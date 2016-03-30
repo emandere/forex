@@ -1,0 +1,7 @@
+{"_id":{"$oid":"561862abc69c4a5aa3d11aa4"},"name":"AUDUSD"}
+{"_id":{"$oid":"561862c6c69c4a5aa3d11aa5"},"name":"EURUSD"}
+{"_id":{"$oid":"561862d0c69c4a5aa3d11aa6"},"name":"GBPUSD"}
+{"_id":{"$oid":"561862dbc69c4a5aa3d11aa7"},"name":"NZDUSD"}
+{"_id":{"$oid":"561862eac69c4a5aa3d11aa8"},"name":"USDCAD"}
+{"_id":{"$oid":"561862fac69c4a5aa3d11aa9"},"name":"USDCHF"}
+{"_id":{"$oid":"56186319c69c4a5aa3d11aaa"},"name":"USDJPY"}
