@@ -25,7 +25,7 @@ class ForexClasses
 
   }
 
-  @ApiMethod(path: 'mongopairs')
+  @ApiMethod(path: 'pairs')
   Future<List<String>> readMongoPairs()
   {
     return mongoLayer.readMongoPairs();
@@ -169,7 +169,7 @@ class ForexClasses
   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,String endDate)
   {
     List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
-
+    print("Here we are");
     sendDailyValues(mapValues)
     {
       for (Map mapDaily in mapValues)

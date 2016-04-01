@@ -11,7 +11,8 @@ import 'package:web_components/web_components.dart';
 
 /// Uses [PaperInput]
 @PolymerRegister('main-app')
-class MainApp extends PolymerElement {
+class MainApp extends PolymerElement
+{
   @property
   String text;
 
@@ -43,6 +44,7 @@ class MainApp extends PolymerElement {
 
 //  /// Called when main-app has been fully prepared (Shadow DOM created,
 //  /// property observers set up, event listeners attached).
-//  ready() {
-//  }
+    ready()
+    {
+    }
 }

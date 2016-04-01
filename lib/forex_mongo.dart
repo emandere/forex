@@ -9,7 +9,7 @@ class ForexMongo
   Db db;
   ForexMongo()
   {
-    db = new Db("mongodb://localhost/local");
+    db = new Db("mongodb://localhost/testdb");
   }
 
   Future<List<Map>> readDailyValues(pair)
@@ -20,8 +20,8 @@ class ForexMongo
 
   Future<List<Map>> readDailyValuesRange(pair,DateTime startDate,DateTime endDate)
   {
-    //SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
-    SelectorBuilder condition = where.eq("pair",pair).eq("datetime",startDate);
+    SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
+    //SelectorBuilder condition = where.eq("pair",pair).eq("datetime",startDate);
     return db.collection('forexvalues').find(condition).toList();
   }
 
