@@ -268,6 +268,42 @@ class Account
     return NetAssetValue() - MarginUsed();
   }
 
+
+  printacc()
+  {
+
+    for(Trade currTrade in Trades)
+    {
+      print(currTrade.id.toString()+" "+ currTrade.pair+" "+currTrade.units.toString()+" "+currTrade.PL().toString());
+    }
+    print("PL "+UnrealizedPL().toString());
+    print("Net Value "+NetAssetValue().toString());
+    print("Margin Used "+MarginUsed().toString());
+    print("Margin Available "+MarginAvailable().toString());
+    print("Cash Balance "+cash.toString());
+  }
+
+  processOrders(Function dailyValuesRange,DateTime currentTime) async
+  {
+    for(Order order in orders)
+    {
+      if(!order.expired)
+      {
+        List<ForexDailyValue> val = await dailyValuesRange(order.trade.pair, currentTime.toString(), currentTime.toString());
+        if (val.length > 0)
+        {
+          print("processed " + val[0].close.toString()+" "+order.trade.long.toString() );
+          if(order.checkTrigger(val[0].close))
+          {
+            print("processed event");
+            executeTrade(order.trade);
+            order.expired = true;
+          }
+        }
+      }
+    }
+  }
+
   void Deposit(num amt)
   {
 
@@ -277,6 +313,7 @@ class Account
   {
 
   }
+
 
 
 }
@@ -409,19 +446,81 @@ class User
     }
   }
 
+  fundAccount(String acc,double amount)
+  {
+    if(acc=="primary")
+        primaryAccount.fundAccount(amount);
+    else
+        secondaryAccount.fundAccount(amount);
+  }
+
+  closeTrade(String acc,int index)
+  {
+    if(acc=="primary")
+      primaryAccount.closeTrade(index);
+    else
+      secondaryAccount.closeTrade(index);
+  }
+
+  executeTrade(String acc,String pair, int units,String position,String openDate)
+  {
+    Trade trade1 = new Trade();
+    trade1.pair=pair;
+    trade1.units=units;
+    trade1.openDate=openDate;
+
+    if(position=="long")
+      trade1.long=true;
+    else
+      trade1.long=false;
+
+    if(acc=="primary")
+      primaryAccount.executeTrade(trade1);
+    else
+      secondaryAccount.executeTrade(trade1);
+
+  }
+
   printacc()
   {
+      print("Primary Account");
+      primaryAccount.printacc();
 
-    for(Trade currTrade in new List<Trade>.from(primaryAccount.Trades)..addAll(secondaryAccount.Trades))
-    {
-        print(currTrade.id.toString()+" "+ currTrade.pair+" "+currTrade.units.toString()+" "+currTrade.PL().toString());
-    }
-    print("PL "+UnRealizedPL().toString());
-    print("Net Value "+NetAssetValue().toString());
-    print("Margin Used "+MarginUsed().toString());
-    print("Margin Available "+MarginAvailable().toString());
-    print("Cash Balance "+Cash().toString());
+      print("Secondary Account");
+      secondaryAccount.printacc();
+
+      print("User PL "+UnRealizedPL().toString());
+      print("User Net Value "+NetAssetValue().toString());
+      print("User Cash Balance "+Cash().toString());
   }
+
+  processOrder(Function dailyValue,DateTime CurrentDate)
+  {
+      primaryAccount.processOrders(dailyValue,CurrentDate);
+      secondaryAccount.processOrders(dailyValue,CurrentDate);
+  }
+
+  setOrder(String acc,int index,double price,bool direction)
+  {
+    if(acc=="primary")
+      primaryAccount.setOrder(index,price,direction);
+    else
+      secondaryAccount.setOrder(index,price,direction);
+  }
+
+  transferAmount(String from,String to,double amount) {
+    if (from == "primary")
+    {
+        primaryAccount.cash-=amount;
+        secondaryAccount.cash+=amount;
+    }
+    else
+    {
+        secondaryAccount.cash-=amount;
+        primaryAccount.cash+=amount;
+    }
+  }
+
 }
 
 class TradingSession
@@ -441,13 +540,10 @@ class TradingSession
      dailyValuesCallMissing = dailyValuesMissing;
 
    }
-
-
    updateUser(DateTime currentTime) async
    {
 
    }
-
    updateTime(var len)  async
    {
      currentTime=currentTime.add(new Duration(days: len));
@@ -455,7 +551,7 @@ class TradingSession
      for(String pair in sessionUser.TradingPairs())
      {
        //print(pair);
-       List<ForexDailyValue> val = await dailyValuesRange(pair,currentTime.toString(),currentTime.toString());
+       List<ForexDailyValue> val = await dailyValuesRange(pair,currentTime.toString());
        if(val.length>0)
        {
          sessionUser.updateTrades(pair,currentTime.toString(),val[0].close);
@@ -465,7 +561,7 @@ class TradingSession
    }
 
 
-   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,String endDate) async
+   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate) async
    {
      List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
 
@@ -478,11 +574,10 @@ class TradingSession
        }
        return dailyvals;
      }
-     List<Map> data = await dailyValuesCall(pair,DateTime.parse(startDate),DateTime.parse(endDate));
+     List<Map> data = await dailyValuesCall(pair,DateTime.parse(startDate));
      if(data.length==0)
      {
-       //print("used missing");
-       data = await dailyValuesCallMissing(pair,DateTime.parse(startDate),DateTime.parse(endDate));
+       data = await dailyValuesCallMissing(pair,DateTime.parse(startDate));
        return sendDailyValues(data.reversed.toList());
      }
      else
@@ -498,66 +593,32 @@ class TradingSession
 
    closeTrade(String acc,int index)
    {
-     if(acc=="primary")
-       sessionUser.primaryAccount.closeTrade(index);
-     else
-       sessionUser.secondaryAccount.closeTrade(index);
+       sessionUser.closeTrade(acc,index);
+   }
+
+   fundAccount(String acc,double amount)
+   {
+      sessionUser.fundAccount(acc,amount);
    }
 
    executeTrade(String acc,String pair, int units,String position,String openDate)
    {
-     Trade trade1 = new Trade();
-     trade1.pair=pair;
-     trade1.units=units;
-     trade1.openDate=openDate;
-
-     if(position=="long")
-       trade1.long=true;
-     else
-        trade1.long=false;
-
-     if(acc=="primary")
-       sessionUser.primaryAccount.executeTrade(trade1);
-     else
-       sessionUser.secondaryAccount.executeTrade(trade1);
-
+      sessionUser.executeTrade(acc,pair,units,position,openDate);
    }
 
    processOrders() async
    {
-      for(Order order in sessionUser.primaryAccount.orders)
-      {
-        if(!order.expired)
-        {
-          List<ForexDailyValue> val = await dailyValuesRange(order.trade.pair, currentTime.toString(), currentTime.toString());
-          if (val.length > 0)
-          {
-            print("processed " + val[0].close.toString()+" "+order.trade.long.toString() );
-            if(order.checkTrigger(val[0].close))
-            {
-              print("processed event");
-              sessionUser.primaryAccount.executeTrade(order.trade);
-              order.expired = true;
-            }
-            /*if ((val[0].close > order.triggerprice) && order.long)
-            {
-              sessionUser.primaryAccount.executeTrade(order.trade);
-              order.expired = true;
-            }*/
-
-            /*if ((val[0].close < order.triggerprice))// && order.long==false)
-            {
-              print("processed event");
-              //sessionUser.primaryAccount.executeTrade(order.trade);
-              order.expired = true;*/
-          }
-        }
-      }
+      sessionUser.processOrder(dailyValuesRange,currentTime);
    }
 
-   setOrder(int index,double price,bool direction)
+   setOrder(String acc,int index,double price,bool direction)
    {
-        sessionUser.primaryAccount.setOrder(index,price,direction);
+        sessionUser.setOrder(acc,index,price,direction);
+   }
+
+   transferAmount(String from,String to,double amount)
+   {
+        sessionUser.transferAmount(from,to,amount);
    }
 
 }
