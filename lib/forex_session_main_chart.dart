@@ -40,7 +40,7 @@ class ForexMainChart extends PolymerElement
     btnCharts =$['btnCharts'];
     startDate =$['startDate'];
     endDate =$['endDate'];
-    //mainChart.on['google-chart-select'].listen(sendMessage);
+
     selectPair.on['tap'].listen(loadChartDialog);
     btnCharts.on['tap'].listen(loadChart);
     loadCurrencyPairs();
@@ -49,7 +49,8 @@ class ForexMainChart extends PolymerElement
   }
   sendMessage(Event e)
   {
-    window.alert(e.type);
+
+    window.alert(mainChart.selection[0]["row"].toString());
   }
 
   loadChartDialog(Event e)
@@ -61,6 +62,8 @@ class ForexMainChart extends PolymerElement
   {
     String pair =currencyPairs[$['menuPair'].selected];
     mainChart = $['mainChart'];
+
+
     String chartTitle="Daily Rates for "+pair;
     var options = {
       'title':chartTitle,
@@ -78,6 +81,7 @@ class ForexMainChart extends PolymerElement
 
 
     mainChart.rows= await dailyValues(startDate.value,endDate.value,pair);
+    mainChart.on['google-chart-select'].listen(sendMessage);
 
   }
 
