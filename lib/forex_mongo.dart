@@ -18,6 +18,11 @@ class ForexMongo
     return db.collection('forexvalues').find({"pair":pair}).toList();
   }
 
+  Future<Map> readSession(String id)
+  {
+    return db.collection('session').findOne({"id":id});
+  }
+
   Future<List<Map>> readDailyValuesRange(pair,DateTime startDate,DateTime endDate)
   {
     SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
@@ -132,6 +137,24 @@ class ForexMongo
       return respond;
     }
     return mongoSaveUser().then(mongoResult);
+  }
+
+
+  Future<List<String>> saveSession(TradingSession session)
+  {
+    mongoSaveSession()
+    {
+      return db.collection('session').save(session.toJsonMap());
+    }
+
+    mongoResult(var result)
+    {
+      List<String> respond = new List<String>();
+      //respond.add(session.id+" Saved");
+      print("saved session");
+      return respond;
+    }
+    return mongoSaveSession().then(mongoResult);
   }
 
   Future<Map> getUser(String id)

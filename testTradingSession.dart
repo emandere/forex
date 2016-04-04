@@ -14,8 +14,9 @@ main() async
 
    mongoLayer= new ForexMongo();
    await mongoLayer.db.open();
-   testSession=new TradingSession(mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
-   testSession.sessionUser.id="testSession";
+   testSession=new TradingSession();
+   testSession.id="testSession";
+   testSession.sessionUser.id="testSessionUser";
 
    String line ="";
    Duration timeElapsed=new Duration(seconds:1);
@@ -38,12 +39,12 @@ main() async
 
       for(int i=0;i<timeElapsed.inSeconds;i++)
       {
-         await testSession.updateTime(1);
-         //testSession.printacc();
+         await testSession.updateTime(1,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
+         testSession.updateHistory();
          await testSession.processOrders();
       }
 
-      await testSession.updateTime(0);
+      await testSession.updateTime(0,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
 
       print("> Added $line\n");
       if(line=="playpause")
@@ -64,7 +65,7 @@ main() async
          {
             print(pair);
             String dt = testSession.currentTime.toString();//.split(' ')[0];
-            List<ForexDailyValue> val = await testSession.dailyValuesRange(pair,dt);
+            List<ForexDailyValue> val = await testSession.dailyValuesRange(pair,dt,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
             if(val.length>0)
                print(val[0].close.toString());
          }
@@ -91,7 +92,7 @@ main() async
       {
          List<String> parts = line.split(' ');
          testSession.executeTrade(parts[1],parts[2],int.parse(parts[3]),parts[4],testSession.currentTime.toString());
-         await testSession.updateTime(timeElapsed.inSeconds);
+         await testSession.updateTime(timeElapsed.inSeconds,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
          testSession.sessionUser.printacc();
       }
 
@@ -115,6 +116,11 @@ main() async
       {
          List<String> parts = line.split(' ');
          testSession.transferAmount(parts[1],parts[2],double.parse(parts[3]));
+      }
+
+      if(line.startsWith("save"))
+      {
+         mongoLayer.saveSession(testSession);
       }
 
    }

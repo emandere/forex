@@ -25,6 +25,19 @@ class ForexClasses
 
   }
 
+  @ApiMethod(path: 'getsession/{sessionid}')
+  Future<TradingSession> readSession(String sessionid)
+  {
+    getSessionString(result)
+    {
+      TradingSession sessionRead = new TradingSession.fromJSONMap(result);
+      //List<String> lstuser=new List<String>();
+      //lstuser.add(userRead.toJson());
+      return sessionRead;
+    }
+    return mongoLayer.readSession(sessionid).then(getSessionString);
+  }
+
   @ApiMethod(path: 'pairs')
   Future<List<String>> readMongoPairs()
   {

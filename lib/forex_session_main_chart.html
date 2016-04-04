@@ -7,6 +7,11 @@
             width: 800px;
         }
 
+        #balanceChart
+        {
+            width: 800px;
+        }
+
         paper-fab.blue
         {
             background: #03A9F4;
@@ -15,7 +20,9 @@
 
 <template>
 
+    <google-chart id="balanceChart"></google-chart>
     <google-chart id="mainChart"></google-chart>
+
     <paper-dialog id="dialogChart">
         <h2>Select Date Range and Currency Pair</h2>
         <paper-input id="startDate" label="Start Date" floatingLabel></paper-input>
@@ -31,6 +38,8 @@
         </div>
     </paper-dialog>
     <paper-fab mini id="selectPair" class="blue" icon="view-module"></paper-fab>
+
+
 </template>
 
 

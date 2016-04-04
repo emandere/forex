@@ -129,9 +129,10 @@ class Account
   List<Trade> Trades;
   List<Trade> closedTrades;
   List<Order> orders;
-
+  List<Map<String,double>> balanceHistory;
   //List<Order> OpenOrder;
   //List<Order> ClosedOrder;
+  //List balanceHistory;
   Account()
   {
     realizedPL=0.0;
@@ -141,7 +142,13 @@ class Account
     Trades = new List<Trade>();
     closedTrades = new List<Trade>();
     orders = new List<Order>();
+    balanceHistory= new List<Map<String,double>> ();
     idcount=0;
+  }
+
+  AddHistory(String dt,double amount)
+  {
+     balanceHistory.add({"date":dt,"amount":amount});
   }
 
   fundAccount(double amount)
@@ -216,6 +223,11 @@ class Account
     {
       Trades.add(new Trade.fromJsonMap(trade));
     }
+    balanceHistory = jsonNode["balanceHistory"];
+   /* for(Map day in jsonNode["balanceHistory"])
+    {
+      balanceHistory.add(day);
+    }*/
   }
 
   Map toJson()
@@ -225,7 +237,7 @@ class Account
     {
       MapTrades.add(trade.toJson());
     }
-    return {"id":id,"realizedPL":realizedPL,"Trades":MapTrades};
+    return {"id":id,"realizedPL":realizedPL,"Trades":MapTrades,"balanceHistory":balanceHistory};
   }
   num RealizedPL()
   {
@@ -444,6 +456,13 @@ class User
           currTrade.updateTrade(dt,price);
       }
     }
+
+  }
+
+  updateHistory(String dt)
+  {
+    primaryAccount.AddHistory(dt,primaryAccount.NetAssetValue());
+    secondaryAccount.AddHistory(dt,primaryAccount.NetAssetValue());
   }
 
   fundAccount(String acc,double amount)
@@ -529,29 +548,70 @@ class TradingSession
    DateTime startDate;
    DateTime endDate;
    DateTime currentTime;
-   var dailyValuesCall;
-   var dailyValuesCallMissing;
+   //Function dailyValuesCall;
+   //Function dailyValuesCallMissing;
 
-   TradingSession(var dailyValues,var dailyValuesMissing)
+
+   String id;
+
+   TradingSession()
    {
      sessionUser=new User();
      currentTime = DateTime.parse("2007-01-01T05:00Z");
-     dailyValuesCall = dailyValues;
-     dailyValuesCallMissing = dailyValuesMissing;
+     //dailyValuesCall = dailyValues;
+     //dailyValuesCallMissing = dailyValuesMissing;
 
    }
+
+   TradingSession.fromJSON(String json)
+   {
+     Map jsonNode = JSON.decode(json);
+     setSession(jsonNode);
+   }
+
+   TradingSession.fromJSONMap(Map jsonNode)
+   {
+     setSession(jsonNode);
+   }
+
+   setSession(Map jsonMap)
+   {
+      id=jsonMap["id"];
+      //startDate=DateTime.parse(jsonMap["startDate"]);
+      //endDate=DateTime.parse(jsonMap["endDate"]);
+      currentTime=DateTime.parse(jsonMap["currentTime"]);
+      sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
+   }
+
+
+   String toJson()
+   {
+     return JSON.encode(toJsonMap());
+   }
+
+   Map toJsonMap() {
+      return {
+        "_id":id,
+       "id":id,
+       "startDate":startDate.toString(),
+       "endDate":endDate.toString(),
+       "currentTime":currentTime.toString(),
+       "sessionUser":sessionUser.toJsonMap()
+       };
+   }
+
    updateUser(DateTime currentTime) async
    {
 
    }
-   updateTime(var len)  async
+   updateTime(var len,Function dailyValues,Function dailyValuesMissing)  async
    {
      currentTime=currentTime.add(new Duration(days: len));
      //print(currentTime.toString());
      for(String pair in sessionUser.TradingPairs())
      {
        //print(pair);
-       List<ForexDailyValue> val = await dailyValuesRange(pair,currentTime.toString());
+       List<ForexDailyValue> val = await dailyValuesRange(pair,currentTime.toString(),dailyValues,dailyValuesMissing);
        if(val.length>0)
        {
          sessionUser.updateTrades(pair,currentTime.toString(),val[0].close);
@@ -561,7 +621,7 @@ class TradingSession
    }
 
 
-   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate) async
+   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,Function dailyValuesCall,Function dailyValuesCallMissing) async
    {
      List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
 
@@ -621,6 +681,12 @@ class TradingSession
         sessionUser.transferAmount(from,to,amount);
    }
 
+   updateHistory()
+   {
+     sessionUser.updateHistory(currentTime.toString());
+   }
+
 }
+
 
 

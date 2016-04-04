@@ -5,6 +5,7 @@ import 'dart:html';
 import 'dart:convert';
 import 'candle_stick.dart';
 import 'dart:async';
+import 'forex_classes.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -21,6 +22,7 @@ class ForexMainChart extends PolymerElement
 {
   ForexMainChart.created() : super.created();
   GoogleChart mainChart;
+  GoogleChart balanceChart;
   PaperFab selectPair;
   PaperDialog dialogChart;
   PaperButton btnCharts;
@@ -41,15 +43,17 @@ class ForexMainChart extends PolymerElement
     startDate =$['startDate'];
     endDate =$['endDate'];
 
+
     selectPair.on['tap'].listen(loadChartDialog);
     btnCharts.on['tap'].listen(loadChart);
     loadCurrencyPairs();
+    loadBalanceChart();
+
 
 
   }
   sendMessage(Event e)
   {
-
     window.alert(mainChart.selection[0]["row"].toString());
   }
 
@@ -83,13 +87,43 @@ class ForexMainChart extends PolymerElement
     mainChart.rows= await dailyValues(startDate.value,endDate.value,pair);
     mainChart.on['google-chart-select'].listen(sendMessage);
 
+
+
   }
+
+
+  loadBalanceChart() async
+  {
+
+    balanceChart =$['balanceChart'];
+    String chartTitle="Balance History";
+    var options = {
+      'title':chartTitle,
+      'legend': 'none',
+      'vAxis':{'title':'Value'},
+      'hAxis':{'title':'Date'}
+      };
+
+    balanceChart.options=options;
+    balanceChart.type="line";
+    balanceChart.cols=[ {"type":"date"},{"type":"number"}];
+    balanceChart.rows = await balances();
+
+  }
+
 
   Future<List> dailyValues(String startDt,String endDt,String pair ) async
   {
       var url = "/api/forexclasses/v1/dailyvaluesrange/$pair/$startDt/$endDt";
       String response = await HttpRequest.getString(url);
       return readResponse(response);
+  }
+
+  Future<List> balances() async
+  {
+    var url = "/api/forexclasses/v1/getsession/testSession";
+    String response = await HttpRequest.getString(url);
+    return readResponseSession(response);
   }
 
   List readResponse(String responseText)
@@ -110,6 +144,23 @@ class ForexMainChart extends PolymerElement
       dval.add(dailyVal.open);
       dval.add(dailyVal.close);
       dval.add(dailyVal.high);
+      data.add(dval);
+    }
+    return data;
+  }
+
+  List readResponseSession(String responseText)
+  {
+
+
+    TradingSession sess = new TradingSession.fromJSON(responseText);
+    Map session =JSON.decode(responseText);
+    var data=new List();
+    for(Map dailyVal in sess.sessionUser.primaryAccount.balanceHistory)
+    {
+      var dval = new List();
+      dval.add(DateTime.parse(dailyVal["date"]));
+      dval.add(dailyVal["amount"]);
       data.add(dval);
     }
     return data;
