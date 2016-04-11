@@ -18,6 +18,19 @@ class UserData
   }
 }
 
+class PostData
+{
+  String data;
+  Map toJsonMap()
+  {
+    return {"data":data};
+  }
+
+  String toJson()
+  {
+    return JSON.encode(toJsonMap());
+  }
+}
 
 class Trade
 {
@@ -88,6 +101,30 @@ class Order
     double triggerprice;
     bool expired;
     bool above;
+
+
+    Map toJson()
+    {
+      return
+        {
+          "expirationDate":expirationDate,
+          "triggerprice":triggerprice,
+          "expired":expired,
+          "above":above,
+          "trade":trade.toJson()
+        };
+    }
+
+    Order.fromJsonMap(Map jsonNode)
+    {
+      setOrder(jsonNode);
+    }
+
+    setOrder(jsonNode)
+    {
+      expirationDate=jsonNode["expirationDate"];
+
+    }
 
     Order(Trade t,double price,bool abovebelow)
     {
@@ -218,7 +255,9 @@ class Account
   {
     id=jsonNode["id"];
     realizedPL=jsonNode["realizedPL"];
+    cash=jsonNode["cash"];
     Trades=new List<Trade>();
+    orders=new List<Order>();
     for(Map trade in jsonNode["Trades"])
     {
       Trades.add(new Trade.fromJsonMap(trade));
@@ -233,11 +272,24 @@ class Account
   Map toJson()
   {
     List<Map> MapTrades = new List<Map>();
+    List<Map> MapOrders=new List<Map>();
     for(Trade trade in Trades)
     {
       MapTrades.add(trade.toJson());
     }
-    return {"id":id,"realizedPL":realizedPL,"Trades":MapTrades,"balanceHistory":balanceHistory};
+
+    for(Order order in orders)
+    {
+      MapOrders.add(order.toJson());
+    }
+
+    return {
+      "id":id,
+      "cash":cash,
+      "realizedPL":realizedPL,
+      "Trades":MapTrades,
+      "balanceHistory":balanceHistory
+    };
   }
   num RealizedPL()
   {
@@ -558,6 +610,7 @@ class TradingSession
    {
      sessionUser=new User();
      currentTime = DateTime.parse("2007-01-01T05:00Z");
+     startDate = DateTime.parse("2007-01-01T05:00Z");
      //dailyValuesCall = dailyValues;
      //dailyValuesCallMissing = dailyValuesMissing;
 
@@ -577,10 +630,12 @@ class TradingSession
    setSession(Map jsonMap)
    {
       id=jsonMap["id"];
-      //startDate=DateTime.parse(jsonMap["startDate"]);
-      //endDate=DateTime.parse(jsonMap["endDate"]);
-      currentTime=DateTime.parse(jsonMap["currentTime"]);
+      print("HEEEEEREEEE End "+jsonMap["endDate"].toString());
+      startDate=DateTime.parse(jsonMap["startDate"].toString());
+      //endDate=DateTime.parse(jsonMap["endDate"].toString());
+      currentTime=DateTime.parse(jsonMap["currentTime"].toString());
       sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
+      print("HEEEEEREEEE COMPLETE "+jsonMap["currentTime"].toString());
    }
 
 

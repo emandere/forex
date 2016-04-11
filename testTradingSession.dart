@@ -41,6 +41,7 @@ main() async
       {
          await testSession.updateTime(1,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
          testSession.updateHistory();
+         mongoLayer.saveSession(testSession);
          await testSession.processOrders();
       }
 

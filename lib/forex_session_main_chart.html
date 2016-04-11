@@ -16,30 +16,48 @@
         {
             background: #03A9F4;
         }
+
+        paper-toolbar {
+            background-color: #03A9F4;
+        }
+
+
+
+
     </style>
 
 <template>
-
-    <google-chart id="balanceChart"></google-chart>
-    <google-chart id="mainChart"></google-chart>
+    <paper-card>
+        <div class="card-content">
+            <google-chart id="balanceChart"></google-chart>
+        </div>
+    </paper-card>
+    <p>{{loadingStatus}} - {{countdown}}</p>
+    <paper-card>
+        <div class="card-content">
+            <google-chart id="mainChart"></google-chart>
+        </div>
+    </paper-card>
+    <paper-fab mini id="selectPair" class="blue" icon="view-module"></paper-fab>
 
     <paper-dialog id="dialogChart">
         <h2>Select Date Range and Currency Pair</h2>
+        <paper-dialog-scrollable>
         <paper-input id="startDate" label="Start Date" floatingLabel></paper-input>
         <paper-input id="endDate" label="End Date" floatingLabel></paper-input>
-        <paper-menu class="menu" id="menuPair">
-            <template is="dom-repeat" items="{{currencyPairs}}">
-                <p><paper-item>{{item}}</paper-item></p>
-            </template>
-        </paper-menu>
-        <div class="buttons">
+
+            <paper-menu id="menuPair">
+                <template is="dom-repeat" items="{{currencyPairs}}">
+                        <paper-item>{{item}}</paper-item>
+                </template>
+            </paper-menu>
+
+        </paper-dialog-scrollable>
+        <div  class="buttons">
             <paper-button raised class="colored" id="btnCharts" dialog-dismiss>Update Chart</paper-button>
             <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
         </div>
     </paper-dialog>
-    <paper-fab mini id="selectPair" class="blue" icon="view-module"></paper-fab>
-
-
 </template>
 
 

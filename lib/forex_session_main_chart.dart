@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'candle_stick.dart';
 import 'dart:async';
 import 'forex_classes.dart';
+import 'package:intl/intl.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -16,7 +17,14 @@ import 'package:polymer_elements/paper_menu.dart';
 import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_fab.dart';
 import 'package:polymer_elements/iron_icons.dart';
+import 'package:polymer_elements/paper_card.dart';
+import 'package:polymer_elements/paper_drawer_panel.dart';
+import 'package:polymer_elements/paper_header_panel.dart';
+import 'package:polymer_elements/paper_toolbar.dart';
+import 'package:polymer_elements/paper_item.dart';
 
+const int duration=20;
+const durationCountdown = const Duration(seconds:1);
 @PolymerRegister('forex-session-main-chart')
 class ForexMainChart extends PolymerElement
 {
@@ -28,27 +36,37 @@ class ForexMainChart extends PolymerElement
   PaperButton btnCharts;
   PaperInput startDate;
   PaperInput endDate;
-
+  TradingSession sess;
   @property
   List<String> currencyPairs;
+  @property
+  String loadingStatus;
+  String countdown;
+  int countdownAmt;
+  bool playState;
+  Timer countdownSesssions;
 
   ready()
   {
-
-
 
     selectPair = $['selectPair'];
     dialogChart = $['dialogChart'];
     btnCharts =$['btnCharts'];
     startDate =$['startDate'];
     endDate =$['endDate'];
-
+    countdownAmt=duration;
 
     selectPair.on['tap'].listen(loadChartDialog);
     btnCharts.on['tap'].listen(loadChart);
     loadCurrencyPairs();
-    loadBalanceChart();
+    //play();
+    //loadBalanceChart();
 
+
+
+
+
+    //countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
 
 
   }
@@ -57,14 +75,45 @@ class ForexMainChart extends PolymerElement
     window.alert(mainChart.selection[0]["row"].toString());
   }
 
+  playpause()
+  {
+    if(playState)
+      play();
+    else
+      pause();
+  }
+
+  pause()
+  {
+    if(countdownSesssions!=null && countdownSesssions.isActive)
+    {
+      countdownSesssions.cancel();
+      playState=false;
+    }
+  }
+
+  play()
+  {
+    countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
+    playState = true;
+  }
+
   loadChartDialog(Event e)
   {
+    pause();
     dialogChart.open();
   }
 
   loadChart(Event e) async
   {
     String pair =currencyPairs[$['menuPair'].selected];
+    loadChartData(pair,startDate.value,endDate.value);
+    play();
+  }
+
+  loadChartData(String pair,String startdt,String enddt) async
+  {
+
     mainChart = $['mainChart'];
 
 
@@ -84,17 +133,28 @@ class ForexMainChart extends PolymerElement
     mainChart.cols=[ {"type":"date"},{"type":"number"},{"type":"number"},{"type":"number"},{"type":"number"}];
 
 
-    mainChart.rows= await dailyValues(startDate.value,endDate.value,pair);
+    mainChart.rows= await dailyValues(startdt,enddt,pair);
     mainChart.on['google-chart-select'].listen(sendMessage);
 
 
 
   }
 
-
-  loadBalanceChart() async
+  updateCountdown(Timer e) async
   {
+    countdownAmt=countdownAmt-1;
+    if(countdownAmt==0)
+    {
+      countdownAmt = 20;
+      loadBalanceChart(e);
+    }
 
+    set('countdown',countdownAmt.toString());
+  }
+
+  loadBalanceChart(Timer e) async
+  {
+    set('loadingStatus',"Loading");
     balanceChart =$['balanceChart'];
     String chartTitle="Balance History";
     var options = {
@@ -109,6 +169,12 @@ class ForexMainChart extends PolymerElement
     balanceChart.cols=[ {"type":"date"},{"type":"number"}];
     balanceChart.rows = await balances();
 
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String pair=sess.sessionUser.TradingPairs()[0];
+    String startdt=formatter.format(sess.startDate);
+    String enddt=formatter.format(sess.currentTime);
+    loadChartData(pair,startdt,enddt);
+    set('loadingStatus',"Complete");
   }
 
 
@@ -153,7 +219,7 @@ class ForexMainChart extends PolymerElement
   {
 
 
-    TradingSession sess = new TradingSession.fromJSON(responseText);
+    sess = new TradingSession.fromJSON(responseText);
     Map session =JSON.decode(responseText);
     var data=new List();
     for(Map dailyVal in sess.sessionUser.primaryAccount.balanceHistory)

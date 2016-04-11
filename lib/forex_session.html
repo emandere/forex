@@ -1,0 +1,77 @@
+<dom-module id="forex-session">
+    <template>
+        <style is="custom-style">
+            #createForexSession
+            {
+                background: #03A9F4;
+                position: absolute;
+                top: 600px;
+                right: 26px;
+            }
+            paper-icon-item.fancy {
+                --paper-item-focused: {
+                    font-weight: bold;
+                };
+                --paper-item-focused-before: {
+                    opacity: 0;
+                };
+            }
+
+            .avatar {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+
+            }
+
+            .small {
+                --iron-icon-height: 12px;
+                --iron-icon-width: 12px;
+            }
+        </style>
+        <paper-drawer-panel id="drawerPanel">
+            <paper-header-panel drawer>
+                <paper-toolbar><paper-icon-button id="navIconMenuBack" icon="arrow-back"></paper-icon-button></paper-toolbar>
+                <paper-menu id="menuPage" selected="{{itemIndex}}">
+                    <paper-item id="sessionItem">Sessions</paper-item>
+                    <paper-item id="dashboardItem">DashBoard</paper-item>
+                </paper-menu>
+            </paper-header-panel>
+            <paper-header-panel  main>
+                <paper-toolbar>
+                    <paper-icon-button id="navIconMenu" icon="menu"></paper-icon-button>
+                    <span class="title">Forex Test Sessions</span>
+                    <paper-icon-button id="searchbutton" icon="search"></paper-icon-button>
+                </paper-toolbar>
+                <div class="content fit" align="center">
+
+                    <iron-pages selected="{{itemIndex}}">
+                        <div><forex-session-main-chart></forex-session-main-chart></div>
+                        <div>Two</div>
+                        <div>Three</div>
+                    </iron-pages>
+
+
+                </div>
+            </paper-header-panel>
+        </paper-drawer-panel>
+        <paper-fab mini id="createForexSession" class="blue" icon="add"></paper-fab>
+        <!--Session Dialog-->
+        <paper-dialog id="dialogSession">
+            <h2>New Session</h2>
+            <div align="left">
+                <paper-input id="sessionId" label="Session Name" floatingLabel></paper-input>
+                <paper-input id="startDate" label="Starting Date" floatingLabel></paper-input>
+                <paper-input id="primaryAmount" label="Starting Amount(PRIM)" floatingLabel></paper-input>
+                <paper-input id="secondaryAmount" label="Starting Amount(SEC)" floatingLabel></paper-input>
+            </div>
+            <div  align="center">
+                <paper-button raised class="colored" id="btnCreateSession" dialog-dismiss>Create</paper-button>
+                <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
+            </div>
+        </paper-dialog>
+        <paper-toast id="toastSession"></paper-toast>
+    </template>
+</dom-module>

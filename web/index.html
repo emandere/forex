@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <!--
   Copyright (c) 2016, <your name>. All rights reserved. Use of this source code
   is governed by a BSD-style license that can be found in the LICENSE file.
@@ -12,6 +10,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="scaffolded-by" content="https://github.com/google/stagehand">
   <title>forex</title>
+
+
 
   <!-- Add to homescreen for Chrome on Android -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -29,7 +29,6 @@
 
   <!--  Polyfill of Custom Elements and HTML Imports -->
   <script src="packages/web_components/webcomponents-lite.min.js"></script>
-
   <script defer type="application/dart" src="index.dart"></script>
   <script defer src="packages/browser/dart.js"></script>
 
@@ -39,6 +38,24 @@
 </head>
 
 <body unresolved>
-<forex-session-main-chart></forex-session-main-chart>
+    <forex-session></forex-session>
 </body>
+<!--
+<body unresolved>
+ <paper-drawer-panel>
+   <paper-header-panel drawer>
+     <paper-toolbar></paper-toolbar>
+     <div> Drawer content... </div>
+   </paper-header-panel>
+   <paper-header-panel  main>
+    <paper-toolbar>
+      <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+    </paper-toolbar>
+    <div class="content fit" align="center"><forex-session-main-chart></forex-session-main-chart></div>
+  </paper-header-panel>
+ </paper-drawer-panel>
+</body>
+
+-->
+
 </html>
