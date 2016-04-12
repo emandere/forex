@@ -24,6 +24,7 @@ import 'package:polymer_elements/paper_toast.dart';
 import 'package:polymer_elements/paper_listbox.dart';
 import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/iron_iconset.dart';
+import 'package:polymer_elements/av_icons.dart';
 @PolymerRegister('forex-session')
 class ForexSession extends PolymerElement
 {
