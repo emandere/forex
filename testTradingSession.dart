@@ -124,6 +124,16 @@ main() async
          mongoLayer.saveSession(testSession);
       }
 
+      if(line.startsWith("session"))
+      {
+         print("cmon!!");
+         await for (Map sess in mongoLayer.getSessions())
+         {
+            print(sess["id"]);
+         }
+
+      }
+
    }
 
    print("closed");

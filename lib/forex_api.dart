@@ -44,6 +44,17 @@ class ForexClasses
     return mongoLayer.readMongoPairs();
   }
 
+  @ApiMethod(path: 'sessions')
+  Future<List<String>> getSessions() async
+  {
+    List<String> sessions=new List<String>();
+    await for (Map session in mongoLayer.getSessions())
+    {
+      sessions.add(session["id"]);
+    }
+    return sessions;
+  }
+
   @ApiMethod(path: 'usernames')
   Future<List<String>> readUserNames()
   {

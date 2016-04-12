@@ -23,12 +23,15 @@ import 'package:polymer_elements/paper_toolbar.dart';
 import 'package:polymer_elements/paper_toast.dart';
 import 'package:polymer_elements/paper_listbox.dart';
 import 'package:polymer_elements/paper_item.dart';
+import 'package:polymer_elements/iron_iconset.dart';
 @PolymerRegister('forex-session')
 class ForexSession extends PolymerElement
 {
   TradingSession tradeSession;
   @property
   int itemIndex;
+  @property
+  List<String> sessions;
   ForexSession.created() : super.created();
   ready()
   {
@@ -47,8 +50,19 @@ class ForexSession extends PolymerElement
      btnCreateSession.on['tap'].listen(CreateUserSession);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      panel.forceNarrow=true;
+     set('itemIndex',0);
       //navIconMenu.onClick.listen((event)=>panel.togglePanel());
+     loadSessions();
   }
+
+  loadSessions() async
+  {
+    var url = "/api/forexclasses/v1/sessions";
+    String request = await HttpRequest.getString(url);
+    set('sessions', JSON.decode(request));
+
+  }
+
   CreateUserSession(Event e)
   {
       PaperInput sessionId=$['sessionId'];
@@ -85,6 +99,7 @@ class ForexSession extends PolymerElement
     toastSession.text=tradeSession.id+" created and saved";
     toastSession.duration=3000;
     toastSession.open();
+    loadSessions();
   }
 
 }

@@ -157,6 +157,11 @@ class ForexMongo
     return mongoSaveSession().then(mongoResult);
   }
 
+  Stream<Map> getSessions()
+  {
+    return db.collection('session').find();
+  }
+
   Future<Map> getUser(String id)
   {
 

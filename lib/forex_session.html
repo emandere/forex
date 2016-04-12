@@ -1,6 +1,15 @@
 <dom-module id="forex-session">
+
     <template>
         <style is="custom-style">
+
+            footer {
+                position: fixed;
+                background: white;
+                width: 100%;
+                bottom: 0;
+            }
+
             #createForexSession
             {
                 background: #03A9F4;
@@ -48,12 +57,23 @@
                 <div class="content fit" align="center">
 
                     <iron-pages selected="{{itemIndex}}">
+                        <div>
+                            <paper-card>
+                                <div class="card-content">
+                                    <paper-menu id="menuSession">
+                                        <template is="dom-repeat" items="{{sessions}}">
+                                            <paper-item>{{item}}</paper-item>
+                                        </template>
+                                    </paper-menu>
+                                </div>
+                            </paper-card>
+                        </div>
                         <div><forex-session-main-chart></forex-session-main-chart></div>
-                        <div>Two</div>
                         <div>Three</div>
                     </iron-pages>
-
-
+                    <div fit>
+                        <footer><paper-fab mini id="playpause" class="blue" icon="av:play-arrow"></paper-fab></footer>
+                    </div>
                 </div>
             </paper-header-panel>
         </paper-drawer-panel>
