@@ -55,21 +55,40 @@ class ForexMainChart extends PolymerElement
     startDate =$['startDate'];
     endDate =$['endDate'];
     countdownAmt=duration;
-
     selectPair.on['tap'].listen(loadChartDialog);
     btnCharts.on['tap'].listen(loadChart);
     loadCurrencyPairs();
     //play();
     //loadBalanceChart();
-
-
-
-
-
     //countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
-
-
   }
+
+
+  loadCurrencyChart(String pair,String startdt,String enddt,List data)
+  {
+
+    mainChart = $['mainChart'];
+    String chartTitle="Daily Rates for "+pair;
+    var options = {
+      'title':chartTitle,
+      'legend': 'none',
+      'vAxis':{'title':'Price'},
+      'hAxis':{'title':'Date'},
+      'candlestick': {
+        'fallingColor': { 'strokeWidth': 0, 'fill': '#a52714' }, // red
+        'risingColor': { 'strokeWidth': 0, 'fill': '#0f9d58' }   // green
+      }
+    };
+    mainChart.options=options;
+    mainChart.type="candlestick";
+    mainChart.cols=[ {"type":"date"},{"type":"number"},{"type":"number"},{"type":"number"},{"type":"number"}];
+    mainChart.rows= data;
+    mainChart.on['google-chart-select'].listen(sendMessage);
+  }
+
+
+
+
   sendMessage(Event e)
   {
     window.alert(mainChart.selection[0]["row"].toString());

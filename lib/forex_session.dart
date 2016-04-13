@@ -2,8 +2,13 @@
 library forex.lib.forex_session;
 import 'dart:html';
 import 'dart:convert';
-
+import 'dart:async';
+import 'forex_session_main_chart.dart';
 import 'forex_classes.dart';
+import 'candle_stick.dart';
+import 'package:intl/intl.dart';
+
+
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
 import 'package:forex/forex_session_main_chart.dart';
@@ -29,10 +34,20 @@ import 'package:polymer_elements/av_icons.dart';
 class ForexSession extends PolymerElement
 {
   TradingSession tradeSession;
+  ForexMainChart mainChart;
   @property
   int itemIndex;
   @property
   List<String> sessions;
+
+  String loadingStatus;
+  String countdown;
+  int countdownAmt;
+  bool playState;
+  Timer countdownSesssions;
+  DateTime startDate;
+  DateTime endDate;
+
   ForexSession.created() : super.created();
   ready()
   {
@@ -44,16 +59,25 @@ class ForexSession extends PolymerElement
      PaperButton btnCreateSession=$['btnCreateSession'];
      PaperItem sessionItem=$['sessionItem'];
      PaperMenu menuPage=$['menuPage'];
+     mainChart=$['mainChart'];
+     PaperFab playpauseBtn =$['playpauseBtn'];
 
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
      createForexSession.on['tap'].listen((event)=>dialogSession.open());
      btnCreateSession.on['tap'].listen(CreateUserSession);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     playpauseBtn.on['tap'].listen((event)=>playpause());
+
+     startDate=DateTime.parse('20110101');
+     endDate=DateTime.parse('20110101');
+     countdownAmt=5;
+
      panel.forceNarrow=true;
      set('itemIndex',0);
       //navIconMenu.onClick.listen((event)=>panel.togglePanel());
      loadSessions();
+     pause();
   }
 
   loadSessions() async
@@ -101,6 +125,84 @@ class ForexSession extends PolymerElement
     toastSession.duration=3000;
     toastSession.open();
     loadSessions();
+  }
+
+
+  playpause()
+  {
+    window.alert("PlayPausing!");
+    if(playState)
+      pause();
+    else
+      play();
+  }
+
+  pause()
+  {
+    if(countdownSesssions!=null && countdownSesssions.isActive)
+    {
+      countdownSesssions.cancel();
+    }
+    playState=false;
+  }
+
+  play()
+  {
+    countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
+    playState = true;
+  }
+
+  Future<List> dailyValues(String pair,String startDt,String endDt ) async
+  {
+
+
+    var url = "/api/forexclasses/v1/dailyvaluesrange/$pair/$startDt/$endDt";
+    String response = await HttpRequest.getString(url);
+    return readResponse(response);
+  }
+
+  List readResponse(String responseText)
+  {
+    List<ForexDailyValue> dailyVals= new List<ForexDailyValue>();
+    List<Map> JsonData = JSON.decode(responseText);
+    for(var jsonNode in JsonData)
+    {
+      ForexDailyValue dailyVal = new ForexDailyValue.fromJson(jsonNode);
+      dailyVals.add(dailyVal);
+    }
+    var data=new List();
+    for(ForexDailyValue dailyVal in dailyVals)
+    {
+      var dval = new List();
+      dval.add(DateTime.parse(dailyVal.date));
+      dval.add(dailyVal.low);
+      dval.add(dailyVal.open);
+      dval.add(dailyVal.close);
+      dval.add(dailyVal.high);
+      data.add(dval);
+    }
+    return data;
+  }
+
+  updateCountdown(Timer e) async
+  {
+    countdownAmt=countdownAmt-1;
+
+
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String pair='USDJPY';
+    String startdt=formatter.format(startDate);
+    String enddt=formatter.format(endDate);
+
+    if(countdownAmt==0)
+    {
+      countdownAmt = 5;
+      endDate=endDate.add(new Duration(days: 1));
+      List values = await dailyValues(pair,startdt,enddt);
+      mainChart.loadCurrencyChart(pair,startdt,enddt,values);
+    }
+
+    set('countdown',countdownAmt.toString());
   }
 
 }
