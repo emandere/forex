@@ -47,7 +47,7 @@ class ForexSession extends PolymerElement
   Timer countdownSesssions;
   DateTime startDate;
   DateTime endDate;
-
+  TradingSession currentSession;
   ForexSession.created() : super.created();
   ready()
   {
@@ -62,6 +62,9 @@ class ForexSession extends PolymerElement
      mainChart=$['mainChart'];
      PaperFab playpauseBtn =$['playpauseBtn'];
 
+     currentSession = new TradingSession();
+
+
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
      createForexSession.on['tap'].listen((event)=>dialogSession.open());
@@ -69,9 +72,14 @@ class ForexSession extends PolymerElement
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
 
-     startDate=DateTime.parse('20110101');
-     endDate=DateTime.parse('20110101');
-     countdownAmt=5;
+     startDate=DateTime.parse('20110101T0500Z');
+     endDate=DateTime.parse('20110101T0500Z');
+     countdownAmt=1;
+     currentSession.id="testSession";
+     currentSession.sessionUser.id="testSessionUser";
+     currentSession.currentTime=startDate;
+     currentSession.fundAccount("primary",2000.0);
+     currentSession.executeTrade("primary","EURUSD",1000,"long",currentSession.currentTime.toString());
 
      panel.forceNarrow=true;
      set('itemIndex',0);
@@ -130,7 +138,6 @@ class ForexSession extends PolymerElement
 
   playpause()
   {
-    window.alert("PlayPausing!");
     if(playState)
       pause();
     else
@@ -154,8 +161,6 @@ class ForexSession extends PolymerElement
 
   Future<List> dailyValues(String pair,String startDt,String endDt ) async
   {
-
-
     var url = "/api/forexclasses/v1/dailyvaluesrange/$pair/$startDt/$endDt";
     String response = await HttpRequest.getString(url);
     return readResponse(response);
@@ -190,7 +195,7 @@ class ForexSession extends PolymerElement
 
 
     DateFormat formatter = new DateFormat('yyyyMMdd');
-    String pair='USDJPY';
+    String pair='EURUSD';
     String startdt=formatter.format(startDate);
     String enddt=formatter.format(endDate);
 
@@ -199,10 +204,50 @@ class ForexSession extends PolymerElement
       countdownAmt = 5;
       endDate=endDate.add(new Duration(days: 1));
       List values = await dailyValues(pair,startdt,enddt);
+
+      await currentSession.updateTime(1,readDailyValue,readDailyValueMissing);
+      currentSession.updateHistory();
+
+
       mainChart.loadCurrencyChart(pair,startdt,enddt,values);
+      mainChart.loadBalanceChart(balanceHist());
     }
 
     set('countdown',countdownAmt.toString());
+  }
+
+  List balanceHist()
+  {
+    var data=new List();
+    for(Map dailyVal in currentSession.sessionUser.primaryAccount.balanceHistory)
+    {
+      var dval = new List();
+      dval.add(DateTime.parse(dailyVal["date"]));
+      dval.add(dailyVal["amount"]);
+      data.add(dval);
+    }
+    return data;
+  }
+
+  Future<List<Map>> readDailyValue(String pair,DateTime date) async
+  {
+
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String dt=formatter.format(date);
+
+    var url = "/api/forexclasses/v1/readdailyvalue/$pair/$dt";
+    String response = await HttpRequest.getString(url);
+    return JSON.decode(response);
+  }
+
+  Future<List<Map>> readDailyValueMissing(String pair,DateTime date) async
+  {
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String dt=formatter.format(date);
+
+    var url = "/api/forexclasses/v1/dailyvaluesrangemissing/$pair/$dt";
+    String response = await HttpRequest.getString(url);
+    return JSON.decode(response);
   }
 
 }

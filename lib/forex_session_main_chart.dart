@@ -171,7 +171,7 @@ class ForexMainChart extends PolymerElement
     set('countdown',countdownAmt.toString());
   }
 
-  loadBalanceChart(Timer e) async
+  loadBalanceChart(List data)
   {
     set('loadingStatus',"Loading");
     balanceChart =$['balanceChart'];
@@ -186,14 +186,14 @@ class ForexMainChart extends PolymerElement
     balanceChart.options=options;
     balanceChart.type="line";
     balanceChart.cols=[ {"type":"date"},{"type":"number"}];
-    balanceChart.rows = await balances();
+    balanceChart.rows = data;//await balances();
 
-    DateFormat formatter = new DateFormat('yyyyMMdd');
+    /*DateFormat formatter = new DateFormat('yyyyMMdd');
     String pair=sess.sessionUser.TradingPairs()[0];
     String startdt=formatter.format(sess.startDate);
     String enddt=formatter.format(sess.currentTime);
     loadChartData(pair,startdt,enddt);
-    set('loadingStatus',"Complete");
+    set('loadingStatus',"Complete");*/
   }
 
 
