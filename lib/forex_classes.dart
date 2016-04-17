@@ -220,18 +220,27 @@ class Account
 
     }
 
-    Trade oppositeTrade=Trades.firstWhere(matchTrade,orElse: () => null);
-    int index = Trades.indexOf(oppositeTrade);
-    if(oppositeTrade==null)
+    if(Trades.length>0)
     {
-      trade.id=idcount;
-      Trades.add(trade);
-      idcount++;
+      Trade oppositeTrade = Trades.firstWhere(matchTrade, orElse: () => null);
+      //int index = Trades.indexOf(oppositeTrade);
+      if (oppositeTrade == null)
+      {
+        trade.id = idcount;
+        Trades.add(trade);
+        idcount++;
+      }
+      else
+      {
+        //print("removing");
+        closeTrade(oppositeTrade.id);
+      }
     }
     else
     {
-      //print("removing");
-      closeTrade(index);
+      trade.id = idcount;
+      Trades.add(trade);
+      idcount++;
     }
 
   }
@@ -600,6 +609,7 @@ class TradingSession
    DateTime startDate;
    DateTime endDate;
    DateTime currentTime;
+   //List<Map> lastDailyValue;
    //Function dailyValuesCall;
    //Function dailyValuesCallMissing;
 
@@ -689,10 +699,10 @@ class TradingSession
        }
        return dailyvals;
      }
-     List<Map> data = await dailyValuesCall(pair,DateTime.parse(startDate));
+     List<Map> data= await dailyValuesCall(pair,DateTime.parse(startDate));
      if(data.length==0)
      {
-       data = await dailyValuesCallMissing(pair,DateTime.parse(startDate));
+       await dailyValuesCallMissing(pair,DateTime.parse(startDate));
        return sendDailyValues(data.reversed.toList());
      }
      else
@@ -739,6 +749,14 @@ class TradingSession
    updateHistory()
    {
      sessionUser.updateHistory(currentTime.toString());
+   }
+
+   List<Trade> openTrades(String account)
+   {
+     if(account=="primary")
+      return sessionUser.primaryAccount.Trades;
+     else
+       return sessionUser.secondaryAccount.Trades;
    }
 
 }

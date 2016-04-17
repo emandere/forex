@@ -30,16 +30,19 @@ import 'package:polymer_elements/paper_listbox.dart';
 import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/iron_iconset.dart';
 import 'package:polymer_elements/av_icons.dart';
+import 'package:polymer_elements/paper_icon_item.dart';
 @PolymerRegister('forex-session')
 class ForexSession extends PolymerElement
 {
   TradingSession tradeSession;
   ForexMainChart mainChart;
   @property
+  String avicon;
+  @property
   int itemIndex;
   @property
   List<String> sessions;
-
+  List<String> trades;
   String loadingStatus;
   String countdown;
   int countdownAmt;
@@ -53,22 +56,39 @@ class ForexSession extends PolymerElement
   {
      PaperIconButton navIconMenu = $['navIconMenu'];
      PaperIconButton navIconMenuBack = $['navIconMenuBack'];
+
      PaperDrawerPanel panel = $['drawerPanel'];
-     PaperFab createForexSession=$['createForexSession'];
+
      PaperDialog dialogSession=$['dialogSession'];
+     PaperDialog dialogTrade=$['dialogTrade'];
+     PaperDialog dialogCloseTrade=$['dialogCloseTrade'];
+
      PaperButton btnCreateSession=$['btnCreateSession'];
+     PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
+     PaperButton btndialogCloseTrade=$['btndialogCloseTrade'];
+     PaperButton btnAddSession=$['btnAddSession'];
+     PaperButton btnCreateTrade=$['btnCreateTrade'];
+     PaperButton btnCloseTrade=$['btnCloseTrade'];
+
      PaperItem sessionItem=$['sessionItem'];
      PaperMenu menuPage=$['menuPage'];
-     mainChart=$['mainChart'];
      PaperFab playpauseBtn =$['playpauseBtn'];
 
      currentSession = new TradingSession();
+     mainChart=$['mainChart'];
 
+     btndialogOpenTrade.on['tap'].listen((event){pause();dialogTrade.open();});
+     btndialogCloseTrade.on['tap'].listen((event){pause();dialogCloseTrade.open();});
+     btnAddSession.on['tap'].listen((event)=>dialogSession.open());
 
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
-     createForexSession.on['tap'].listen((event)=>dialogSession.open());
+
+
+
      btnCreateSession.on['tap'].listen(CreateUserSession);
+     btnCreateTrade.on['tap'].listen(CreateTrade);
+     btnCloseTrade.on['tap'].listen(CreateTrade);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
 
@@ -79,7 +99,7 @@ class ForexSession extends PolymerElement
      currentSession.sessionUser.id="testSessionUser";
      currentSession.currentTime=startDate;
      currentSession.fundAccount("primary",2000.0);
-     currentSession.executeTrade("primary","EURUSD",1000,"long",currentSession.currentTime.toString());
+
 
      panel.forceNarrow=true;
      set('itemIndex',0);
@@ -94,6 +114,23 @@ class ForexSession extends PolymerElement
     String request = await HttpRequest.getString(url);
     set('sessions', JSON.decode(request));
 
+  }
+
+  CreateTrade(Event e)
+  {
+    PaperInput account=$['primaryTradeAccount'];
+    PaperInput pair=$['pair'];
+    PaperInput units=$['units'];
+    PaperInput position=$['position'];
+
+    currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
+    List<String> strtrades=new List<String>();
+    for(Trade sessTrade in currentSession.openTrades("primary"))
+    {
+       strtrades.add(sessTrade.pair+" "+sessTrade.openDate.toString());
+    }
+    set('trades',strtrades);
+    play();
   }
 
   CreateUserSession(Event e)
@@ -151,12 +188,14 @@ class ForexSession extends PolymerElement
       countdownSesssions.cancel();
     }
     playState=false;
+    set('avicon','av:play-circle-outline');
   }
 
   play()
   {
     countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
     playState = true;
+    set('avicon','av:pause-circle-outline');
   }
 
   Future<List> dailyValues(String pair,String startDt,String endDt ) async
@@ -245,7 +284,7 @@ class ForexSession extends PolymerElement
     DateFormat formatter = new DateFormat('yyyyMMdd');
     String dt=formatter.format(date);
 
-    var url = "/api/forexclasses/v1/dailyvaluesrangemissing/$pair/$dt";
+    var url = "/api/forexclasses/v1/readdailyvaluemissing/$pair/$dt";
     String response = await HttpRequest.getString(url);
     return JSON.decode(response);
   }
