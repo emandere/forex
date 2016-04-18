@@ -42,6 +42,7 @@ class Trade
    double openPrice;
    double closePrice;
    bool long;
+   bool init;
    Position()
    {
       if(long)
@@ -51,7 +52,10 @@ class Trade
    }
    Trade()
    {
+      init=true;
       long=false;
+      openPrice=0.0;
+      closePrice=0.0;
    }
    double value()
    {
@@ -85,9 +89,10 @@ class Trade
 
    updateTrade(String dt,price)
    {
-     if(openPrice==null)
+     if(init)
      {
         openPrice=price;
+        init=false;
      }
      closeDate=dt;
      closePrice=price;

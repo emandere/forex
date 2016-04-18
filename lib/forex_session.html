@@ -59,7 +59,7 @@
                     </paper-icon-item>
                     <paper-icon-item id="tradeItem">
                         <iron-icon icon="timeline" item-icon></iron-icon>
-                        DashBoard
+                        Trade
                     </paper-icon-item>
                     <!--<paper-item id="tradeItem">Trade</paper-item>-->
                 </paper-menu>
@@ -92,7 +92,7 @@
                             <paper-card>
                                 <div class="card-content">
                                     <paper-button raised class="colored" id="btndialogOpenTrade">Open Trade</paper-button>
-                                    <paper-button raised class="colored" id="btndialogCloseTrade">Close Trade</paper-button>
+                                    <paper-button raised class="colored" id="btnCloseTrade">Close Trade</paper-button>
                                     <paper-menu id="menuTrades">
                                         <template is="dom-repeat" items="{{trades}}">
                                             <paper-item>{{item}}</paper-item>
@@ -139,20 +139,6 @@
             <div  align="center">
                 <paper-button raised class="colored" id="btnCreateTrade" dialog-dismiss>Create</paper-button>
                 <paper-button raised class="colored" id="btnCancelTrade" dialog-dismiss>Cancel</paper-button>
-            </div>
-        </paper-dialog>
-
-
-        <!--Close Trade Dialog-->
-        <paper-dialog id="dialogCloseTrade">
-            <h2>New Session</h2>
-            <div align="left">
-                <paper-input id="primaryCloseTradeAccount" label="Account" floatingLabel></paper-input>
-                <paper-input id="index" label="Index" floatingLabel></paper-input>
-            </div>
-            <div  align="center">
-                <paper-button raised class="colored" id="btnCloseTrade" dialog-dismiss>Create</paper-button>
-                <paper-button raised class="colored" id="btnCloseTradeDialog" dialog-dismiss>Cancel</paper-button>
             </div>
         </paper-dialog>
 

@@ -65,7 +65,7 @@ class ForexSession extends PolymerElement
 
      PaperButton btnCreateSession=$['btnCreateSession'];
      PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
-     PaperButton btndialogCloseTrade=$['btndialogCloseTrade'];
+
      PaperButton btnAddSession=$['btnAddSession'];
      PaperButton btnCreateTrade=$['btnCreateTrade'];
      PaperButton btnCloseTrade=$['btnCloseTrade'];
@@ -78,9 +78,7 @@ class ForexSession extends PolymerElement
      mainChart=$['mainChart'];
 
      btndialogOpenTrade.on['tap'].listen((event){pause();dialogTrade.open();});
-     btndialogCloseTrade.on['tap'].listen((event){pause();dialogCloseTrade.open();});
      btnAddSession.on['tap'].listen((event)=>dialogSession.open());
-
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
@@ -88,7 +86,7 @@ class ForexSession extends PolymerElement
 
      btnCreateSession.on['tap'].listen(CreateUserSession);
      btnCreateTrade.on['tap'].listen(CreateTrade);
-     btnCloseTrade.on['tap'].listen(CreateTrade);
+     btnCloseTrade.on['tap'].listen(CloseTrade);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
 
@@ -99,6 +97,7 @@ class ForexSession extends PolymerElement
      currentSession.sessionUser.id="testSessionUser";
      currentSession.currentTime=startDate;
      currentSession.fundAccount("primary",2000.0);
+     List<String> trades=new List<String>();
 
 
      panel.forceNarrow=true;
@@ -124,13 +123,41 @@ class ForexSession extends PolymerElement
     PaperInput position=$['position'];
 
     currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
-    List<String> strtrades=new List<String>();
+    updateTradeMenu();
+    play();
+  }
+  CloseTrade(Event e)
+  {
+     PaperMenu menuTrades =$['menuTrades'];
+     int index = menuTrades.selected;
+     //window.alert(index.toString());
+     if (index !=null && currentSession.sessionUser.primaryAccount.Trades.length > 0 && index>=0)
+     {
+       int id=currentSession.sessionUser.primaryAccount.Trades[index].id;
+       currentSession.closeTrade("primary", id);
+       menuTrades.selected=null;
+     }
+     updateTradeMenu();
+     //window.alert(index.toString());
+  }
+
+  void updateTradeMenu()
+  {
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    trades=new List<String>();
     for(Trade sessTrade in currentSession.openTrades("primary"))
     {
-       strtrades.add(sessTrade.pair+" "+sessTrade.openDate.toString());
+      //if(openPrice!=null && closePrice!=null)
+      //{
+       trades.add(sessTrade.pair
+             +" "+formatter.format(DateTime.parse(sessTrade.openDate))
+             +" "+sessTrade.units.toString()
+             +" "+sessTrade.openPrice.toString()
+             +" "+sessTrade.closePrice.toString()
+             +" "+sessTrade.PL().toString()
+       );
     }
-    set('trades',strtrades);
-    play();
+    set('trades',trades);
   }
 
   CreateUserSession(Event e)
@@ -246,8 +273,7 @@ class ForexSession extends PolymerElement
 
       await currentSession.updateTime(1,readDailyValue,readDailyValueMissing);
       currentSession.updateHistory();
-
-
+      updateTradeMenu();
       mainChart.loadCurrencyChart(pair,startdt,enddt,values);
       mainChart.loadBalanceChart(balanceHist());
     }
