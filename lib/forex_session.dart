@@ -45,6 +45,7 @@ class ForexSession extends PolymerElement
   List<String> trades;
   String loadingStatus;
   String countdown;
+  String currentSessionId;
   int countdownAmt;
   bool playState;
   Timer countdownSesssions;
@@ -73,6 +74,7 @@ class ForexSession extends PolymerElement
      PaperItem sessionItem=$['sessionItem'];
      PaperMenu menuPage=$['menuPage'];
      PaperFab playpauseBtn =$['playpauseBtn'];
+     PaperMenu menuSession=$['menuSession'];
 
      currentSession = new TradingSession();
      mainChart=$['mainChart'];
@@ -89,30 +91,40 @@ class ForexSession extends PolymerElement
      btnCloseTrade.on['tap'].listen(CloseTrade);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
+     menuSession.on['iron-select'].listen(UpdateCurrentSession);
 
-     startDate=DateTime.parse('20110101T0500Z');
-     endDate=DateTime.parse('20110101T0500Z');
      countdownAmt=1;
-     currentSession.id="testSession";
-     currentSession.sessionUser.id="testSessionUser";
-     currentSession.currentTime=startDate;
-     currentSession.fundAccount("primary",2000.0);
-     List<String> trades=new List<String>();
+
 
 
      panel.forceNarrow=true;
      set('itemIndex',0);
-      //navIconMenu.onClick.listen((event)=>panel.togglePanel());
+
      loadSessions();
      pause();
+  }
+
+  UpdateCurrentSession(Event e) async
+  {
+     currentSessionId=sessions[$['menuSession'].selected];
+     set('currentSessionId',currentSessionId);
+     currentSession = await loadSession(currentSessionId);
+  }
+
+  Future<TradingSession> loadSession(String id) async
+  {
+    var url = "/api/forexclasses/v1/getsession/$id";
+    String request = await HttpRequest.getString(url);
+    return new TradingSession.fromJSON(request);
+
   }
 
   loadSessions() async
   {
     var url = "/api/forexclasses/v1/sessions";
     String request = await HttpRequest.getString(url);
-    set('sessions', JSON.decode(request));
-
+    sessions=JSON.decode(request);
+    set('sessions',sessions );
   }
 
   CreateTrade(Event e)
@@ -261,21 +273,30 @@ class ForexSession extends PolymerElement
 
 
     DateFormat formatter = new DateFormat('yyyyMMdd');
-    String pair='EURUSD';
-    String startdt=formatter.format(startDate);
-    String enddt=formatter.format(endDate);
+
+    String startdt=formatter.format(currentSession.startDate);
+    String enddt=formatter.format(currentSession.currentTime);
 
     if(countdownAmt==0)
     {
       countdownAmt = 5;
-      endDate=endDate.add(new Duration(days: 1));
-      List values = await dailyValues(pair,startdt,enddt);
+      //endDate=endDate.add(new Duration(days: 1));
+
 
       await currentSession.updateTime(1,readDailyValue,readDailyValueMissing);
       currentSession.updateHistory();
       updateTradeMenu();
-      mainChart.loadCurrencyChart(pair,startdt,enddt,values);
+
+
       mainChart.loadBalanceChart(balanceHist());
+
+      if(currentSession.sessionUser.TradingPairs().length>0)
+      {
+        String pair = currentSession.sessionUser.TradingPairs()[0];
+        List values = await dailyValues(pair, startdt, enddt);
+        mainChart.loadCurrencyChart(pair, startdt, enddt, values);
+      }
+
     }
 
     set('countdown',countdownAmt.toString());

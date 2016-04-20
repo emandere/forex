@@ -270,12 +270,19 @@ class Account
     id=jsonNode["id"];
     realizedPL=jsonNode["realizedPL"];
     cash=jsonNode["cash"];
+    idcount=jsonNode["idcount"];
     Trades=new List<Trade>();
+    closedTrades = new List<Trade>();
     orders=new List<Order>();
     for(Map trade in jsonNode["Trades"])
     {
       Trades.add(new Trade.fromJsonMap(trade));
     }
+    for(Map trade in jsonNode["closedTrades"])
+    {
+      closedTrades.add(new Trade.fromJsonMap(trade));
+    }
+
     balanceHistory = jsonNode["balanceHistory"];
    /* for(Map day in jsonNode["balanceHistory"])
     {
@@ -286,10 +293,16 @@ class Account
   Map toJson()
   {
     List<Map> MapTrades = new List<Map>();
+    List<Map> MapClosedTrades = new List<Map>();
     List<Map> MapOrders=new List<Map>();
     for(Trade trade in Trades)
     {
       MapTrades.add(trade.toJson());
+    }
+
+    for(Trade trade in closedTrades)
+    {
+      MapClosedTrades.add(trade.toJson());
     }
 
     for(Order order in orders)
@@ -302,7 +315,9 @@ class Account
       "cash":cash,
       "realizedPL":realizedPL,
       "Trades":MapTrades,
-      "balanceHistory":balanceHistory
+      "closedTrades":MapClosedTrades,
+      "balanceHistory":balanceHistory,
+      "idcount":idcount
     };
   }
   num RealizedPL()
