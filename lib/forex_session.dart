@@ -109,6 +109,7 @@ class ForexSession extends PolymerElement
      currentSessionId=sessions[$['menuSession'].selected];
      set('currentSessionId',currentSessionId);
      currentSession = await loadSession(currentSessionId);
+     updateTradeMenu();
   }
 
   Future<TradingSession> loadSession(String id) async
@@ -133,8 +134,30 @@ class ForexSession extends PolymerElement
     PaperInput pair=$['pair'];
     PaperInput units=$['units'];
     PaperInput position=$['position'];
+    PaperInput stopLoss=$['stopLoss'];
+    PaperInput takeProfit=$['takeProfit'];
 
     currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
+
+    int lastTrade = currentSession.sessionUser.Accounts[account.value].idcount-1;
+    double stopLossPrice = double.parse(stopLoss.value);
+    double takeProfitPrice = double.parse(takeProfit.value);
+    //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
+    if(position.value=="long")
+    {
+       currentSession.setOrder(account.value,lastTrade,stopLossPrice,false);
+       currentSession.setOrder(account.value,lastTrade,takeProfitPrice,true);
+       //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
+    }
+    else
+    {
+      currentSession.setOrder(account.value,lastTrade,stopLossPrice,true);
+      currentSession.setOrder(account.value,lastTrade,takeProfitPrice,false);
+    }
+
+
+
+
     updateTradeMenu();
     play();
   }
@@ -163,6 +186,7 @@ class ForexSession extends PolymerElement
       //{
        trades.add(sessTrade.pair
              +" "+formatter.format(DateTime.parse(sessTrade.openDate))
+             +" "+formatter.format(DateTime.parse(sessTrade.closeDate))
              +" "+sessTrade.units.toString()
              +" "+sessTrade.openPrice.toString()
              +" "+sessTrade.closePrice.toString()
@@ -284,12 +308,10 @@ class ForexSession extends PolymerElement
 
 
       await currentSession.updateTime(1,readDailyValue,readDailyValueMissing);
+      await currentSession.processOrders(readDailyValue,readDailyValueMissing);
       currentSession.updateHistory();
       updateTradeMenu();
-
-
-      mainChart.loadBalanceChart(balanceHist());
-
+      mainChart.loadBalanceChart(currentSessionId,balanceHist());
       if(currentSession.sessionUser.TradingPairs().length>0)
       {
         String pair = currentSession.sessionUser.TradingPairs()[0];

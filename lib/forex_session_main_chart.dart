@@ -165,17 +165,17 @@ class ForexMainChart extends PolymerElement
     if(countdownAmt==0)
     {
       countdownAmt = 20;
-      loadBalanceChart(e);
+      loadBalanceChart("",e);
     }
 
     set('countdown',countdownAmt.toString());
   }
 
-  loadBalanceChart(List data)
+  loadBalanceChart(String session,List data)
   {
     set('loadingStatus',"Loading");
     balanceChart =$['balanceChart'];
-    String chartTitle="Balance History";
+    String chartTitle="Balance History for $session";
     var options = {
       'title':chartTitle,
       'legend': 'none',

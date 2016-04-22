@@ -376,13 +376,13 @@ class Account
     print("Cash Balance "+cash.toString());
   }
 
-  processOrders(Function dailyValuesRange,DateTime currentTime) async
+  processOrders(Function dailyValuesRange,Function dailyValues,Function dailyValuesMissing,DateTime currentTime) async
   {
     for(Order order in orders)
     {
       if(!order.expired)
       {
-        List<ForexDailyValue> val = await dailyValuesRange(order.trade.pair, currentTime.toString(), currentTime.toString());
+        List<ForexDailyValue> val = await dailyValuesRange(order.trade.pair, currentTime.toString(),dailyValues,dailyValuesMissing);
         if (val.length > 0)
         {
           print("processed " + val[0].close.toString()+" "+order.trade.long.toString() );
@@ -568,6 +568,7 @@ class User
     trade1.pair=pair;
     trade1.units=units;
     trade1.openDate=openDate;
+    trade1.closeDate=openDate;
 
     if(position=="long")
       trade1.long=true;
@@ -594,10 +595,10 @@ class User
       print("User Cash Balance "+Cash().toString());
   }
 
-  processOrder(Function dailyValue,DateTime CurrentDate)
+  processOrder(Function dailyValue,Function dailyValues,Function dailyValuesMissing,DateTime CurrentDate)
   {
-      primaryAccount.processOrders(dailyValue,CurrentDate);
-      secondaryAccount.processOrders(dailyValue,CurrentDate);
+      primaryAccount.processOrders(dailyValue,dailyValues,dailyValuesMissing,CurrentDate);
+      secondaryAccount.processOrders(dailyValue,dailyValues,dailyValuesMissing,CurrentDate);
   }
 
   setOrder(String acc,int index,double price,bool direction)
@@ -751,9 +752,9 @@ class TradingSession
       sessionUser.executeTrade(acc,pair,units,position,openDate);
    }
 
-   processOrders() async
+   processOrders(Function dailyValues,Function dailyValuesMissing) async
    {
-      sessionUser.processOrder(dailyValuesRange,currentTime);
+      sessionUser.processOrder(dailyValuesRange,dailyValues,dailyValuesMissing,currentTime);
    }
 
    setOrder(String acc,int index,double price,bool direction)
