@@ -37,11 +37,25 @@ class ForexMongo
     return db.collection('forexvalues').find(condition).toList();
   }
 
+  Future<List<Map>> readDailyValueAll(DateTime currDate)
+  {
+    //SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
+    SelectorBuilder condition = where.eq("datetime",currDate);
+    return db.collection('forexvalues').find(condition).toList();
+  }
+
   Future<List<Map>> readDailyValueMissing(pair,DateTime startDate)
   {
     SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate.add(new Duration(days:-7))).lte("datetime",startDate);
     return db.collection('forexvalues').find(condition).toList();
   }
+
+  Future<List<Map>> readDailyValueMissingAll(DateTime startDate)
+  {
+    SelectorBuilder condition = where.gte("datetime",startDate.add(new Duration(days:-7))).lte("datetime",startDate);
+    return db.collection('forexvalues').find(condition).toList();
+  }
+
 
   Future<List<Map>> readMinuteValues(pair,DateTime startDate,DateTime endDate)
   {

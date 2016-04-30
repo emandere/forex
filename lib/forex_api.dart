@@ -199,6 +199,20 @@ class ForexClasses
     return mongoLayer.readDailyValues(pair).then(sendDailyValues);
   }
 
+  @ApiMethod(path: 'dailyvaluesall/{date}')
+  Future <List<ForexDailyValue>> dailyValuesAll(String date) async
+  {
+    List<Map> data = await mongoLayer.readDailyValueAll(DateTime.parse(date));
+    List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
+    for (Map mapDaily in data)
+    {
+      ForexDailyValue val = new ForexDailyValue.fromJson(mapDaily);
+      dailyvals.add(val);
+    }
+    return dailyvals;
+  }
+
+
   @ApiMethod(path: 'readdailyvalue/{pair}/{date}')
   Future<List<ForexDailyValue>> readDailyValue(String pair,String date) async
   {
@@ -216,6 +230,19 @@ class ForexClasses
   Future<List<ForexDailyValue>> readDailyValueMissing(String pair,String date) async
   {
     List<Map> data = await mongoLayer.readDailyValueMissing(pair,DateTime.parse(date));
+    List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
+    for (Map mapDaily in data)
+    {
+      ForexDailyValue val = new ForexDailyValue.fromJson(mapDaily);
+      dailyvals.add(val);
+    }
+    return dailyvals;
+  }
+
+  @ApiMethod(path: 'readdailyvaluemissingall/{date}')
+  Future<List<ForexDailyValue>> readDailyValueMissingAll(String date) async
+  {
+    List<Map> data = await mongoLayer.readDailyValueMissingAll(DateTime.parse(date));
     List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
     for (Map mapDaily in data)
     {

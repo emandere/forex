@@ -7,7 +7,7 @@ import 'forex_session_main_chart.dart';
 import 'forex_classes.dart';
 import 'candle_stick.dart';
 import 'package:intl/intl.dart';
-
+import 'forex_pair.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -52,13 +52,19 @@ class ForexSession extends PolymerElement
   DateTime startDate;
   DateTime endDate;
   TradingSession currentSession;
+  List<String> currencyPairs;
+  List<ForexDailyValue> dailycurrencies;
   ForexSession.created() : super.created();
   ready()
   {
+
+
+
      PaperIconButton navIconMenu = $['navIconMenu'];
      PaperIconButton navIconMenuBack = $['navIconMenuBack'];
 
      PaperDrawerPanel panel = $['drawerPanel'];
+
 
      PaperDialog dialogSession=$['dialogSession'];
      PaperDialog dialogTrade=$['dialogTrade'];
@@ -101,7 +107,27 @@ class ForexSession extends PolymerElement
      set('itemIndex',0);
 
      loadSessions();
+     loadCurrencyPairs();
+     getDailyCurrencies();
      pause();
+  }
+
+  loadCurrencyPairs() async
+  {
+    var url = "/api/forexclasses/v1/pairs";
+    String request = await HttpRequest.getString(url);
+    currencyPairs=JSON.decode(request);
+    set('currencyPairs',currencyPairs);
+
+    DivElement divpaircards=$['divpaircards'];
+    //ForexPair pair = new ForexPair.created();
+    divpaircards.children.clear();
+    for(String pair in currencyPairs)
+    {
+      divpaircards.children.add(new ForexPair()
+        ..pair = pair);
+    }
+
   }
 
   UpdateCurrentSession(Event e) async
@@ -266,6 +292,19 @@ class ForexSession extends PolymerElement
     var url = "/api/forexclasses/v1/dailyvaluesrange/$pair/$startDt/$endDt";
     String response = await HttpRequest.getString(url);
     return readResponse(response);
+  }
+
+  List getDailyCurrencies()
+  {
+      dailycurrencies = new List();
+      ForexDailyValue val= new ForexDailyValue();
+      val.pair="testpair";
+      val.open=1.0;
+      val.open=1.0;
+      val.open=1.0;
+      val.close=1.0;
+      dailycurrencies.add(val);
+      set('dailycurrencies',dailycurrencies);
   }
 
   List readResponse(String responseText)
