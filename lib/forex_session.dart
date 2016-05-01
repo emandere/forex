@@ -118,17 +118,29 @@ class ForexSession extends PolymerElement
     String request = await HttpRequest.getString(url);
     currencyPairs=JSON.decode(request);
     set('currencyPairs',currencyPairs);
+  }
 
+  updatePairs(List<Map> prices)
+  {
     DivElement divpaircards=$['divpaircards'];
     //ForexPair pair = new ForexPair.created();
-    divpaircards.children.clear();
-    for(String pair in currencyPairs)
+    if(prices.length>0)
     {
-      divpaircards.children.add(new ForexPair()
-        ..pair = pair);
+      divpaircards.children.clear();
+      for (String pair in currencyPairs)
+      {
+        Map data=prices.firstWhere((Map i)=>i["pair"]==pair);
+        divpaircards.children.add(new ForexPair()
+          ..pair = pair
+          ..open=data["close"]
+          ..high=data["high"]
+          ..low=data["low"]
+          ..close=data["close"]);
+      }
     }
-
   }
+
+
 
   UpdateCurrentSession(Event e) async
   {
@@ -136,6 +148,12 @@ class ForexSession extends PolymerElement
      set('currentSessionId',currentSessionId);
      currentSession = await loadSession(currentSessionId);
      updateTradeMenu();
+     UpdatePrices();
+  }
+
+  Future UpdatePrices() async {
+    List<Map> prices = await readDailyValueAll(currentSession.currentTime);
+    updatePairs(prices);
   }
 
   Future<TradingSession> loadSession(String id) async
@@ -350,6 +368,7 @@ class ForexSession extends PolymerElement
       await currentSession.processOrders(readDailyValue,readDailyValueMissing);
       currentSession.updateHistory();
       updateTradeMenu();
+      UpdatePrices();
       mainChart.loadBalanceChart(currentSessionId,balanceHist());
       if(currentSession.sessionUser.TradingPairs().length>0)
       {
@@ -387,12 +406,33 @@ class ForexSession extends PolymerElement
     return JSON.decode(response);
   }
 
+  Future<List<Map>> readDailyValueAll(DateTime date) async
+  {
+
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String dt=formatter.format(date);
+
+    var url = "/api/forexclasses/v1/dailyvaluesall/$dt";
+    String response = await HttpRequest.getString(url);
+    return JSON.decode(response);
+  }
+
   Future<List<Map>> readDailyValueMissing(String pair,DateTime date) async
   {
     DateFormat formatter = new DateFormat('yyyyMMdd');
     String dt=formatter.format(date);
 
     var url = "/api/forexclasses/v1/readdailyvaluemissing/$pair/$dt";
+    String response = await HttpRequest.getString(url);
+    return JSON.decode(response);
+  }
+
+  Future<List<Map>> readDailyValueMissingAll(DateTime date) async
+  {
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    String dt=formatter.format(date);
+
+    var url = "/api/forexclasses/v1/readdailyvaluemissingall/$dt";
     String response = await HttpRequest.getString(url);
     return JSON.decode(response);
   }
