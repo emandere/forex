@@ -1,9 +1,43 @@
 <dom-module id="forex-pair">
     <template>
+        <style is="custom-style">
+           paper-card
+           {
+               width:700px;
+           }
+
+           .up
+           {
+               --iron-icon-fill-color:green;
+           }
+
+           .down
+           {
+               --iron-icon-fill-color:red;
+           }
+
+           .pair
+           {
+               font-family: Inconsolata, monospace;
+               font-weight: 600;
+               margin-right: 12px;
+           }
+           .price
+           {
+               font-family: Inconsolata, monospace;
+               padding-right: 12px;
+           }
+
+        </style>
         <div>
             <paper-card>
-                <div class="card-content">
-                  {{pair}} {{open}} {{high}} {{low}} {{close}}
+                <div class="card-content layout horizontal">
+                    <div class="pair">{{pair}} </div>
+                    <div class="price">{{open}}</div>
+                    <div class="price">{{high}}</div>
+                    <div class="price">{{low}}</div>
+                    <div class="price">{{close}}</div>
+                    <div class="price"><iron-icon id="direction" icon="{{moveicon}}"></iron-icon></div>
                 </div>
             </paper-card>
         </div>

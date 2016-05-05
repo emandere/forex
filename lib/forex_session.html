@@ -10,6 +10,18 @@
                 bottom: 0;
             }
 
+            #pairheader
+            {
+                width:700px;
+            }
+
+            .pair
+            {
+                font-family: Inconsolata, monospace;
+                font-weight: 600;
+                margin-right: 12px;
+            }
+
             #playpauseBtn
             {
                 background: #03A9F4;
@@ -70,7 +82,8 @@
             <paper-header-panel  main>
                 <paper-toolbar>
                     <paper-icon-button id="navIconMenu" icon="menu"></paper-icon-button>
-                    <span class="title">Forex Test Sessions</span>
+                    <span class="title">Forex Test Sessions  </span>
+                    <div>{{currentSessionId}}</div>
                     <paper-icon-button id="searchbutton" icon="search"></paper-icon-button>
                 </paper-toolbar>
                 <div class="content fit" align="center">

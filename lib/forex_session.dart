@@ -8,6 +8,7 @@ import 'forex_classes.dart';
 import 'candle_stick.dart';
 import 'package:intl/intl.dart';
 import 'forex_pair.dart';
+import 'forex_pair_header.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -123,23 +124,49 @@ class ForexSession extends PolymerElement
   updatePairs(List<Map> prices)
   {
     DivElement divpaircards=$['divpaircards'];
+    String move;
+    //String moveicon;
     //ForexPair pair = new ForexPair.created();
     if(prices.length>0)
     {
       divpaircards.children.clear();
+      divpaircards.children.add(new ForexPairHeader());
       for (String pair in currencyPairs)
       {
         Map data=prices.firstWhere((Map i)=>i["pair"]==pair);
+        if(data["open"]<data["close"])
+        {
+          move="up";
+          //moveicon="icons:arrow-upward";
+        }
+        else
+        {
+          move="down";
+          //moveicon="icons:arrow-downward";
+        }
         divpaircards.children.add(new ForexPair()
           ..pair = pair
-          ..open=data["close"]
-          ..high=data["high"]
-          ..low=data["low"]
-          ..close=data["close"]);
+          ..move=move
+          //..moveicon=moveicon
+          ..open=padzeros(data["open"].toString())
+          ..high=padzeros(data["high"].toString())
+          ..low=padzeros(data["low"].toString())
+          ..close=padzeros(data["close"].toString()));
+
+
+        ;
       }
     }
   }
 
+  padzeros(String str)
+  {
+     for(int i=str.length;i<=5;i++)
+     {
+        str=str+"0";
+     }
+     return str;
+  }
 
 
   UpdateCurrentSession(Event e) async
