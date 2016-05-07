@@ -3,17 +3,12 @@
         <style is="custom-style">
            paper-card
            {
-               width:700px;
+               width:450px;
            }
 
-           .up
-           {
-               --iron-icon-fill-color:green;
-           }
-
-           .down
-           {
-               --iron-icon-fill-color:red;
+           paper-icon-button.small {
+               width: 32px;
+               height: 32px;
            }
 
            .pair
@@ -28,6 +23,8 @@
                padding-right: 12px;
            }
 
+
+
         </style>
         <div>
             <paper-card>
@@ -38,6 +35,7 @@
                     <div class="price">{{low}}</div>
                     <div class="price">{{close}}</div>
                     <div class="price"><iron-icon id="direction" icon="{{moveicon}}"></iron-icon></div>
+                    <paper-icon-button id="launchPair" class="small" icon="icons:launch"></paper-icon-button>
                 </div>
             </paper-card>
         </div>

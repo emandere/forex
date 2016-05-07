@@ -72,6 +72,10 @@
                         <iron-icon icon="dashboard" item-icon></iron-icon>
                         DashBoard
                     </paper-icon-item>
+                    <paper-icon-item id="pairItem">
+                        <iron-icon icon="swap-vert" item-icon></iron-icon>
+                        Pairs
+                    </paper-icon-item>
                     <paper-icon-item id="tradeItem">
                         <iron-icon icon="timeline" item-icon></iron-icon>
                         Trade
@@ -91,7 +95,6 @@
                     <iron-pages selected="{{itemIndex}}">
                         <div>
                             <paper-card>
-
                                 <div class="card-actions">
                                     <paper-button raised class="colored" id="btnAddSession">Add Session</paper-button>
                                     <paper-button raised class="colored" id="btnDeleteSession">Delete Session</paper-button>
@@ -107,6 +110,11 @@
                         </div>
                         <div><forex-session-main-chart id="mainChart"></forex-session-main-chart></div>
                         <div>
+                            <div id="divpaircards">
+
+                            </div>
+                        </div>
+                        <div>
                             <paper-card>
                                 <div class="card-content">
                                     <paper-button raised class="colored" id="btndialogOpenTrade">Open Trade</paper-button>
@@ -119,12 +127,7 @@
                                 </div>
                             </paper-card>
                             <p></p>
-                            <div id="divpaircards">
-                               <!--<forex-pair></forex-pair>
-                                <forex-pair></forex-pair>
-                                <forex-pair></forex-pair>
-                                <forex-pair></forex-pair>-->
-                            </div>
+
 
                         </div>
                     </iron-pages>

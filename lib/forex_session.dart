@@ -464,4 +464,9 @@ class ForexSession extends PolymerElement
     return JSON.decode(response);
   }
 
+  @Listen('launchpair')
+  void regularTap(event, detail) {
+    window.alert('Thank you for tapping '+detail["pair"].toString());
+  }
+
 }
