@@ -91,28 +91,15 @@
                     <paper-icon-button id="searchbutton" icon="search"></paper-icon-button>
                 </paper-toolbar>
                 <div class="content fit" align="center">
-
                     <iron-pages selected="{{itemIndex}}">
                         <div>
-                            <paper-card>
-                                <div class="card-actions">
-                                    <paper-button raised class="colored" id="btnAddSession">Add Session</paper-button>
-                                    <paper-button raised class="colored" id="btnDeleteSession">Delete Session</paper-button>
-                                </div>
-                                <div class="card-content">
-                                    <paper-menu id="menuSession">
-                                        <template is="dom-repeat" items="{{sessions}}">
-                                            <paper-item>{{item}}</paper-item>
-                                        </template>
-                                    </paper-menu>
-                                </div>
-                            </paper-card>
+                            <forex-session-panel id="sessionPanel"></forex-session-panel>
                         </div>
-                        <div><forex-session-main-chart id="mainChart"></forex-session-main-chart></div>
                         <div>
-                            <div id="divpaircards">
-
-                            </div>
+                            <forex-session-main-chart id="mainChart"></forex-session-main-chart>
+                        </div>
+                        <div>
+                            <forex-pair-table id="pairTable"></forex-pair-table>
                         </div>
                         <div>
                             <paper-card>
@@ -127,8 +114,6 @@
                                 </div>
                             </paper-card>
                             <p></p>
-
-
                         </div>
                     </iron-pages>
                     <div fit>
@@ -138,21 +123,6 @@
             </paper-header-panel>
         </paper-drawer-panel>
         <!--<paper-fab mini id="createForexSession" class="blue" icon="add"></paper-fab>-->
-        <!--Session Dialog-->
-        <paper-dialog id="dialogSession">
-            <h2>New Session</h2>
-            <div align="left">
-                <paper-input id="sessionId" label="Session Name" floatingLabel></paper-input>
-                <paper-input id="startDate" label="Starting Date" floatingLabel></paper-input>
-                <paper-input id="primaryAmount" label="Starting Amount(PRIM)" floatingLabel></paper-input>
-                <paper-input id="secondaryAmount" label="Starting Amount(SEC)" floatingLabel></paper-input>
-            </div>
-            <div  align="center">
-                <paper-button raised class="colored" id="btnCreateSession" dialog-dismiss>Create</paper-button>
-                <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
-            </div>
-        </paper-dialog>
-
         <!--Trade Dialog-->
         <paper-dialog id="dialogTrade">
             <h2>New Session</h2>

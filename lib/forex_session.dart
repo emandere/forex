@@ -7,8 +7,8 @@ import 'forex_session_main_chart.dart';
 import 'forex_classes.dart';
 import 'candle_stick.dart';
 import 'package:intl/intl.dart';
-import 'forex_pair.dart';
-import 'forex_pair_header.dart';
+import 'forex_pair_table.dart';
+import 'forex_session_panel.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -37,6 +37,7 @@ class ForexSession extends PolymerElement
 {
   TradingSession tradeSession;
   ForexMainChart mainChart;
+  ForexSessionPanel sessionPanel;
   @property
   String avicon;
   @property
@@ -59,46 +60,36 @@ class ForexSession extends PolymerElement
   ready()
   {
 
-
-
      PaperIconButton navIconMenu = $['navIconMenu'];
      PaperIconButton navIconMenuBack = $['navIconMenuBack'];
-
      PaperDrawerPanel panel = $['drawerPanel'];
 
-
-     PaperDialog dialogSession=$['dialogSession'];
      PaperDialog dialogTrade=$['dialogTrade'];
      PaperDialog dialogCloseTrade=$['dialogCloseTrade'];
 
-     PaperButton btnCreateSession=$['btnCreateSession'];
      PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
-
-     PaperButton btnAddSession=$['btnAddSession'];
      PaperButton btnCreateTrade=$['btnCreateTrade'];
      PaperButton btnCloseTrade=$['btnCloseTrade'];
 
-     PaperItem sessionItem=$['sessionItem'];
      PaperMenu menuPage=$['menuPage'];
      PaperFab playpauseBtn =$['playpauseBtn'];
-     PaperMenu menuSession=$['menuSession'];
 
-     currentSession = new TradingSession();
+
+     sessionPanel=$['sessionPanel'];
      mainChart=$['mainChart'];
+     currentSession = new TradingSession();
+
 
      btndialogOpenTrade.on['tap'].listen((event){pause();dialogTrade.open();});
-     btnAddSession.on['tap'].listen((event)=>dialogSession.open());
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
 
-
-     btnCreateSession.on['tap'].listen(CreateUserSession);
      btnCreateTrade.on['tap'].listen(CreateTrade);
      btnCloseTrade.on['tap'].listen(CloseTrade);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
-     menuSession.on['iron-select'].listen(UpdateCurrentSession);
+
 
      countdownAmt=1;
 
@@ -123,51 +114,10 @@ class ForexSession extends PolymerElement
 
   updatePairs(List<Map> prices)
   {
-    DivElement divpaircards=$['divpaircards'];
-    String move;
-    //String moveicon;
-    //ForexPair pair = new ForexPair.created();
-    if(prices.length>0)
-    {
-      divpaircards.children.clear();
-      divpaircards.children.add(new ForexPairHeader());
-      for (String pair in currencyPairs)
-      {
-        Map data=prices.firstWhere((Map i)=>i["pair"]==pair);
-        if(data["open"]<data["close"])
-        {
-          move="up";
-          //moveicon="icons:arrow-upward";
-        }
-        else
-        {
-          move="down";
-          //moveicon="icons:arrow-downward";
-        }
-        divpaircards.children.add(new ForexPair()
-          ..pair = pair
-          ..move=move
-          //..moveicon=moveicon
-          ..open=padzeros(data["open"].toString())
-          ..high=padzeros(data["high"].toString())
-          ..low=padzeros(data["low"].toString())
-          ..close=padzeros(data["close"].toString()));
-
-
-        ;
-      }
-    }
+    ForexPairTable pairTable=$['pairTable'];
+    pairTable.currencyPairs=currencyPairs;
+    pairTable.prices=prices;
   }
-
-  padzeros(String str)
-  {
-     for(int i=str.length;i<=5;i++)
-     {
-        str=str+"0";
-     }
-     return str;
-  }
-
 
   UpdateCurrentSession(Event e) async
   {
@@ -197,6 +147,7 @@ class ForexSession extends PolymerElement
     String request = await HttpRequest.getString(url);
     sessions=JSON.decode(request);
     set('sessions',sessions );
+    sessionPanel.sessions=sessions;
   }
 
   CreateTrade(Event e)
@@ -267,24 +218,6 @@ class ForexSession extends PolymerElement
     set('trades',trades);
   }
 
-  CreateUserSession(Event e)
-  {
-      PaperInput sessionId=$['sessionId'];
-      PaperInput startDate=$['startDate'];
-      PaperInput primaryAmount=  $['primaryAmount'] ;
-      PaperInput secondaryAmount=  $['secondaryAmount'] ;
-
-
-      tradeSession = new TradingSession();
-      tradeSession.id=sessionId.value;
-      tradeSession.sessionUser.id="testSessionUser";
-      tradeSession.startDate=DateTime.parse(startDate.value);
-      tradeSession.currentTime=DateTime.parse(startDate.value);
-      tradeSession.fundAccount("primary",double.parse(primaryAmount.value));
-      tradeSession.fundAccount("secondary",double.parse(secondaryAmount.value));
-
-      SaveSession();
-  }
 
   SaveSession()
   {
@@ -465,8 +398,27 @@ class ForexSession extends PolymerElement
   }
 
   @Listen('launchpair')
-  void regularTap(event, detail) {
-    window.alert('Thank you for tapping '+detail["pair"].toString());
+  void regularTap(event, detail)
+  {
+    set('itemIndex',3);
+  }
+
+  @Listen('selectsession')
+  selectedSession(event, detail) async
+  {
+    int selected=detail['session'];
+    currentSessionId=sessions[selected];
+    set('currentSessionId',currentSessionId);
+    currentSession = await loadSession(currentSessionId);
+    updateTradeMenu();
+    UpdatePrices();
+  }
+
+  @Listen('savesession')
+  void saveSessionEvent(event, detail)
+  {
+    tradeSession = new TradingSession.fromJSONMap(detail["session"]);
+    SaveSession();
   }
 
 }
