@@ -9,6 +9,7 @@ import 'candle_stick.dart';
 import 'package:intl/intl.dart';
 import 'forex_pair_table.dart';
 import 'forex_session_panel.dart';
+import 'forex_trade.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
