@@ -38,6 +38,7 @@ class ForexSession extends PolymerElement
 {
   TradingSession tradeSession;
   ForexMainChart mainChart;
+  ForexTradeControl tradeControl;
   ForexSessionPanel sessionPanel;
   @property
   String avicon;
@@ -78,6 +79,7 @@ class ForexSession extends PolymerElement
 
      sessionPanel=$['sessionPanel'];
      mainChart=$['mainChart'];
+     tradeControl = $['tradeControl'];
      currentSession = new TradingSession();
 
 
@@ -401,6 +403,9 @@ class ForexSession extends PolymerElement
   @Listen('launchpair')
   void regularTap(event, detail)
   {
+    //window.alert("here 1");
+    //tradeControl.pair=detail['pair'];
+    tradeControl.SetPair(detail['pair']);
     set('itemIndex',3);
   }
 
