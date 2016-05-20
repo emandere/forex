@@ -186,6 +186,28 @@ class ForexSession extends PolymerElement
     updateTradeMenu();
     play();
   }
+
+  ExecuteTrade(String account,String pair,int units,String position,String currentTime,String stopLoss,String takeProfit)
+  {
+    //currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
+    currentSession.executeTrade(account,pair,units,position,currentTime);
+    int lastTrade = currentSession.sessionUser.Accounts[account].idcount-1;
+    double stopLossPrice = double.parse(stopLoss);
+    double takeProfitPrice = double.parse(takeProfit);
+    //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
+    if(position=="long")
+    {
+      currentSession.setOrder(account,lastTrade,stopLossPrice,false);
+      currentSession.setOrder(account,lastTrade,takeProfitPrice,true);
+      //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
+    }
+    else
+    {
+      currentSession.setOrder(account,lastTrade,stopLossPrice,true);
+      currentSession.setOrder(account,lastTrade,takeProfitPrice,false);
+    }
+  }
+
   CloseTrade(Event e)
   {
      PaperMenu menuTrades =$['menuTrades'];
@@ -425,6 +447,15 @@ class ForexSession extends PolymerElement
   {
     tradeSession = new TradingSession.fromJSONMap(detail["session"]);
     SaveSession();
+  }
+
+  @Listen('executetrade')
+  void onexecuteTrade(event,detail)
+  {
+     //window.alert(detail['pair']+" "+detail['account']+" "+detail['units']+" "+detail['position']+" "+detail['stopLoss']+" "+detail['takeProfit']);
+     ExecuteTrade(detail['account'],detail['pair'],int.parse(detail['units']),detail['position'],currentSession.currentTime.toString(),detail['stopLoss'],detail['takeProfit']);
+     updateTradeMenu();
+     play();
   }
 
 }

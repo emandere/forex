@@ -21,7 +21,9 @@ class ForexTradeControl extends PolymerElement
   {
     PaperDialog dialogTrade=$['dialogTrade'];
     PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
+    PaperButton btnCreateTrade=$['btnCreateTrade'];
     btndialogOpenTrade.on['tap'].listen((event)=>dialogTrade.open());
+    btnCreateTrade.on['tap'].listen(sendExecuteTrade);
   }
 
   void SetPair(String value)
@@ -29,6 +31,26 @@ class ForexTradeControl extends PolymerElement
      pair=value;
      PaperInput txtPair = $['pair'];
      txtPair.value=value;
+  }
+
+  void sendExecuteTrade(var event)
+  {
+    PaperInput txtPrimaryTradeAccount=$['primaryTradeAccount'];
+    PaperInput txtPair=$['pair'];
+    PaperInput txtUnits=$['units'];
+    PaperInput txtPosition=$['position'];
+    PaperInput txtStopLoss=$['stopLoss'];
+    PaperInput txtTakeProfit=$['takeProfit'];
+
+
+    String account=txtPrimaryTradeAccount.value;
+    pair=txtPair.value;
+    String units=txtUnits.value;
+    String position=txtPosition.value;
+    String stopLoss=txtStopLoss.value;
+    String takeProfit=txtTakeProfit.value;
+
+    this.fire('executetrade',detail: {"account":account,"pair":pair,"units":units,"position":position,"stopLoss":stopLoss,"takeProfit":takeProfit});
   }
 
 }
