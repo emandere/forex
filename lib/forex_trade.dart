@@ -1,6 +1,7 @@
 @HtmlImport('forex_trade.html')
 library forex.lib.forex_trade;
 import 'dart:html';
+import 'forex_trade_detail.dart';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
 import 'package:polymer_elements/paper_card.dart';

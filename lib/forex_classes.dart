@@ -41,6 +41,8 @@ class Trade
    String closeDate;
    double openPrice;
    double closePrice;
+   double stopLoss;
+   double takeProfit;
    bool long;
    bool init;
    Position()
@@ -562,14 +564,15 @@ class User
       secondaryAccount.closeTrade(index);
   }
 
-  executeTrade(String acc,String pair, int units,String position,String openDate)
+  executeTrade(String acc,String pair, int units,String position,String openDate,double stopLoss,double takeProfit)
   {
     Trade trade1 = new Trade();
     trade1.pair=pair;
     trade1.units=units;
     trade1.openDate=openDate;
     trade1.closeDate=openDate;
-
+    trade1.stopLoss=stopLoss;
+    trade1.takeProfit=takeProfit;
     if(position=="long")
       trade1.long=true;
     else
@@ -747,9 +750,28 @@ class TradingSession
       sessionUser.fundAccount(acc,amount);
    }
 
-   executeTrade(String acc,String pair, int units,String position,String openDate)
+   executeTrade(String acc,String pair, int units,String position,String openDate,double stopLoss,double takeProfit)
    {
-      sessionUser.executeTrade(acc,pair,units,position,openDate);
+      sessionUser.executeTrade(acc,pair,units,position,openDate,stopLoss,takeProfit);
+      setStopLossAndTakeProfit(acc,position,stopLoss,takeProfit);
+   }
+
+   setStopLossAndTakeProfit(String account,String position,double stopLossPrice,double takeProfitPrice)
+   {
+     int lastTrade = sessionUser.Accounts[account].idcount-1;
+
+     //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
+     if(position=="long")
+     {
+       setOrder(account,lastTrade,stopLossPrice,false);
+       setOrder(account,lastTrade,takeProfitPrice,true);
+       //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
+     }
+     else
+     {
+       setOrder(account,lastTrade,stopLossPrice,true);
+       setOrder(account,lastTrade,takeProfitPrice,false);
+     }
    }
 
    processOrders(Function dailyValues,Function dailyValuesMissing) async

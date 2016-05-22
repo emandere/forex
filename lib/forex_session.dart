@@ -88,7 +88,7 @@ class ForexSession extends PolymerElement
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
 
-     btnCreateTrade.on['tap'].listen(CreateTrade);
+     //btnCreateTrade.on['tap'].listen(CreateTrade);
      btnCloseTrade.on['tap'].listen(CloseTrade);
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
@@ -153,59 +153,11 @@ class ForexSession extends PolymerElement
     sessionPanel.sessions=sessions;
   }
 
-  CreateTrade(Event e)
-  {
-    PaperInput account=$['primaryTradeAccount'];
-    PaperInput pair=$['pair'];
-    PaperInput units=$['units'];
-    PaperInput position=$['position'];
-    PaperInput stopLoss=$['stopLoss'];
-    PaperInput takeProfit=$['takeProfit'];
-
-    currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
-
-    int lastTrade = currentSession.sessionUser.Accounts[account.value].idcount-1;
-    double stopLossPrice = double.parse(stopLoss.value);
-    double takeProfitPrice = double.parse(takeProfit.value);
-    //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
-    if(position.value=="long")
-    {
-       currentSession.setOrder(account.value,lastTrade,stopLossPrice,false);
-       currentSession.setOrder(account.value,lastTrade,takeProfitPrice,true);
-       //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
-    }
-    else
-    {
-      currentSession.setOrder(account.value,lastTrade,stopLossPrice,true);
-      currentSession.setOrder(account.value,lastTrade,takeProfitPrice,false);
-    }
-
-
-
-
-    updateTradeMenu();
-    play();
-  }
-
   ExecuteTrade(String account,String pair,int units,String position,String currentTime,String stopLoss,String takeProfit)
   {
-    //currentSession.executeTrade(account.value,pair.value,int.parse(units.value),position.value,currentSession.currentTime.toString());
-    currentSession.executeTrade(account,pair,units,position,currentTime);
-    int lastTrade = currentSession.sessionUser.Accounts[account].idcount-1;
     double stopLossPrice = double.parse(stopLoss);
     double takeProfitPrice = double.parse(takeProfit);
-    //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
-    if(position=="long")
-    {
-      currentSession.setOrder(account,lastTrade,stopLossPrice,false);
-      currentSession.setOrder(account,lastTrade,takeProfitPrice,true);
-      //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
-    }
-    else
-    {
-      currentSession.setOrder(account,lastTrade,stopLossPrice,true);
-      currentSession.setOrder(account,lastTrade,takeProfitPrice,false);
-    }
+    currentSession.executeTrade(account,pair,units,position,currentTime,stopLossPrice,takeProfitPrice);
   }
 
   CloseTrade(Event e)
