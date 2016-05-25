@@ -103,18 +103,6 @@
                         </div>
                         <div>
                             <forex-trade-control id="tradeControl"></forex-trade-control>
-                            <paper-card>
-                                <div class="card-content">
-                                    <paper-button raised class="colored" id="btndialogOpenTrade">Open Trade</paper-button>
-                                    <paper-button raised class="colored" id="btnCloseTrade">Close Trade</paper-button>
-                                    <paper-menu id="menuTrades">
-                                        <template is="dom-repeat" items="{{trades}}">
-                                            <paper-item>{{item}}</paper-item>
-                                        </template>
-                                    </paper-menu>
-                                </div>
-                            </paper-card>
-                            <p></p>
                         </div>
                     </iron-pages>
                     <div fit>
@@ -124,23 +112,6 @@
             </paper-header-panel>
         </paper-drawer-panel>
         <!--<paper-fab mini id="createForexSession" class="blue" icon="add"></paper-fab>-->
-        <!--Trade Dialog-->
-        <paper-dialog id="dialogTrade">
-            <h2>New Session</h2>
-            <div align="left">
-                <paper-input id="pair" label="Pair" floatingLabel></paper-input>
-                <paper-input id="units" label="Units" floatingLabel></paper-input>
-                <paper-input id="primaryTradeAccount" label="Account" floatingLabel></paper-input>
-                <paper-input id="position" label="Position(long,short)" floatingLabel></paper-input>
-                <paper-input id="stopLoss" label="Stop Loss(Price)" floatingLabel></paper-input>
-                <paper-input id="takeProfit" label="Take Profit(Price)" floatingLabel></paper-input>
-            </div>
-            <div  align="center">
-                <paper-button raised class="colored" id="btnCreateTrade" dialog-dismiss>Create</paper-button>
-                <paper-button raised class="colored" id="btnCancelTrade" dialog-dismiss>Cancel</paper-button>
-            </div>
-        </paper-dialog>
-
         <paper-toast id="toastSession"></paper-toast>
     </template>
 </dom-module>

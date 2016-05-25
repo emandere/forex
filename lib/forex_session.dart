@@ -69,9 +69,8 @@ class ForexSession extends PolymerElement
      PaperDialog dialogTrade=$['dialogTrade'];
      PaperDialog dialogCloseTrade=$['dialogCloseTrade'];
 
-     PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
-     PaperButton btnCreateTrade=$['btnCreateTrade'];
-     PaperButton btnCloseTrade=$['btnCloseTrade'];
+
+
 
      PaperMenu menuPage=$['menuPage'];
      PaperFab playpauseBtn =$['playpauseBtn'];
@@ -83,13 +82,13 @@ class ForexSession extends PolymerElement
      currentSession = new TradingSession();
 
 
-     btndialogOpenTrade.on['tap'].listen((event){pause();dialogTrade.open();});
+
      navIconMenu.on['tap'].listen((event)=>panel.togglePanel());
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
 
      //btnCreateTrade.on['tap'].listen(CreateTrade);
-     btnCloseTrade.on['tap'].listen(CloseTrade);
+
      menuPage.on['tap'].listen((event)=>panel.togglePanel());
      playpauseBtn.on['tap'].listen((event)=>playpause());
 
@@ -162,7 +161,7 @@ class ForexSession extends PolymerElement
 
   CloseTrade(Event e)
   {
-     PaperMenu menuTrades =$['menuTrades'];
+    /* PaperMenu menuTrades =$['menuTrades'];
      int index = menuTrades.selected;
      //window.alert(index.toString());
      if (index !=null && currentSession.sessionUser.primaryAccount.Trades.length > 0 && index>=0)
@@ -171,28 +170,13 @@ class ForexSession extends PolymerElement
        currentSession.closeTrade("primary", id);
        menuTrades.selected=null;
      }
-     updateTradeMenu();
+     updateTradeMenu();*/
      //window.alert(index.toString());
   }
 
   void updateTradeMenu()
   {
-    DateFormat formatter = new DateFormat('yyyyMMdd');
-    trades=new List<String>();
-    for(Trade sessTrade in currentSession.openTrades("primary"))
-    {
-      //if(openPrice!=null && closePrice!=null)
-      //{
-       trades.add(sessTrade.pair
-             +" "+formatter.format(DateTime.parse(sessTrade.openDate))
-             +" "+formatter.format(DateTime.parse(sessTrade.closeDate))
-             +" "+sessTrade.units.toString()
-             +" "+sessTrade.openPrice.toString()
-             +" "+sessTrade.closePrice.toString()
-             +" "+sessTrade.PL().toString()
-       );
-    }
-    set('trades',trades);
+    tradeControl.updateTrades( currentSession.openTrades("primary"));
   }
 
 

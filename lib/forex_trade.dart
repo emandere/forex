@@ -2,9 +2,11 @@
 library forex.lib.forex_trade;
 import 'dart:html';
 import 'forex_trade_detail.dart';
+import 'forex_classes.dart';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
 import 'package:polymer_elements/paper_card.dart';
+import 'package:intl/intl.dart';
 import 'package:polymer_elements/paper_button.dart';
 import 'package:polymer_elements/paper_menu.dart';
 import 'package:polymer_elements/paper_item.dart';
@@ -14,8 +16,11 @@ import 'package:polymer_elements/paper_dialog.dart';
 class ForexTradeControl extends PolymerElement
 {
   String _pair;
+  List<Trade> _currentTrades;
   @property String get pair => _pair;
   @reflectable set pair(String value) =>_pair=value;
+
+
 
   ForexTradeControl.created() : super.created();
   ready()
@@ -23,6 +28,8 @@ class ForexTradeControl extends PolymerElement
     PaperDialog dialogTrade=$['dialogTrade'];
     PaperButton btndialogOpenTrade=$['btndialogOpenTrade'];
     PaperButton btnCreateTrade=$['btnCreateTrade'];
+
+
     btndialogOpenTrade.on['tap'].listen((event)=>dialogTrade.open());
     btnCreateTrade.on['tap'].listen(sendExecuteTrade);
   }
@@ -52,6 +59,29 @@ class ForexTradeControl extends PolymerElement
     String takeProfit=txtTakeProfit.value;
 
     this.fire('executetrade',detail: {"account":account,"pair":pair,"units":units,"position":position,"stopLoss":stopLoss,"takeProfit":takeProfit});
+  }
+
+  updateTrades(List<Trade> currentTrades)
+  {
+    PaperMenu menuTrades=$['menuTrades'];
+    menuTrades.children.clear();
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    for(Trade currTrade in currentTrades)
+    {
+      PaperItem item = new PaperItem();
+      ForexTradeDetail detail = new ForexTradeDetail()
+        ..pair=currTrade.pair
+        ..units=currTrade.units.toString()
+        ..currentPrice=currTrade.closePrice.toString()
+        ..tradeValue=currTrade.value().toString()
+        ..openDate=formatter.format(DateTime.parse(currTrade.openDate))
+        ..currentDate=formatter.format(DateTime.parse(currTrade.closeDate))
+        ..PL=currTrade.PL().toString();
+      ;
+
+      item.children.add(detail);
+      menuTrades.children.add(item);
+    }
   }
 
 }
