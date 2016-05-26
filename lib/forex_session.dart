@@ -119,6 +119,7 @@ class ForexSession extends PolymerElement
     ForexPairTable pairTable=$['pairTable'];
     pairTable.currencyPairs=currencyPairs;
     pairTable.prices=prices;
+    tradeControl.prices=prices;
   }
 
   UpdateCurrentSession(Event e) async
@@ -177,6 +178,7 @@ class ForexSession extends PolymerElement
   void updateTradeMenu()
   {
     tradeControl.updateTrades( currentSession.openTrades("primary"));
+
   }
 
 

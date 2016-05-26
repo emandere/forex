@@ -16,10 +16,24 @@ import 'package:polymer_elements/paper_dialog.dart';
 class ForexTradeControl extends PolymerElement
 {
   String _pair;
-  List<Trade> _currentTrades;
+  String _price;
+  List<Map> _prices;
   @property String get pair => _pair;
-  @reflectable set pair(String value) =>_pair=value;
+  @reflectable set pair(String value)
+  {
+    _pair=value;
+    set("pair",pair);
+  }
 
+  @property List<Map> get prices => _prices;
+  @reflectable set prices(List<Map>  value) =>_prices=value;
+
+  @property String get price => _price;
+  @reflectable set price(String value)
+  {
+    _price=value;
+    set("price",price);
+  }
 
 
   ForexTradeControl.created() : super.created();
@@ -37,6 +51,8 @@ class ForexTradeControl extends PolymerElement
   void SetPair(String value)
   {
      pair=value;
+     Map candle = prices.firstWhere((Map i)=>i['pair']==pair);
+     price=candle['close'];
      PaperInput txtPair = $['pair'];
      txtPair.value=value;
   }
