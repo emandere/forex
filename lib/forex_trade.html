@@ -15,8 +15,18 @@
             <div align="left">
                 <paper-input id="pair" label="Pair" floatingLabel></paper-input>
                 <paper-input id="units" label="Units" floatingLabel></paper-input>
-                <paper-input id="primaryTradeAccount" label="Account" floatingLabel></paper-input>
-                <paper-input id="position" label="Position(long,short)" floatingLabel></paper-input>
+                <paper-dropdown-menu id="primaryTradeAccountMenu" label="Account">
+                    <paper-listbox class="dropdown-content">
+                        <paper-item>primary</paper-item>
+                        <paper-item>secondary</paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+                <paper-dropdown-menu id="positionMenu" label="Position">
+                    <paper-listbox class="dropdown-content">
+                        <paper-item>long</paper-item>
+                        <paper-item>short</paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>
                 <paper-input id="stopLoss" label="Stop Loss(Price)" floatingLabel></paper-input>
                 <paper-input id="takeProfit" label="Take Profit(Price)" floatingLabel></paper-input>
             </div>

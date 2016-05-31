@@ -12,6 +12,7 @@ import 'package:polymer_elements/paper_menu.dart';
 import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/paper_input.dart';
 import 'package:polymer_elements/paper_dialog.dart';
+import 'package:polymer_elements/paper_dropdown_menu.dart';
 @PolymerRegister('forex-trade-control')
 class ForexTradeControl extends PolymerElement
 {
@@ -59,18 +60,18 @@ class ForexTradeControl extends PolymerElement
 
   void sendExecuteTrade(var event)
   {
-    PaperInput txtPrimaryTradeAccount=$['primaryTradeAccount'];
+
     PaperInput txtPair=$['pair'];
     PaperInput txtUnits=$['units'];
-    PaperInput txtPosition=$['position'];
     PaperInput txtStopLoss=$['stopLoss'];
     PaperInput txtTakeProfit=$['takeProfit'];
+    PaperDropdownMenu menuAccount=$['primaryTradeAccountMenu'];
+    PaperDropdownMenu positionMenu=$['positionMenu'];
 
-
-    String account=txtPrimaryTradeAccount.value;
+    String account=menuAccount.value;
     pair=txtPair.value;
     String units=txtUnits.value;
-    String position=txtPosition.value;
+    String position=positionMenu.value;
     String stopLoss=txtStopLoss.value;
     String takeProfit=txtTakeProfit.value;
 
