@@ -80,7 +80,7 @@ class ForexTradeControl extends PolymerElement
 
   updateTrades(List<Trade> currentTrades)
   {
-    PaperMenu menuTrades=$['menuTrades'];
+    DivElement menuTrades=$['menuTrades'];
     menuTrades.children.clear();
     DateFormat formatter = new DateFormat('yyyyMMdd');
     for(Trade currTrade in currentTrades)
@@ -93,6 +93,8 @@ class ForexTradeControl extends PolymerElement
         ..tradeValue=currTrade.value().toString()
         ..openDate=formatter.format(DateTime.parse(currTrade.openDate))
         ..currentDate=formatter.format(DateTime.parse(currTrade.closeDate))
+        ..Id=currTrade.id.toString()
+        ..account="primary"
         ..PL=currTrade.PL().toString();
       ;
 

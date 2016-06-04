@@ -19,12 +19,27 @@ class ForexTradeDetail extends PolymerElement
   String _PL;
   String _openDate;
   String _currentDate;
+  String _Id;
+  String _account;
+
+
+  @property String get account => _account;
+  @reflectable set account(String value)
+  {
+    _account=value;
+  }
 
   @property String get pair => _pair;
   @reflectable set pair(String value)
   {
     _pair=value;
     set('pair', _pair);
+  }
+
+  @property String get Id => _Id;
+  @reflectable set Id(String value)
+  {
+    _Id=value;
   }
 
   @property String get units => _units;
@@ -73,6 +88,13 @@ class ForexTradeDetail extends PolymerElement
   factory ForexTradeDetail() => new Element.tag('forex-trade-detail') as ForexTradeDetail;
   ready()
   {
-
+    PaperIconButton navCloseTrade=$['navCloseTrade'];
+    navCloseTrade.on['tap'].listen(sendCloseTrade);
   }
+
+  sendCloseTrade(var event)
+  {
+    this.fire('closetrade',detail: {"account":account,"id":Id});
+  }
+
 }

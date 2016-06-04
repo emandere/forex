@@ -160,20 +160,7 @@ class ForexSession extends PolymerElement
     currentSession.executeTrade(account,pair,units,position,currentTime,stopLossPrice,takeProfitPrice);
   }
 
-  CloseTrade(Event e)
-  {
-    /* PaperMenu menuTrades =$['menuTrades'];
-     int index = menuTrades.selected;
-     //window.alert(index.toString());
-     if (index !=null && currentSession.sessionUser.primaryAccount.Trades.length > 0 && index>=0)
-     {
-       int id=currentSession.sessionUser.primaryAccount.Trades[index].id;
-       currentSession.closeTrade("primary", id);
-       menuTrades.selected=null;
-     }
-     updateTradeMenu();*/
-     //window.alert(index.toString());
-  }
+
 
   void updateTradeMenu()
   {
@@ -394,6 +381,13 @@ class ForexSession extends PolymerElement
      ExecuteTrade(detail['account'],detail['pair'],int.parse(detail['units']),detail['position'],currentSession.currentTime.toString(),detail['stopLoss'],detail['takeProfit']);
      updateTradeMenu();
      play();
+  }
+
+  @Listen('closetrade')
+  void onCloseTradeEvent(event, detail)
+  {
+      currentSession.closeTrade(detail["account"],int.parse(detail["id"]));
+      updateTradeMenu();
   }
 
 }
