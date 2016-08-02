@@ -7,6 +7,7 @@ class ForexDailyValue
   double low;
   double close;
   String time;
+  DateTime datetime;
   ForexDailyValue();
   ForexDailyValue.fromData(this.pair,this.date,this.open,this.high,this.low,this.close);
   ForexDailyValue.fromString(String line,{String pairName})
@@ -21,7 +22,7 @@ class ForexDailyValue
     else
       date = vals[0].substring(0,4)+"-"+vals[0].substring(4,6)+"-"+vals[0].substring(6,8);
 
-
+    datetime = DateTime.parse(date);
     open = double.parse(vals[1]);
     high = double.parse(vals[2]);
     low  = double.parse(vals[3]);
@@ -39,6 +40,7 @@ class ForexDailyValue
     else
       date = json["date"].substring(0,4)+"-"+json["date"].substring(4,6)+"-"+json["date"].substring(6,8);//json["date"];
 
+    datetime = DateTime.parse(date);
     open = json["open"];//double.parse(json["open"]);
     high = json["high"];//double.parse(json["high"]);
     low  = json["low"];//double.parse(json["low"]);
@@ -46,10 +48,10 @@ class ForexDailyValue
     time=json["time"];
   }
 
-   Map toJsonMap()
-   {
-      return{"pair":pair,"date":date,"open":open,"high":high,"low":low,"close":close};
-   }
+  Map toJsonMap()
+  {
+    return{"pair":pair,"date":date,"open":open,"high":high,"low":low,"close":close,"datetime":datetime};
+  }
 }
 
 
