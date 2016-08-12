@@ -30,7 +30,7 @@ packages:
       name: barback
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.2+8"
+    version: "0.15.2+9"
   browser:
     description:
       name: browser
@@ -336,7 +336,7 @@ packages:
       name: watcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.7+2"
+    version: "0.9.7+3"
   web_components:
     description:
       name: web_components

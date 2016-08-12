@@ -56,12 +56,12 @@ main() async
 {
   print(_buildPath+" here");
   ForexMongo mongoLayer = new ForexMongo();
-  await mongoLayer.db.open();
+  //await mongoLayer.db.open();
   _apiServer.addApi(new TreeApi());
   _apiServer.addApi(new ForexData());
   _apiServer.addApi(new ForexClasses(mongoLayer));
   _apiServer.enableDiscoveryApi();
-  HttpServer server = await HttpServer.bind(InternetAddress.ANY_IP_V4,8080);
+  HttpServer server = await HttpServer.bind(InternetAddress.ANY_IP_V6,80);
   //server.listen(_apiServer.httpRequestHandler);
   server.listen(requestHandler);
 }
