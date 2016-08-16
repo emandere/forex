@@ -15,7 +15,7 @@ import 'lib/forex_mongo.dart';
 
 const String _API_PREFIX = '/api';
 final ApiServer _apiServer = new ApiServer(apiPrefix: _API_PREFIX, prettyPrint: true);
-final String _buildPath = Platform.script.resolve('web/').toFilePath();
+final String _buildPath = Platform.script.resolve('build/web/').toFilePath();
 final VirtualDirectory _clientDir = new VirtualDirectory(_buildPath);
 
 Future requestHandler(HttpRequest request) async {
