@@ -11,6 +11,8 @@ main() async
   List<String> pairs = ["AUDUSD","EURUSD","GBPUSD","NZDUSD","USDCAD","USDCHF","USDJPY"];
   ForexMongo mongoLayer= new ForexMongo();
   await mongoLayer.db.open();
+  await mongoLayer.ClearForexValues();
+  await mongoLayer.AddCurrencies(pairs);
   for(String pair in pairs)
   {
     List<String> strvalues = new File('data/' + pair + '/' + pair + 'dailyval.txt').readAsLinesSync();

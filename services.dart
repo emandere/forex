@@ -56,7 +56,7 @@ main() async
 {
   print(_buildPath+" here");
   ForexMongo mongoLayer = new ForexMongo();
-  //await mongoLayer.db.open();
+  await mongoLayer.db.open();
   _apiServer.addApi(new TreeApi());
   _apiServer.addApi(new ForexData());
   _apiServer.addApi(new ForexClasses(mongoLayer));

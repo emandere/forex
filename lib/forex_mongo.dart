@@ -198,6 +198,20 @@ class ForexMongo
     return mongoDeleteUser().then(mongoResult);
   }
 
+  AddCurrencies(List<String> currencies) async
+  {
+    await db.collection("currencypairs").drop();
+     for(String pair in currencies)
+     {
+       await db.collection("currencypairs").insert({"name":pair});
+     }
+  }
+
+  ClearForexValues() async
+  {
+    await db.collection('forexvalues').drop();
+  }
+
   Future<List<String>> addForexDailyValue(ForexDailyValue value)
   {
     mongoAddForexDailyValue()
