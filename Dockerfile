@@ -8,5 +8,6 @@ ADD services.dart /forex/services.dart
 RUN pub get --trace
 ADD . /forex
 RUN pub get --offline
+RUN pub build
 CMD []
 ENTRYPOINT ["/usr/bin/dart", "services.dart"]
