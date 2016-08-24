@@ -9,7 +9,8 @@ class ForexMongo
   Db db;
   ForexMongo()
   {
-    db = new Db("mongodb://localhost/testdb");
+    //db = new Db("mongodb://localhost/testdb");
+    db = new Db("mongodb://mongo:27017/testdb");
   }
 
   Future<List<Map>> readDailyValues(pair)
