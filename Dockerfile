@@ -3,6 +3,7 @@ FROM google/dart
 WORKDIR /forex
 ADD pubspec.* /forex/
 ADD lib /forex/lib
+ADD web /forex/web
 ADD services.dart /forex/services.dart
 RUN pub get --trace
 ADD . /forex
