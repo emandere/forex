@@ -10,4 +10,4 @@ ADD . /forex
 RUN pub get --offline
 RUN pub build
 CMD []
-ENTRYPOINT ["/usr/bin/dart", "services.dart"]
+ENTRYPOINT ["/usr/bin/dart","services.dart","release"]

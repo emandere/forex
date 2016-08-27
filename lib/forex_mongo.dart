@@ -7,10 +7,18 @@ import 'dart:convert';
 class ForexMongo
 {
   Db db;
-  ForexMongo()
+  ForexMongo(String mode)
   {
     //db = new Db("mongodb://localhost/testdb");
-    db = new Db("mongodb://mongo:27017/testdb");
+    if(mode=="debug")
+    {
+      db = new Db("mongodb://localhost/testdb");
+
+    }
+    else
+    {
+      db = new Db("mongodb://mongo:27017/testdb");
+    }
   }
 
   Future<List<Map>> readDailyValues(pair)
