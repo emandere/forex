@@ -1,1 +1,25 @@
+//Start Mongo local test
 mongod --dbpath c:\data
+
+//Using Mongo Container
+//Get latest mongo container
+docker pull mongo:latest
+//Run mongo container
+docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
+//Query mongo database
+docker exec -it mongo bash
+
+
+//Get running containers
+sudo docker ps
+
+//Stop docker Process
+sudo docker stop [id]
+
+//Build forex docker container
+sudo docker build -t forexapp github.com/emandere/forex
+
+//Run forex docker container
+sudo docker run -p 80:80 --link mongo:mongo forexapp
+
+
