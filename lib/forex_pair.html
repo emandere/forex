@@ -23,19 +23,42 @@
                padding-right: 12px;
            }
 
+           @media screen and (max-width: 360px)
+           {
+               paper-card
+               {
+                   width:340px;
+               }
+
+               .pair
+               {
+                   font-family: Inconsolata, monospace;
+                   font-weight: 600;
+                   margin-right: 12px;
+                   font-size:x-small;
+
+               }
+
+               .price
+               {
+                   font-family: Inconsolata, monospace;
+                   padding-right: 12px;
+                   font-size:x-small;
+               }
+           }
 
 
         </style>
         <div>
             <paper-card>
                 <div class="card-content layout horizontal">
-                    <paper-icon-button id="launchPair" class="small" icon="icons:launch"></paper-icon-button>
                     <div class="pair">{{pair}} </div>
                     <div class="price">{{open}}</div>
                     <div class="price">{{high}}</div>
                     <div class="price">{{low}}</div>
                     <div class="price">{{close}}</div>
                     <div class="price"><iron-icon id="direction" icon="{{moveicon}}"></iron-icon></div>
+                    <paper-icon-button id="launchPair" class="small" icon="icons:launch"></paper-icon-button>
                 </div>
             </paper-card>
         </div>

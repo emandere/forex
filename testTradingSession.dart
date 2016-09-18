@@ -12,11 +12,11 @@ bool play=false;
 main() async
 {
 
-   mongoLayer= new ForexMongo();
+   mongoLayer= new ForexMongo("debug");
    await mongoLayer.db.open();
    testSession=new TradingSession();
-   testSession.id="testSession";
-   testSession.sessionUser.id="testSessionUser";
+   testSession.id="testSession77";
+   testSession.sessionUser.id="testSessionUser77";
 
    String line ="";
    Duration timeElapsed=new Duration(seconds:1);
@@ -42,7 +42,7 @@ main() async
          await testSession.updateTime(1,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
          testSession.updateHistory();
          mongoLayer.saveSession(testSession);
-         await testSession.processOrders();
+         await testSession.processOrders(mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
       }
 
       await testSession.updateTime(0,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
@@ -92,7 +92,7 @@ main() async
       if(line.startsWith("exec"))
       {
          List<String> parts = line.split(' ');
-         testSession.executeTrade(parts[1],parts[2],int.parse(parts[3]),parts[4],testSession.currentTime.toString());
+         //testSession.executeTrade(parts[1],parts[2],int.parse(parts[3]),parts[4],testSession.currentTime.toString());
          await testSession.updateTime(timeElapsed.inSeconds,mongoLayer.readDailyValue,mongoLayer.readDailyValueMissing);
          testSession.sessionUser.printacc();
       }

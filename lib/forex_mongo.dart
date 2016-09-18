@@ -162,23 +162,12 @@ class ForexMongo
     return mongoSaveUser().then(mongoResult);
   }
 
+   saveSession(TradingSession session) async
+   {
+     return db.collection('session').save(session.toJsonMap());
+   }
 
-  Future<List<String>> saveSession(TradingSession session)
-  {
-    mongoSaveSession()
-    {
-      return db.collection('session').save(session.toJsonMap());
-    }
 
-    mongoResult(var result)
-    {
-      List<String> respond = new List<String>();
-      //respond.add(session.id+" Saved");
-      print("saved session");
-      return respond;
-    }
-    return mongoSaveSession().then(mongoResult);
-  }
 
   Stream<Map> getSessions()
   {

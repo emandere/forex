@@ -9,7 +9,7 @@ main() async
 
   var result;
   List<String> pairs = ["AUDUSD","EURUSD","GBPUSD","NZDUSD","USDCAD","USDCHF","USDJPY"];
-  ForexMongo mongoLayer= new ForexMongo();
+  ForexMongo mongoLayer= new ForexMongo("debug");
   await mongoLayer.db.open();
   await mongoLayer.ClearForexValues();
   await mongoLayer.AddCurrencies(pairs);

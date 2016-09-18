@@ -18,12 +18,28 @@
                 font-family: Inconsolata, monospace;
                 padding-right: 12px;
             }
+            @media screen and (max-width: 360px)
+            {
+                paper-card
+                {
+                    width:340px;
+                }
+
+                .pair
+                {
+                    font-family: Inconsolata, monospace;
+                    font-weight: 600;
+                    margin-right: 12px;
+                    font-size:x-small;
+
+                }
+            }
 
         </style>
         <div>
             <paper-card>
                 <div class="card-content layout horizontal">
-                    <div class="pair">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="pair">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                     <div class="pair">Open&nbsp;&nbsp;</div>
                     <div class="pair">High&nbsp;&nbsp;</div>
                     <div class="pair">Low&nbsp;&nbsp;&nbsp;</div>

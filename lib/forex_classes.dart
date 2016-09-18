@@ -269,9 +269,10 @@ class Account
 
   setAccount(jsonNode)
   {
+
     id=jsonNode["id"];
-    realizedPL=jsonNode["realizedPL"];
-    cash=jsonNode["cash"];
+    realizedPL=double.parse(jsonNode["realizedPL"].toString());
+    cash=double.parse(jsonNode["cash"].toString());
     idcount=jsonNode["idcount"];
     Trades=new List<Trade>();
     closedTrades = new List<Trade>();
@@ -280,6 +281,7 @@ class Account
     {
       Trades.add(new Trade.fromJsonMap(trade));
     }
+
     for(Map trade in jsonNode["closedTrades"])
     {
       closedTrades.add(new Trade.fromJsonMap(trade));
@@ -450,7 +452,10 @@ class User
     Accounts = new Map<String,Account>();
     Accounts["primary"]=new Account.fromJsonMap(jsonNode["Accounts"]["primary"]);
     Accounts["secondary"]=new Account.fromJsonMap(jsonNode["Accounts"]["secondary"]);
-   /* for(Map acc in jsonNode["Accounts"])
+
+
+
+    /* for(Map acc in jsonNode["Accounts"])
     {
        Accounts.add(new Account.fromJsonMap(acc));
     }*/
@@ -652,8 +657,10 @@ class TradingSession
 
    TradingSession.fromJSON(String json)
    {
+
      Map jsonNode = JSON.decode(json);
      setSession(jsonNode);
+
    }
 
    TradingSession.fromJSONMap(Map jsonNode)
@@ -664,6 +671,7 @@ class TradingSession
    setSession(Map jsonMap)
    {
       id=jsonMap["id"];
+      print("id= "+id);
       print("HEEEEEREEEE End "+jsonMap["endDate"].toString());
       startDate=DateTime.parse(jsonMap["startDate"].toString());
       //endDate=DateTime.parse(jsonMap["endDate"].toString());
