@@ -45,12 +45,13 @@ class ForexClasses
   }
 
   @ApiMethod(path: 'sessions')
-  Future<List<String>> getSessions() async
+  Future<List<TradingSession>> getSessions() async
   {
-    List<String> sessions=new List<String>();
-    await for (Map session in mongoLayer.getSessions())
+    List<TradingSession> sessions=new List<TradingSession>();
+    await for (Map sessionMap in mongoLayer.getSessions())
     {
-      sessions.add(session["id"]);
+      TradingSession session = new TradingSession.fromJSONMap(sessionMap);
+      sessions.add(session);
     }
     return sessions;
   }

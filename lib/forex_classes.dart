@@ -671,6 +671,7 @@ class TradingSession
    setSession(Map jsonMap)
    {
       id=jsonMap["id"];
+
       print("id= "+id);
       print("HEEEEEREEEE End "+jsonMap["endDate"].toString());
       startDate=DateTime.parse(jsonMap["startDate"].toString());
@@ -808,6 +809,11 @@ class TradingSession
       return sessionUser.primaryAccount.Trades;
      else
        return sessionUser.secondaryAccount.Trades;
+   }
+
+   double balance()
+   {
+      return sessionUser.primaryAccount.NetAssetValue()+sessionUser.primaryAccount.NetAssetValue();
    }
 
 }

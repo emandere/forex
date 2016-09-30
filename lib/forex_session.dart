@@ -45,7 +45,7 @@ class ForexSession extends PolymerElement
   @property
   int itemIndex;
   @property
-  List<String> sessions;
+  List<Map> sessions;
   List<String> trades;
   String loadingStatus;
   String countdown;
@@ -124,7 +124,7 @@ class ForexSession extends PolymerElement
 
   UpdateCurrentSession(Event e) async
   {
-     currentSessionId=sessions[$['menuSession'].selected];
+     currentSessionId=sessions[$['menuSession'].selected]["id"].toString();
      set('currentSessionId',currentSessionId);
      currentSession = await loadSession(currentSessionId);
      updateTradeMenu();
@@ -166,6 +166,12 @@ class ForexSession extends PolymerElement
   {
     tradeControl.updateTrades( currentSession.openTrades("primary"));
 
+  }
+
+  updateSessionCards()
+  {
+      ForexSessionPanel sessionPanel = $['sessionPanel'];
+      sessionPanel.uncheckUnselectedSessions(currentSessionId);
   }
 
 
@@ -359,10 +365,12 @@ class ForexSession extends PolymerElement
   @Listen('selectsession')
   selectedSession(event, detail) async
   {
-    int selected=detail['session'];
-    currentSessionId=sessions[selected];
+    //int selected=detail['session'];
+    //currentSessionId=sessions[selected]["id"];
+    currentSessionId = detail["id"];
     set('currentSessionId',currentSessionId);
     currentSession = await loadSession(currentSessionId);
+    updateSessionCards();
     updateTradeMenu();
     UpdatePrices();
   }

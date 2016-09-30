@@ -1,0 +1,53 @@
+<dom-module id="forex-session-detail">
+    <template>
+        <style is="custom-style">
+            paper-card
+            {
+                width:320px;
+            }
+
+            paper-icon-button.small {
+                width: 32px;
+                height: 32px;
+            }
+
+            .id
+            {
+                font-family: Inconsolata, monospace;
+                font-weight: 600;
+                margin-right: 13px;
+            }
+            .papertitle
+            {
+                font-family: Inconsolata, monospace;
+                font-weight: 400;
+                margin-right: 10px;
+            }
+            .paperdetail
+            {
+                font-family: Inconsolata, monospace;
+                padding-right: 10px;
+            }
+        </style>
+        <div>
+            <paper-card>
+                <div class="card-content layout horizontal">
+                    <paper-checkbox id="selectSession"></paper-checkbox>
+                    <div class="id">{{id}}</div>
+                </div>
+                <div class="card-content layout horizontal">
+                    <div class="papertitle">Balance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                    <div class="paperdetail">{{balance}}</div>
+                </div>
+                <div class="card-content layout horizontal">
+                    <div class="papertitle">Start Date&nbsp;&nbsp;</div>
+                    <div class="paperdetail">{{startDate}}</div>
+                </div>
+                <div class="card-content layout horizontal">
+                    <div class="papertitle">Current Date</div>
+                    <div class="paperdetail">{{currentDate}}</div>
+                </div>
+            </paper-card>
+        </div>
+    </template>
+</dom-module>
