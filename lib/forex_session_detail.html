@@ -22,31 +22,41 @@
                 font-family: Inconsolata, monospace;
                 font-weight: 400;
                 margin-right: 10px;
+
             }
             .paperdetail
             {
                 font-family: Inconsolata, monospace;
                 padding-right: 10px;
+
+            }
+            .card-content
+            {
+                margin-top: 1px;
+                margin-bottom: 1px;
             }
         </style>
         <div>
             <paper-card>
-                <div class="card-content layout horizontal">
+                <div class="card-content layout horizontal" style="margin-top: 0;margin-bottom: 0">
                     <paper-checkbox id="selectSession"></paper-checkbox>
                     <div class="id">{{id}}</div>
                 </div>
-                <div class="card-content layout horizontal">
-                    <div class="papertitle">Balance&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                    <div class="paperdetail">{{balance}}</div>
-                </div>
-                <div class="card-content layout horizontal">
-                    <div class="papertitle">Start Date&nbsp;&nbsp;</div>
-                    <div class="paperdetail">{{startDate}}</div>
-                </div>
-                <div class="card-content layout horizontal">
-                    <div class="papertitle">Current Date</div>
-                    <div class="paperdetail">{{currentDate}}</div>
-                </div>
+                <table>
+                    <tr>
+                        <td>Balance</td>
+                        <td>{{balance}}</td>
+                    </tr>
+                    <tr>
+                        <td>Start Date</td>
+                        <td>{{startDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Date</td>
+                        <td>{{currentDate}}</td>
+                    </tr>
+                </table>
+
             </paper-card>
         </div>
     </template>
