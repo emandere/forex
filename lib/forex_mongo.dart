@@ -169,6 +169,7 @@ class ForexMongo
 
 
 
+
   Stream<Map> getSessions()
   {
     return db.collection('session').find();

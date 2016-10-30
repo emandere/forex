@@ -82,11 +82,23 @@ class Trade
    setTrade(jsonNode)
    {
      pair=jsonNode["pair"];
-
+     units=jsonNode["units"];
+     openDate=jsonNode["openDate"];
+     closeDate=jsonNode["closeDate"];
+     long= jsonNode["long"];
+     openPrice=double.parse(jsonNode["openPrice"].toString());
+     closePrice=double.parse(jsonNode["closePrice"].toString());
    }
    Map toJson()
    {
-     return {"pair":pair,"units":units,"openDate":openDate,"closeDate":closeDate};
+     return { "pair":pair,
+              "units":units,
+              "openDate":openDate,
+              "closeDate":closeDate,
+              "long":long,
+              "openPrice":openPrice,
+              "closePrice":closePrice
+              };
    }
 
    updateTrade(String dt,price)

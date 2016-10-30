@@ -195,6 +195,21 @@ class ForexSession extends PolymerElement
     loadSessions();
   }
 
+  updateSession()
+  {
+    var url = "/api/forexclasses/v1/addsessionpost";//"/api/forexclasses/v1/addsessionpost";
+    PostData myData = new PostData();
+
+
+    myData.data=currentSession.toJson();
+
+    HttpRequest.request(url, method:'POST',
+        requestHeaders: {"content-type": "application/json"},
+        sendData:myData.toJson());
+
+    loadSessions();
+  }
+
 
   playpause()
   {
@@ -292,6 +307,7 @@ class ForexSession extends PolymerElement
         List values = await dailyValues(pair, startdt, enddt);
         mainChart.loadCurrencyChart(pair, startdt, enddt, values);
       }
+      updateSession();
 
     }
 
