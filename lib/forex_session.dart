@@ -207,7 +207,8 @@ class ForexSession extends PolymerElement
         requestHeaders: {"content-type": "application/json"},
         sendData:myData.toJson());
 
-    loadSessions();
+    sessionPanel.updateSession(currentSession);
+    //loadSessions();
   }
 
 
@@ -389,6 +390,19 @@ class ForexSession extends PolymerElement
     updateSessionCards();
     updateTradeMenu();
     UpdatePrices();
+
+    mainChart.loadBalanceChart(currentSessionId,balanceHist());
+    if(currentSession.sessionUser.TradingPairs().length>0)
+    {
+
+      DateFormat formatter = new DateFormat('yyyyMMdd');
+      String startdt=formatter.format(currentSession.startDate);
+      String enddt=formatter.format(currentSession.currentTime);
+      String pair = currentSession.sessionUser.TradingPairs()[0];
+      List values = await dailyValues(pair, startdt, enddt);
+      mainChart.loadCurrencyChart(pair, startdt, enddt, values);
+    }
+
   }
 
   @Listen('savesession')

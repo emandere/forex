@@ -74,8 +74,19 @@ class ForexSessionPanel extends PolymerElement {
         ..id = session.id
         ..startDate=formatter.format(session.startDate)
         ..currentDate=formatter.format(session.currentTime)
-        ..balance = session.balance().toString());
+        ..balance = session.balance().toStringAsFixed(2));
     }
+  }
+
+  updateSession(TradingSession session)
+  {
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    PaperMenu menuSession = $['menuSession'];
+    ForexSessionDetail sessionCard = menuSession.children.firstWhere((x)=>x.id==session.id);
+    sessionCard.id=session.id;
+    sessionCard.startDate=formatter.format(session.startDate);
+    sessionCard.currentDate=formatter.format(session.currentTime);
+    sessionCard.balance=session.balance().toStringAsFixed(2);
   }
 
   uncheckUnselectedSessions(String id)

@@ -173,7 +173,7 @@ class ForexMainChart extends PolymerElement
 
   loadBalanceChart(String session,List data)
   {
-    set('loadingStatus',"Loading");
+
     balanceChart =$['balanceChart'];
     String chartTitle="Balance History for $session";
     var options = {
