@@ -89,7 +89,8 @@ class ForexSession extends PolymerElement
 
      //btnCreateTrade.on['tap'].listen(CreateTrade);
 
-     menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     //menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     menuPage.on['tap'].listen(redrawCharts);
      playpauseBtn.on['tap'].listen((event)=>playpause());
 
 
@@ -104,6 +105,14 @@ class ForexSession extends PolymerElement
      loadCurrencyPairs();
      getDailyCurrencies();
      pause();
+  }
+
+  redrawCharts(var e)
+  {
+    PaperDrawerPanel panel = $['drawerPanel'];
+    panel.togglePanel();
+    if(!currentSessionId.isEmpty)
+      SetUpDashboard();
   }
 
   loadCurrencyPairs() async
@@ -199,6 +208,7 @@ class ForexSession extends PolymerElement
   {
     var url = "/api/forexclasses/v1/addsessionpost";//"/api/forexclasses/v1/addsessionpost";
     PostData myData = new PostData();
+
 
 
     myData.data=currentSession.toJson();
@@ -386,12 +396,20 @@ class ForexSession extends PolymerElement
     //currentSessionId=sessions[selected]["id"];
     currentSessionId = detail["id"];
     set('currentSessionId',currentSessionId);
+
     currentSession = await loadSession(currentSessionId);
     updateSessionCards();
     updateTradeMenu();
     UpdatePrices();
 
+    SetUpDashboard();
+
+  }
+
+  SetUpDashboard() async
+  {
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
+
     if(currentSession.sessionUser.TradingPairs().length>0)
     {
 
@@ -402,7 +420,6 @@ class ForexSession extends PolymerElement
       List values = await dailyValues(pair, startdt, enddt);
       mainChart.loadCurrencyChart(pair, startdt, enddt, values);
     }
-
   }
 
   @Listen('savesession')

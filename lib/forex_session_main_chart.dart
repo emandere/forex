@@ -113,7 +113,7 @@ class ForexMainChart extends PolymerElement
 
   play()
   {
-    countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
+    //countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
     playState = true;
   }
 
@@ -159,7 +159,7 @@ class ForexMainChart extends PolymerElement
 
   }
 
-  updateCountdown(Timer e) async
+  /*updateCountdown(Timer e) async
   {
     countdownAmt=countdownAmt-1;
     if(countdownAmt==0)
@@ -169,7 +169,7 @@ class ForexMainChart extends PolymerElement
     }
 
     set('countdown',countdownAmt.toString());
-  }
+  }*/
 
   loadBalanceChart(String session,List data)
   {
@@ -186,14 +186,8 @@ class ForexMainChart extends PolymerElement
     balanceChart.options=options;
     balanceChart.type="line";
     balanceChart.cols=[ {"type":"date"},{"type":"number"}];
-    balanceChart.rows = data;//await balances();
+    balanceChart.rows = data;
 
-    /*DateFormat formatter = new DateFormat('yyyyMMdd');
-    String pair=sess.sessionUser.TradingPairs()[0];
-    String startdt=formatter.format(sess.startDate);
-    String enddt=formatter.format(sess.currentTime);
-    loadChartData(pair,startdt,enddt);
-    set('loadingStatus',"Complete");*/
   }
 
 

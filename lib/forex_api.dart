@@ -122,10 +122,13 @@ class ForexClasses
   }
 
   @ApiMethod(method: 'POST',path: 'addsessionpost')
-  Future<List<String>> addSessionPost(PostData sessionData)
+  Future<List<String>> addSessionPost(PostData sessionData) async
   {
+    List<String> success = new List<String>();
+    success.add("pass");
     TradingSession session=new TradingSession.fromJSON(sessionData.data);
-    return mongoLayer.saveSession(session);
+    await mongoLayer.saveSession(session);
+    return success;
   }
 
 

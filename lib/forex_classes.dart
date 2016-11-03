@@ -85,7 +85,7 @@ class Trade
      units=jsonNode["units"];
      openDate=jsonNode["openDate"];
      closeDate=jsonNode["closeDate"];
-     long= jsonNode["long"];
+     long= jsonNode["long"].toString().toLowerCase()=="true";
      openPrice=double.parse(jsonNode["openPrice"].toString());
      closePrice=double.parse(jsonNode["closePrice"].toString());
    }
