@@ -30,6 +30,13 @@
                 padding-right: 10px;
 
             }
+            .sessioninfo
+            {
+                font-family: Inconsolata, monospace;
+                color:blue;
+                font-size: x-small;
+                margin-right: 10px;
+            }
             .card-content
             {
                 margin-top: 1px;
@@ -44,16 +51,24 @@
                 </div>
                 <table>
                     <tr>
-                        <td>Balance</td>
-                        <td>{{balance}}</td>
+                        <td><div class ="sessioninfo">Start Date</div></td>
+                        <td></td>
+                        <td><div class ="sessioninfo">Current Date</div></td>
                     </tr>
                     <tr>
-                        <td>Start Date</td>
                         <td>{{startDate}}</td>
+                        <td></td>
+                        <td>{{currentDate}}</td>
                     </tr>
                     <tr>
-                        <td>Current Date</td>
-                        <td>{{currentDate}}</td>
+                        <td><div class ="sessioninfo">Balance</div></td>
+                        <td></td>
+                        <td><div class ="sessioninfo">P/L</div></td>
+                    </tr>
+                    <tr>
+                        <td>{{balance}}</td>
+                        <td></td>
+                        <td>{{balance}}</td>
                     </tr>
                 </table>
 
