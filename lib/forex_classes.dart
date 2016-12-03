@@ -338,13 +338,12 @@ class Account
   }
   num RealizedPL()
   {
-   /* double tradeAmount=0.0;
-    for(Trade currTrade in Trades)
+    double tradeAmount=0.0;
+    for(Trade closedTrade in closedTrades)
     {
-       tradeAmount += (currTrade.units * currTrade.closePrice);
-    }*/
-
-    return realizedPL;
+      tradeAmount += closedTrade.PL();
+    }
+    return tradeAmount;
   }
 
   num UnrealizedPL()
@@ -825,7 +824,12 @@ class TradingSession
 
    double balance()
    {
-      return sessionUser.primaryAccount.NetAssetValue()+sessionUser.primaryAccount.NetAssetValue();
+      return sessionUser.primaryAccount.NetAssetValue()+sessionUser.secondaryAccount.NetAssetValue();
+   }
+
+   double PL()
+   {
+     return sessionUser.primaryAccount.UnrealizedPL() + sessionUser.primaryAccount.RealizedPL() ;
    }
 
 }

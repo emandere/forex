@@ -8,6 +8,7 @@ import 'package:web_components/web_components.dart';
 class ForexSessionDetail extends PolymerElement
 {
   String _balance;
+  String _pl;
   String _id;
   String _startDate;
   String _currentDate;
@@ -16,6 +17,12 @@ class ForexSessionDetail extends PolymerElement
   {
     _balance=value;
     set('balance', _balance);
+  }
+  @property String get pl => _pl;
+  @reflectable set pl(String value)
+  {
+    _pl=value;
+    set('pl', _pl);
   }
   @property String get id => _id;
   @reflectable set id(String value)
