@@ -17,6 +17,9 @@ dependencies:
   http_server: "^0.9.5+1"
   dart_to_js_script_rewriter: "^1.0.1"
   intl: "^0.12.7"
+  gcloud:
+  googleapis: any
+  googleapis_auth: any
 transformers:
 - polymer:
     entry_points: web/index.html
