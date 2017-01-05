@@ -88,6 +88,7 @@ class Trade
      long= jsonNode["long"].toString().toLowerCase()=="true";
      openPrice=double.parse(jsonNode["openPrice"].toString());
      closePrice=double.parse(jsonNode["closePrice"].toString());
+     id=int.parse(jsonNode["id"].toString());
    }
    Map toJson()
    {
@@ -97,7 +98,8 @@ class Trade
               "closeDate":closeDate,
               "long":long,
               "openPrice":openPrice,
-              "closePrice":closePrice
+              "closePrice":closePrice,
+              "id":id
               };
    }
 

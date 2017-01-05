@@ -94,6 +94,7 @@ class ForexTradeDetail extends PolymerElement
 
   sendCloseTrade(var event)
   {
+
     this.fire('closetrade',detail: {"account":account,"id":Id});
   }
 

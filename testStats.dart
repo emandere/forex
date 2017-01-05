@@ -1,10 +1,15 @@
 import 'dart:math';
 main()
 {
-    List<double> x = [1.0,2.0,3.0];
-    print(StdDev(x).toString());
-    print(BollingerUpper(x).toString());
-    print(BollingerLower(x).toString());
+    List<double> x = new List<double>.generate(100,(i)=>i+1.0);
+    int step = 10;
+    for(int i=step;i<x.length;i++)
+    {
+        print(StdDev(x.sublist(i-step, i)).toString());
+        print(BollingerUpper(x.sublist(i-step, i)).toString());
+        print(BollingerLower(x.sublist(i-step, i)).toString());
+        print(Average(x.sublist(i-step, i)).toString());
+    }
 }
 double BollingerUpper(List<double> x)
 {
