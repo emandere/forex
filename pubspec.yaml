@@ -8,6 +8,7 @@ environment:
   sdk: '>=1.9.0 <2.0.0'
 
 dependencies:
+  http:
   browser: ^0.10.0
   polymer_elements: ^1.0.0-rc.8
   polymer: ^1.0.0-rc.15

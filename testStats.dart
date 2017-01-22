@@ -1,5 +1,5 @@
 import 'dart:math';
-main()
+/*main()
 {
     List<double> x = new List<double>.generate(100,(i)=>i+1.0);
     int step = 10;
@@ -10,7 +10,7 @@ main()
         print(BollingerLower(x.sublist(i-step, i)).toString());
         print(Average(x.sublist(i-step, i)).toString());
     }
-}
+}*/
 double BollingerUpper(List<double> x)
 {
     double val = x.last;

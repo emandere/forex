@@ -39,6 +39,12 @@ class ForexMongo
     return db.collection('forexvalues').find(condition).toList();
   }
 
+  Stream readDailyValuesRangeAsync(pair,DateTime startDate,DateTime endDate ) async*
+  {
+    SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
+    yield* db.collection('forexvalues').find(condition);
+  }
+
   Future<List<Map>> readDailyValue(pair,DateTime currDate)
   {
     //SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
@@ -85,6 +91,12 @@ class ForexMongo
         }
     ).then((dummy)=>pairs);
   }
+
+  Stream readMongoPairsAsync() async*
+  {
+     yield* db.collection('currencypairs').find();
+  }
+
 
   Future<List<String>> readUserNames()
   {
