@@ -110,22 +110,12 @@ main() async
   print("cache built");
   await for(Map values in cache.DailyValues())
   {
-    //iterable.fold(0, (prev, element) => prev + element);
     String closePrices=" ";
     for(Map pairvalues in values.values.first)
     {
-       for(String key in pairvalues.keys)
-       {
-          closePrices+=":"+pairvalues[key].toString();
-       }
+       closePrices+=pairvalues.keys.map((key)=>pairvalues[key].toString()).reduce((t,e)=>t+":"+e)+" ";
     }
     print (values.keys.first + closePrices);
-     /*String closePrices = "";
-      for(Map pairvalues in values.values.first)
-      {
-        closePrices+=" "+pairvalues["pair"]+":"+pairvalues["close"].toString()+":"+pairvalues[greaterthan50Avg.name].toString();
-      }
-      print (values.keys.first + closePrices);*/
   }
   exit(1);
 
