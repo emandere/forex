@@ -23,13 +23,14 @@ double BollingerLower(List<double> x)
 }
 double Average(List<double> x)
 {
-    double sum = x.fold(0,(t,e)=>t+e);
+    double sum = x.reduce((t,e)=>t+e);
     double xavg = sum / x.length;
     return xavg;
 }
 double StdDev(List<double> x)
 {
-    double sumsquared = x.fold(0,(t,e)=>t+(e*e));
+    double sumsquared = x.map((t)=>t*t)
+                         .reduce((t,e)=>t+e);
     double stdDev = sqrt((sumsquared/x.length) - (Average(x)*Average(x)));
     return stdDev;
 }

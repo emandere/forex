@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'lib/forex_classes.dart';
 import 'lib/forex_mongo.dart';
 import 'lib/candle_stick.dart';
 import 'testStats.dart';
+
 class IndicatorRule
 {
    String name;
@@ -62,14 +64,17 @@ class ForexCache
 
       for(int i=0;i<cacheSize;i++)
       {
-        Map<String,List<Map>> values = new Map<String,List<Map>>();
+        var values = new Map<String,List<Map>>();
         String dailyValuesDate = cache.values.first[i]["date"];
         values[dailyValuesDate]=new List<Map>();
         for(String pair in cache.keys)
         {
              Map dailyValue = new Map();
-             dailyValue["pair"] = cache[pair][i]["pair"];
-             dailyValue["close"]=cache[pair][i]["close"];
+             for(var key in cache[pair][i].keys)
+             {
+               dailyValue[key] = cache[pair][i][key];
+               //dailyValue["close"] = cache[pair][i]["close"];
+             }
              for(IndicatorRule rule in rules)
              {
                   if(i>=rule.dataPoints)
@@ -100,7 +105,7 @@ main() async
   //Map<String,List<Map>> cache = new Map<String,List<Map>>();
   ForexMongo mongoLayer = new ForexMongo("debug");
   await mongoLayer.db.open();
-  DateTime startDate = DateTime.parse("2007-01-01");
+  DateTime startDate = DateTime.parse("2002-12-31");
   DateTime endDate = DateTime.parse("2012-01-01");
   List<IndicatorRule> rules = new List<IndicatorRule>();
   IndicatorRule greaterthan50Avg = new IndicatorRule("gthan50",50);
@@ -108,15 +113,50 @@ main() async
   ForexCache cache = new ForexCache(mongoLayer,startDate,endDate,rules);
   await cache.buildCache();
   print("cache built");
+
+  TradingSession testSession=new TradingSession();
+  testSession.id="testSessionNew";
+  testSession.sessionUser.id="testSessionUserNew";
+  testSession.fundAccount("primary",2000.0);
   await for(Map values in cache.DailyValues())
+  {
+    for(Map pairvalues in values.values.first)
+    {
+        if(pairvalues["gthan50"]) {
+          testSession.executeTrade(
+              "primary",
+              pairvalues["pair"],
+              10,
+              "long",
+              pairvalues["date"],
+              0.9 * pairvalues["close"],
+              1.1 * pairvalues["close"]);
+        }
+    }
+    testSession.updateSession(values.keys.first,values.values.first);
+  }
+
+  testSession.printacc();
+
+  PostData myData = new PostData();
+  myData.data=testSession.toJson();
+
+  var url = "http://23.22.66.239/api/forexclasses/v1/addsessionpost";
+  var response = await http.post(url,body:myData.toJsonMap());
+  print("Response status: ${response.statusCode}");
+  print("Response body: ${response.body}");
+
+  /*await for(Map values in cache.DailyValues())
   {
     String closePrices=" ";
     for(Map pairvalues in values.values.first)
     {
-       closePrices+=pairvalues.keys.map((key)=>pairvalues[key].toString()).reduce((t,e)=>t+":"+e)+" ";
+       closePrices+=pairvalues.keys.map((key)=>pairvalues[key].toString())
+                                   .reduce((t,e)=>t+":"+e)+" ";
     }
-    print (values.keys.first + closePrices);
-  }
+    //print (values.keys.first + closePrices);
+  }*/
+
   exit(1);
 
 }

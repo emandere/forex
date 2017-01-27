@@ -731,6 +731,17 @@ class TradingSession
      }
    }
 
+   updateSession(String currTime,List<Map> pairs)
+   {
+     currentTime = DateTime.parse(currTime);
+     for(String pair in sessionUser.TradingPairs())
+     {
+        var pairMap = pairs.where((x)=>x["pair"]==pair).first;
+        sessionUser.updateTrades(pair,currTime,pairMap["close"]);
+     }
+     updateHistory();
+   }
+
 
    Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,Function dailyValuesCall,Function dailyValuesCallMissing) async
    {
