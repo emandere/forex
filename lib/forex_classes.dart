@@ -2,7 +2,9 @@ library forex_classes;
 import 'dart:convert';
 import 'dart:async';
 import 'candle_stick.dart';
-
+import 'forex_stats.dart';
+import 'dart:collection';
+import "package:collection/collection.dart";
 
 class UserData
 {
@@ -222,6 +224,7 @@ class Account
      cash+=moveTrade.PL();
      closedTrades.add(moveTrade);
      Trades.removeAt(tradeIndex);
+
   }
 
   Account.fromJsonMap(Map jsonNode)
@@ -234,14 +237,14 @@ class Account
     //balance = balance - (trade.units * trade.openPrice);
     bool matchTrade(Trade i)
     {
-        if(i.pair==trade.pair && i.units==trade.units && (i.long!=trade.long))
+        if(i.pair==trade.pair && i.units==trade.units && i.openDate==trade.openDate && (i.long!=trade.long))
           return true;
         else
           return false;
 
     }
 
-    if(Trades.length>0)
+    if(Trades.isNotEmpty)
     {
       Trade oppositeTrade = Trades.firstWhere(matchTrade, orElse: () => null);
       //int index = Trades.indexOf(oppositeTrade);
@@ -249,6 +252,8 @@ class Account
       {
         trade.id = idcount;
         Trades.add(trade);
+        if(!trade.long)
+            print("broken here");
         idcount++;
       }
       else
@@ -261,23 +266,30 @@ class Account
     {
       trade.id = idcount;
       Trades.add(trade);
+      if(!trade.long)
+        print("broken here");
       idcount++;
     }
 
   }
 
-  setOrder(int index,double price,direction)
+  setOrder(int index,String openDate,double price,direction)
   {
       Trade stopTrade = new Trade();
-      Trade trade = Trades.firstWhere((Trade i)=>i.id==index);
+      Trade trade = Trades.firstWhere((Trade i)=>i.id==index,orElse: () => null);
       if(trade!=null)
       {
         stopTrade.pair = trade.pair;
         stopTrade.units = trade.units;
         stopTrade.long = !trade.long;
+        stopTrade.openDate = openDate;
 
         Order stopLossOrder = new Order(stopTrade,price,direction);
         orders.add(stopLossOrder);
+      }
+      else
+      {
+         print("order failed");
       }
   }
 
@@ -378,6 +390,32 @@ class Account
     return NetAssetValue() - MarginUsed();
   }
 
+  double averageTradePL()
+  {
+     if(closedTrades.isNotEmpty)
+     {
+       var PLList = closedTrades.map((x) => x.PL()).toList();
+       return Average(PLList);
+     }
+     else
+     {
+       return 0.0;
+     }
+  }
+
+  double stdDevTradePL()
+  {
+    if(closedTrades.isNotEmpty)
+    {
+      var PLList = closedTrades.map((x) => x.PL()).toList();
+      return StdDev(PLList);
+    }
+    else
+    {
+      return 0.0;
+    }
+  }
+
 
   printacc()
   {
@@ -391,6 +429,27 @@ class Account
     print("Margin Used "+MarginUsed().toString());
     print("Margin Available "+MarginAvailable().toString());
     print("Cash Balance "+cash.toString());
+    print("Average Realized PL "+averageTradePL().toString());
+    print("Std Dev Realized PL "+stdDevTradePL().toString());
+    printAverageClosedTradeByPair();
+  }
+
+  printAverageClosedTradeByPair()
+  {
+    selectByName(String pair)=>closedTrades
+        .where((trade)=>trade.pair==pair)
+        .map((trade)=>trade.PL());
+
+    var pairs = closedTrades.map((trade)=>trade.pair)
+                            .toSet();
+
+    var averageByPair = pairs.map(selectByName)
+                               .map(Average);
+
+    var averageByPairListZip = new IterableZip([pairs,averageByPair]);
+
+    averageByPairListZip.forEach(print);
+
   }
 
   processOrders(Function dailyValuesRange,Function dailyValues,Function dailyValuesMissing,DateTime currentTime) async
@@ -410,6 +469,27 @@ class Account
             order.expired = true;
           }
         }
+      }
+    }
+  }
+
+  processOrdersNew(String pair,double currentValue)
+  {
+    for(Order order in orders)
+    {
+      if(!order.expired)
+      {
+          if(order.trade.pair==pair && order.checkTrigger(currentValue))
+          {
+            //print("processed start event " +order.trade.pair +" "+order.trade.openDate+" "+Trades.length.toString());
+            executeTrade(order.trade);
+            //print("processed end event " +order.trade.pair +" "+order.trade.openDate+" "+Trades.length.toString());
+            order.expired = true;
+            var twinOrder = orders.firstWhere((x)=>x.trade.pair==order.trade.pair
+                                               && x.above!=order.above
+                                               && x.trade.openDate==order.trade.openDate);
+            twinOrder.expired=true;
+          }
       }
     }
   }
@@ -622,12 +702,17 @@ class User
       secondaryAccount.processOrders(dailyValue,dailyValues,dailyValuesMissing,CurrentDate);
   }
 
-  setOrder(String acc,int index,double price,bool direction)
+  processOrdersNew(String pair,double currentValue)
+  {
+      primaryAccount.processOrdersNew(pair,currentValue);
+      secondaryAccount.processOrdersNew(pair,currentValue);
+  }
+  setOrder(String acc,String openDate,int index,double price,bool direction)
   {
     if(acc=="primary")
-      primaryAccount.setOrder(index,price,direction);
+      primaryAccount.setOrder(index,openDate,price,direction);
     else
-      secondaryAccount.setOrder(index,price,direction);
+      secondaryAccount.setOrder(index,openDate,price,direction);
   }
 
   transferAmount(String from,String to,double amount) {
@@ -731,15 +816,18 @@ class TradingSession
      }
    }
 
-   updateSession(String currTime,List<Map> pairs)
+   updateSession(List<Map> pairs)
    {
+     String currTime = pairs.first['date'];
      currentTime = DateTime.parse(currTime);
      for(String pair in sessionUser.TradingPairs())
      {
-        var pairMap = pairs.where((x)=>x["pair"]==pair).first;
+        var pairMap = pairs.firstWhere((x)=>x["pair"]==pair);
         sessionUser.updateTrades(pair,currTime,pairMap["close"]);
+        sessionUser.processOrdersNew(pair,pairMap["close"]);
      }
      updateHistory();
+
    }
 
 
@@ -786,24 +874,26 @@ class TradingSession
    executeTrade(String acc,String pair, int units,String position,String openDate,double stopLoss,double takeProfit)
    {
       sessionUser.executeTrade(acc,pair,units,position,openDate,stopLoss,takeProfit);
-      setStopLossAndTakeProfit(acc,position,stopLoss,takeProfit);
+      setStopLossAndTakeProfit(acc,openDate,position,stopLoss,takeProfit);
    }
 
-   setStopLossAndTakeProfit(String account,String position,double stopLossPrice,double takeProfitPrice)
+   setStopLossAndTakeProfit(String account,String openDate,String position,double stopLossPrice,double takeProfitPrice)
    {
-     int lastTrade = sessionUser.Accounts[account].idcount-1;
-
+     //int lastTrade = sessionUser.Accounts[account].idcount-1;
+     if(sessionUser.Accounts[account].Trades.isEmpty)
+        print ("here!");
+     int lastTrade = sessionUser.Accounts[account].Trades.last.id;
      //window.alert(lastTrade.toString()+" "+currentSession.sessionUser.Accounts[account.value].Trades[0].id.toString());
      if(position=="long")
      {
-       setOrder(account,lastTrade,stopLossPrice,false);
-       setOrder(account,lastTrade,takeProfitPrice,true);
+       setOrder(account,openDate,lastTrade,stopLossPrice,false);
+       setOrder(account,openDate,lastTrade,takeProfitPrice,true);
        //window.alert(currentSession.sessionUser.Accounts[account.value].orders.length.toString());
      }
      else
      {
-       setOrder(account,lastTrade,stopLossPrice,true);
-       setOrder(account,lastTrade,takeProfitPrice,false);
+       setOrder(account,openDate,lastTrade,stopLossPrice,true);
+       setOrder(account,openDate,lastTrade,takeProfitPrice,false);
      }
    }
 
@@ -812,9 +902,14 @@ class TradingSession
       sessionUser.processOrder(dailyValuesRange,dailyValues,dailyValuesMissing,currentTime);
    }
 
-   setOrder(String acc,int index,double price,bool direction)
+   processOrdersNew(String pair,double currentValue)
    {
-        sessionUser.setOrder(acc,index,price,direction);
+      sessionUser.processOrdersNew(pair,currentValue);
+   }
+
+   setOrder(String acc,String openDate,int index,double price,bool direction)
+   {
+        sessionUser.setOrder(acc,openDate,index,price,direction);
    }
 
    transferAmount(String from,String to,double amount)

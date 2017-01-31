@@ -5,7 +5,9 @@ import 'package:http/http.dart' as http;
 import 'lib/forex_classes.dart';
 import 'lib/forex_mongo.dart';
 import 'lib/candle_stick.dart';
-import 'testStats.dart';
+import 'lib/forex_stats.dart';
+import 'dart:collection';
+import "package:collection/collection.dart";
 
 class IndicatorRule
 {
@@ -23,7 +25,7 @@ class IndicatorRule
       {
           data.add(day["close"]);
       }
-      if(Average(data) < currentValue["close"])
+      if(Slope(data)>0 && Average(data) < currentValue["close"])
           return true;
       else
           return false;
@@ -33,14 +35,14 @@ class IndicatorRule
 
 class ForexCache
 {
-  Map<String,List<Map>> cache;
+  Map cache;
   ForexMongo mongoLayer;
   DateTime startDate;
   DateTime endDate;
   List<IndicatorRule> rules;
   ForexCache(this.mongoLayer,this.startDate,this.endDate,this.rules)
   {
-    cache = new Map<String,List<Map>>();
+    cache = {};
   }
 
   buildCache() async
@@ -48,50 +50,51 @@ class ForexCache
     await for(Map pairMap in mongoLayer.readMongoPairsAsync())
     {
       String pair = pairMap["name"];
-      cache[pair] = new List<Map>();
-
+      cache[pair] = <Map>[];
       await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsync(pair,startDate,endDate))
       {
         cache[pair].add(dailyvalueMap);
       }
     }
-
   }
 
-  Stream DailyValues() async*
+  DailyValues()
   {
-      int cacheSize = cache.values.first.length;
 
-      for(int i=0;i<cacheSize;i++)
+      GetPosition(pair,date)=>cache[pair].map((dailyvalue)=>dailyvalue['date']
+                                         .toString())
+                                         .toList()
+                                         .indexOf(date);
+      GetDailyValue(pair,date)=>cache[pair][GetPosition(pair,date)];
+      GetRange(pair,date,dataPoints)=>cache[pair].getRange(GetPosition(pair,date)-dataPoints,GetPosition(pair,date));
+      GetRuleResult(pair,date,rule,dataPoints)
       {
-        var values = new Map<String,List<Map>>();
-        String dailyValuesDate = cache.values.first[i]["date"];
-        values[dailyValuesDate]=new List<Map>();
-        for(String pair in cache.keys)
+        if (GetPosition(pair,date) >= dataPoints)
         {
-             Map dailyValue = new Map();
-             for(var key in cache[pair][i].keys)
-             {
-               dailyValue[key] = cache[pair][i][key];
-               //dailyValue["close"] = cache[pair][i]["close"];
-             }
-             for(IndicatorRule rule in rules)
-             {
-                  if(i>=rule.dataPoints)
-                  {
-                    var data = cache[pair].getRange(i-rule.dataPoints,i);
-                    dailyValue[rule.name] = checkRule(rule,data,cache[pair][i]);
-                  }
-                  else
-                  {
-                    dailyValue[rule.name]=false;
-                  }
-             }
-             values[dailyValuesDate].add(dailyValue);
+          return checkRule(rule, GetRange(pair, date, dataPoints), GetDailyValue(pair, date));
         }
-        yield values;
+        else
+        {
+          return false;
+        }
       }
+
+      addRules(List dailyValues)
+      {
+        for(Map dailyValue in dailyValues )
+        {
+          for (var rule in rules)
+          {
+              dailyValue[rule.name]=GetRuleResult(dailyValue['pair'],dailyValue['date'],rule,rule.dataPoints);
+          }
+        }
+        return dailyValues;
+      }
+
+      var dailyValuesZip = new IterableZip(cache.values);
+      return dailyValuesZip.map(addRules);
   }
+
 
   bool checkRule(IndicatorRule rule, Iterable dataList,Map dailyValue)
   {
@@ -113,27 +116,32 @@ main() async
   ForexCache cache = new ForexCache(mongoLayer,startDate,endDate,rules);
   await cache.buildCache();
   print("cache built");
+  cache.DailyValues();
+
 
   TradingSession testSession=new TradingSession();
-  testSession.id="testSessionNew";
-  testSession.sessionUser.id="testSessionUserNew";
+  testSession.id="testSessionNewSlope01Order2";
+  testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.fundAccount("primary",2000.0);
-  await for(Map values in cache.DailyValues())
+
+  for(var dailyPairValues in cache.DailyValues())
   {
-    for(Map pairvalues in values.values.first)
-    {
-        if(pairvalues["gthan50"]) {
+      for(Map dailyPairValue in dailyPairValues)
+      {
+        if(dailyPairValue["gthan50"]) {
+
           testSession.executeTrade(
               "primary",
-              pairvalues["pair"],
+              dailyPairValue["pair"],
               10,
               "long",
-              pairvalues["date"],
-              0.9 * pairvalues["close"],
-              1.1 * pairvalues["close"]);
+              dailyPairValue["date"],
+              0.99 * dailyPairValue["close"],
+              1.05 * dailyPairValue["close"]);
         }
-    }
-    testSession.updateSession(values.keys.first,values.values.first);
+      }
+      testSession.updateSession(dailyPairValues);
+      print(dailyPairValues.first["date"]);
   }
 
   testSession.printacc();
@@ -141,21 +149,10 @@ main() async
   PostData myData = new PostData();
   myData.data=testSession.toJson();
 
-  var url = "http://23.22.66.239/api/forexclasses/v1/addsessionpost";
+  var url = "http://localhost/api/forexclasses/v1/addsessionpost";
   var response = await http.post(url,body:myData.toJsonMap());
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");
-
-  /*await for(Map values in cache.DailyValues())
-  {
-    String closePrices=" ";
-    for(Map pairvalues in values.values.first)
-    {
-       closePrices+=pairvalues.keys.map((key)=>pairvalues[key].toString())
-                                   .reduce((t,e)=>t+":"+e)+" ";
-    }
-    //print (values.keys.first + closePrices);
-  }*/
 
   exit(1);
 
