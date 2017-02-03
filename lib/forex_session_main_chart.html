@@ -12,6 +12,11 @@
             width: 800px;
         }
 
+        #histogramChart
+        {
+            width: 800px;
+        }
+
         paper-fab.blue
         {
             background: #03A9F4;
@@ -38,39 +43,32 @@
     </style>
 
 <template>
-    <paper-card>
-        <div class="card-content">
-            <google-chart id="balanceChart"></google-chart>
+    <div class="content fit" align="center">
+        <div>
+            <paper-card>
+                <div class="card-content">
+                    <google-chart id="balanceChart"></google-chart>
+                </div>
+            </paper-card>
         </div>
-    </paper-card>
-
-    <paper-card>
-        <div class="card-content">
-            <google-chart id="mainChart"></google-chart>
+        <br>
+        <div>
+            <paper-card>
+                <div class="card-content">
+                    <google-chart id="histogramChart"></google-chart>
+                </div>
+            </paper-card>
         </div>
-    </paper-card>
-    <paper-fab mini id="selectPair" class="blue" icon="view-module"></paper-fab>
+        <br>
+        <div>
+            <paper-card>
+                <div class="card-content">
+                    <google-chart id="mainChart"></google-chart>
+                </div>
+            </paper-card>
 
-    <paper-dialog id="dialogChart">
-        <h2>Select Date Range and Currency Pair</h2>
-        <paper-dialog-scrollable>
-        <paper-input id="startDate" label="Start Date" floatingLabel></paper-input>
-        <paper-input id="endDate" label="End Date" floatingLabel></paper-input>
-
-            <paper-menu id="menuPair">
-                <template is="dom-repeat" items="{{currencyPairs}}">
-                        <paper-item>{{item}}</paper-item>
-                </template>
-            </paper-menu>
-
-        </paper-dialog-scrollable>
-        <div  class="buttons">
-            <paper-button raised class="colored" id="btnCharts" dialog-dismiss>Update Chart</paper-button>
-            <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
         </div>
-    </paper-dialog>
+    </div>
+
 </template>
-
-
-
 </dom-module>

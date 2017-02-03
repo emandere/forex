@@ -18,9 +18,9 @@ class IndicatorRule
 
    }
 
-   bool isMet(List<Map> window,Map currentValue)
+   bool IsMet(Iterable<Map> window,Map currentValue)
    {
-      List<double> data = new List<double>();
+      List<double> data = <double>[];
       for(Map day in window)
       {
           data.add(day["close"]);
@@ -60,7 +60,6 @@ class ForexCache
 
   DailyValues()
   {
-
       GetPosition(pair,date)=>cache[pair].map((dailyvalue)=>dailyvalue['date']
                                          .toString())
                                          .toList()
@@ -71,7 +70,7 @@ class ForexCache
       {
         if (GetPosition(pair,date) >= dataPoints)
         {
-          return checkRule(rule, GetRange(pair, date, dataPoints), GetDailyValue(pair, date));
+          return rule.IsMet(GetRange(pair, date, dataPoints), GetDailyValue(pair, date));
         }
         else
         {
@@ -96,10 +95,7 @@ class ForexCache
   }
 
 
-  bool checkRule(IndicatorRule rule, Iterable dataList,Map dailyValue)
-  {
-        return rule.isMet(dataList.toList(),dailyValue);
-  }
+
 
 }
 
@@ -122,6 +118,7 @@ main() async
   TradingSession testSession=new TradingSession();
   testSession.id="testSessionNewSlope01Order2";
   testSession.sessionUser.id="testSessionUserNewSlope";
+  testSession.startDate = startDate;
   testSession.fundAccount("primary",2000.0);
 
   for(var dailyPairValues in cache.DailyValues())

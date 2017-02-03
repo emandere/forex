@@ -316,7 +316,7 @@ class ForexSession extends PolymerElement
       {
         String pair = currentSession.sessionUser.TradingPairs()[0];
         List values = await dailyValues(pair, startdt, enddt);
-        mainChart.loadCurrencyChart(pair, startdt, enddt, values);
+        mainChart.loadCurrencyChart(pair,values);
       }
       updateSession();
 
@@ -327,15 +327,22 @@ class ForexSession extends PolymerElement
 
   List balanceHist()
   {
-    var data=new List();
-    for(Map dailyVal in currentSession.sessionUser.primaryAccount.balanceHistory)
-    {
-      var dval = new List();
-      dval.add(DateTime.parse(dailyVal["date"]));
-      dval.add(dailyVal["amount"]);
-      data.add(dval);
-    }
-    return data;
+    return currentSession.
+         sessionUser
+        .primaryAccount
+        .balanceHistory
+        .map((dailyVal)=>[DateTime.parse(dailyVal["date"]),dailyVal["amount"]])
+        .toList();
+  }
+
+  List TradingHistogram()
+  {
+     return currentSession
+         .sessionUser
+         .primaryAccount
+         .closedTrades
+         .map((trade)=>[trade.pair+trade.openDate,trade.PL()])
+         .toList();
   }
 
   Future<List<Map>> readDailyValue(String pair,DateTime date) async
@@ -409,6 +416,7 @@ class ForexSession extends PolymerElement
   SetUpDashboard() async
   {
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
+    mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
 
     if(currentSession.sessionUser.TradingPairs().length>0)
     {
@@ -418,7 +426,7 @@ class ForexSession extends PolymerElement
       String enddt=formatter.format(currentSession.currentTime);
       String pair = currentSession.sessionUser.TradingPairs()[0];
       List values = await dailyValues(pair, startdt, enddt);
-      mainChart.loadCurrencyChart(pair, startdt, enddt, values);
+      mainChart.loadCurrencyChart(pair,values);
     }
   }
 
