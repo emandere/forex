@@ -345,6 +345,22 @@ class ForexSession extends PolymerElement
          .toList();
   }
 
+  List TradingTimeHistogram()
+  {
+    int DateDiff(Trade trade)
+    {
+      DateTime openDate = DateTime.parse(trade.openDate);
+      DateTime closeDate = DateTime.parse(trade.closeDate);
+      return closeDate.difference(openDate).inDays;
+    }
+    return currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
+        .toList();
+  }
+
   Future<List<Map>> readDailyValue(String pair,DateTime date) async
   {
 
@@ -417,6 +433,7 @@ class ForexSession extends PolymerElement
   {
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
+    mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
 
     if(currentSession.sessionUser.TradingPairs().length>0)
     {

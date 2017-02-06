@@ -83,4 +83,21 @@ class ForexMainChart extends PolymerElement
     histogramChart.rows = data;
   }
 
+  loadTradesTimeHistogram(String session,List data)
+  {
+    GoogleChart histogramTimeChart =$['histogramTimeChart'];
+    String chartTitle="Histogram of Trade Timespan";
+    var options = {
+      'title':chartTitle,
+      'legend': 'none',
+      'vAxis':{'title':'Number of Trades'},
+      'hAxis':{'title':'Trade Length'}
+    };
+
+    histogramTimeChart.options=options;
+    histogramTimeChart.type="histogram";
+    histogramTimeChart.cols=[ {"type":"string"},{"type":"number"}];
+    histogramTimeChart.rows = data;
+  }
+
 }
