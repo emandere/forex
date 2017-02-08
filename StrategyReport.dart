@@ -120,7 +120,8 @@ main() async
   testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.startDate = startDate;
   testSession.fundAccount("primary",2000.0);
-
+  Stopwatch watch = new Stopwatch();
+  watch.start();
   for(var dailyPairValues in cache.DailyValues())
   {
       for(Map dailyPairValue in dailyPairValues)
@@ -138,18 +139,21 @@ main() async
         }
       }
       testSession.updateSession(dailyPairValues);
-      print(dailyPairValues.first["date"]);
+      //print(dailyPairValues.first["date"]);
   }
+  watch.stop();
 
   testSession.printacc();
+  print(watch.elapsedMilliseconds.toString());
+
 
   PostData myData = new PostData();
   myData.data=testSession.toJson();
 
-  var url = "http://localhost/api/forexclasses/v1/addsessionpost";
+  /*var url = "http://localhost/api/forexclasses/v1/addsessionpost";
   var response = await http.post(url,body:myData.toJsonMap());
   print("Response status: ${response.statusCode}");
-  print("Response body: ${response.body}");
+  print("Response body: ${response.body}");*/
 
   exit(1);
 
