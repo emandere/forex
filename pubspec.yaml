@@ -20,6 +20,7 @@ dependencies:
   dart_to_js_script_rewriter: "^1.0.1"
   intl: "^0.12.7"
   gcloud:
+  parallel:
   googleapis: any
   googleapis_auth: any
 transformers:
