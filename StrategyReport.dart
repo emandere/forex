@@ -6,32 +6,11 @@ import 'lib/forex_classes.dart';
 import 'lib/forex_mongo.dart';
 import 'lib/candle_stick.dart';
 import 'lib/forex_stats.dart';
+import 'lib/forex_indicator_rules.dart';
 import 'dart:collection';
 import "package:collection/collection.dart";
 
-class IndicatorRule
-{
-   String name;
-   int dataPoints;
-   IndicatorRule(this.name,this.dataPoints)
-   {
 
-   }
-
-   bool IsMet(Iterable<Map> window,Map currentValue)
-   {
-      List<double> data = <double>[];
-      for(Map day in window)
-      {
-          data.add(day["close"]);
-      }
-      if(Slope(data)>0 && Average(data) < currentValue["close"])
-          return true;
-      else
-          return false;
-   }
-
-}
 
 class ForexCache
 {
@@ -107,8 +86,11 @@ main() async
   DateTime startDate = DateTime.parse("2002-12-31");
   DateTime endDate = DateTime.parse("2012-01-01");
   List<IndicatorRule> rules = new List<IndicatorRule>();
-  IndicatorRule greaterthan50Avg = new IndicatorRule("gthan50",50);
-  rules.add(greaterthan50Avg);
+
+  String ruleName = "PositiveSlopeAndGreaterThanAverage";
+
+  IndicatorRule tradingRule = new IndicatorRule(ruleName,50);
+  rules.add(tradingRule);
   ForexCache cache = new ForexCache(mongoLayer,startDate,endDate,rules);
   await cache.buildCache();
   print("cache built");
@@ -126,7 +108,7 @@ main() async
   {
       for(Map dailyPairValue in dailyPairValues)
       {
-        if(dailyPairValue["gthan50"]) {
+        if(dailyPairValue[ruleName]) {
 
           testSession.executeTrade(
               "primary",
@@ -150,10 +132,10 @@ main() async
   PostData myData = new PostData();
   myData.data=testSession.toJson();
 
-  /*var url = "http://localhost/api/forexclasses/v1/addsessionpost";
+  var url = "http://23.22.66.239/api/forexclasses/v1/addsessionpost";
   var response = await http.post(url,body:myData.toJsonMap());
   print("Response status: ${response.statusCode}");
-  print("Response body: ${response.body}");*/
+  print("Response body: ${response.body}");
 
   exit(1);
 

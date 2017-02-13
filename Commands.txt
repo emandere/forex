@@ -10,6 +10,13 @@ docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
 docker exec -it mongo bash
 
 
+# Delete every Docker containers
+# Must be run first because images are attached to containers
+docker rm $(docker ps -a -q)
+
+# Delete every Docker image
+docker rmi $(docker images -q)
+
 //Get running containers
 sudo docker ps
 
@@ -20,6 +27,11 @@ sudo docker stop [id]
 sudo docker build -t forexapp github.com/emandere/forex
 
 //Run forex docker container
-sudo docker run -p 80:80 --link mongo:mongo forexapp
+sudo docker run -p 80:80 --link mongo:mongo forexapp -t
+
+//Start EC2 Instance
+
+aws ec2 run-instances --image-id ami-abe2aabc --security-group-ids sg-b46484c8 --subnet-id subnet-c771eeb0 --count 1 --instance-type c4.8xlarge --key-name devenv-key --query 'Instances[0].InstanceId'
+
 
 
