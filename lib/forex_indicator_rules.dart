@@ -5,6 +5,10 @@ abstract class IndicatorRule
   {
       switch(ruleName)
       {
+        case "BelowBollingerBandLowerWithSlope":
+          return new BelowBollingerBandLowerWithSlope(ruleName,dataPoints);
+        case "BelowBollingerBandLower":
+          return new BelowBollingerBandLower(ruleName,dataPoints);
         case "PositiveSlopeAndGreaterThanAverage":
           return new PositiveSlopeAndGreaterThanAverage(ruleName,dataPoints);
         default:
@@ -40,3 +44,48 @@ class PositiveSlopeAndGreaterThanAverage implements IndicatorRule
 }
 
 
+class BelowBollingerBandLower implements IndicatorRule
+{
+
+  String name;
+  int dataPoints;
+  BelowBollingerBandLower(this.name,this.dataPoints)
+  {
+
+  }
+  bool IsMet(Iterable<Map> window,Map currentValue)
+  {
+    List<double> data = <double>[];
+    for(Map day in window)
+    {
+      data.add(day["close"]);
+    }
+    if(BollingerLower(data) < currentValue["close"])
+      return true;
+    else
+      return false;
+  }
+}
+
+class BelowBollingerBandLowerWithSlope implements IndicatorRule
+{
+
+  String name;
+  int dataPoints;
+  BelowBollingerBandLowerWithSlope(this.name,this.dataPoints)
+  {
+
+  }
+  bool IsMet(Iterable<Map> window,Map currentValue)
+  {
+    List<double> data = <double>[];
+    for(Map day in window)
+    {
+      data.add(day["close"]);
+    }
+    if(Slope(data)>0  && BollingerLower(data) < currentValue["close"])
+      return true;
+    else
+      return false;
+  }
+}

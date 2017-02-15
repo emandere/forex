@@ -82,17 +82,20 @@ main() async
 {
   //Map<String,List<Map>> cache = new Map<String,List<Map>>();
   ForexMongo mongoLayer = new ForexMongo("debug");
-  await mongoLayer.db.open();
+
   DateTime startDate = DateTime.parse("2002-12-31");
   DateTime endDate = DateTime.parse("2012-01-01");
   List<IndicatorRule> rules = new List<IndicatorRule>();
-
-  String ruleName = "PositiveSlopeAndGreaterThanAverage";
-
+  String ruleName = "BelowBollingerBandLowerWithSlope";
+  double stopLoss = 0.99;
+  double takeProfit = 1.003;
   IndicatorRule tradingRule = new IndicatorRule(ruleName,50);
   rules.add(tradingRule);
+
+  await mongoLayer.db.open();
   ForexCache cache = new ForexCache(mongoLayer,startDate,endDate,rules);
   await cache.buildCache();
+
   print("cache built");
   cache.DailyValues();
 
@@ -116,8 +119,8 @@ main() async
               10,
               "long",
               dailyPairValue["date"],
-              0.99 * dailyPairValue["close"],
-              1.05 * dailyPairValue["close"]);
+              stopLoss * dailyPairValue["close"],
+              takeProfit * dailyPairValue["close"]);
         }
       }
       testSession.updateSession(dailyPairValues);
