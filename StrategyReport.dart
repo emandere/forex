@@ -86,10 +86,11 @@ main() async
   DateTime startDate = DateTime.parse("2002-12-31");
   DateTime endDate = DateTime.parse("2012-01-01");
   List<IndicatorRule> rules = new List<IndicatorRule>();
-  String ruleName = "BelowBollingerBandLowerWithSlope";
-  double stopLoss = 0.99;
-  double takeProfit = 1.003;
-  IndicatorRule tradingRule = new IndicatorRule(ruleName,50);
+  String ruleName = "BelowBollingerBandLower";
+  double takeProfit = 0.997;
+  double stopLoss = 1.01;
+  int units = 15000;
+  IndicatorRule tradingRule = new IndicatorRule(ruleName,20);
   rules.add(tradingRule);
 
   await mongoLayer.db.open();
@@ -101,7 +102,7 @@ main() async
 
 
   TradingSession testSession=new TradingSession();
-  testSession.id="testSessionNewSlope01Order2";
+  testSession.id='testSession$ruleName';
   testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.startDate = startDate;
   testSession.fundAccount("primary",2000.0);
@@ -116,9 +117,10 @@ main() async
           testSession.executeTrade(
               "primary",
               dailyPairValue["pair"],
-              10,
-              "long",
+              units,
+              "short",
               dailyPairValue["date"],
+              dailyPairValue["close"],
               stopLoss * dailyPairValue["close"],
               takeProfit * dailyPairValue["close"]);
         }

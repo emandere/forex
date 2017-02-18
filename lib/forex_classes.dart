@@ -252,8 +252,7 @@ class Account
       {
         trade.id = idcount;
         Trades.add(trade);
-        if(!trade.long)
-            print("broken here");
+
         idcount++;
       }
       else
@@ -266,8 +265,7 @@ class Account
     {
       trade.id = idcount;
       Trades.add(trade);
-      if(!trade.long)
-        print("broken here");
+
       idcount++;
     }
 
@@ -370,6 +368,11 @@ class Account
     return tradeAmount;
   }
 
+  num PL()
+  {
+     return RealizedPL() + UnrealizedPL();
+  }
+
   num NetAssetValue()
   {
       return cash + UnrealizedPL();
@@ -424,7 +427,7 @@ class Account
     {
       print(currTrade.id.toString()+" "+ currTrade.pair+" "+currTrade.units.toString()+" "+currTrade.PL().toString());
     }
-    print("PL "+UnrealizedPL().toString());
+    print("PL "+PL().toString());
     print("Net Value "+NetAssetValue().toString());
     print("Margin Used "+MarginUsed().toString());
     print("Margin Available "+MarginAvailable().toString());
@@ -614,6 +617,11 @@ class User
     return balance;
   }
 
+  num PL()
+  {
+     return UnRealizedPL() + RealizedPL();
+  }
+
   List<String> TradingPairs()
   {
      List<String> pairs= new List<String>();
@@ -691,7 +699,7 @@ class User
       print("Secondary Account");
       secondaryAccount.printacc();
 
-      print("User PL "+UnRealizedPL().toString());
+      print("User PL "+PL().toString());
       print("User Net Value "+NetAssetValue().toString());
       print("User Cash Balance "+Cash().toString());
   }
@@ -871,10 +879,13 @@ class TradingSession
       sessionUser.fundAccount(acc,amount);
    }
 
-   executeTrade(String acc,String pair, int units,String position,String openDate,double stopLoss,double takeProfit)
+   executeTrade(String acc,String pair, int units,String position,String openDate,double price,double stopLoss,double takeProfit)
    {
-      sessionUser.executeTrade(acc,pair,units,position,openDate,stopLoss,takeProfit);
-      setStopLossAndTakeProfit(acc,openDate,position,stopLoss,takeProfit);
+      if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (price * units.toDouble()))
+      {
+        sessionUser.executeTrade(acc, pair, units,position, openDate, stopLoss, takeProfit);
+        setStopLossAndTakeProfit(acc, openDate, position, stopLoss, takeProfit);
+      }
    }
 
    setStopLossAndTakeProfit(String account,String openDate,String position,double stopLossPrice,double takeProfitPrice)
