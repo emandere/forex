@@ -33,5 +33,13 @@ sudo docker run -p 80:80 --link mongo:mongo forexapp -t
 
 aws ec2 run-instances --image-id ami-abe2aabc --security-group-ids sg-b46484c8 --subnet-id subnet-c771eeb0 --count 1 --instance-type c4.8xlarge --key-name devenv-key --query 'Instances[0].InstanceId'
 
+//Script to reset aws
 
-
+!#/bin/bash
+sudo docker kill $(sudo docker ps -q)
+sudo docker rm $(sudo docker ps -a -q)
+sudo docker rmi $(sudo docker images -q)
+sudo docker pull mongo:latest
+sudo docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
+sudo docker build -t forexapp github.com/emandere/forex
+sudo docker run -p 80:80 --link mongo:mongo forexapp -t
