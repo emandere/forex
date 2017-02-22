@@ -73,7 +73,7 @@ class ForexSession extends PolymerElement
 
 
      PaperMenu menuPage=$['menuPage'];
-     PaperFab playpauseBtn =$['playpauseBtn'];
+     //PaperFab playpauseBtn =$['playpauseBtn'];
 
 
      sessionPanel=$['sessionPanel'];
@@ -91,7 +91,7 @@ class ForexSession extends PolymerElement
 
      //menuPage.on['tap'].listen((event)=>panel.togglePanel());
      menuPage.on['tap'].listen(redrawCharts);
-     playpauseBtn.on['tap'].listen((event)=>playpause());
+     //playpauseBtn.on['tap'].listen((event)=>playpause());
 
 
      countdownAmt=1;
