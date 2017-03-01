@@ -10,27 +10,38 @@ import 'lib/forex_indicator_rules.dart';
 import 'dart:collection';
 import "package:collection/collection.dart";
 
-
-
 class ForexCache
 {
   Map cache;
-  ForexMongo mongoLayer;
-  DateTime startDate;
-  DateTime endDate;
+  //ForexMongo mongoLayer;
+  String startDate;
+  String endDate;
   List<IndicatorRule> rules;
-  ForexCache(this.mongoLayer,this.startDate,this.endDate,this.rules)
+  ForexCache(this.startDate,this.endDate,this.rules)
   {
     cache = {};
   }
 
-  buildCache() async
+  readMongoPairs(String server) async
   {
-    await for(Map pairMap in mongoLayer.readMongoPairsAsync())
+    var pairurl = 'http://$server/api/forexclasses/v1/pairs';
+    var pairsListStr = await http.get(pairurl);
+    return JSON.decode(pairsListStr.body);
+  }
+
+  readDailyValuesRangeAsync(String server,String pair,String startDate,String endDate) async
+  {
+    var pairurl = 'http://$server/api/forexclasses/v1/dailyvaluesrange/$pair/$startDate/$endDate';
+    var pairsListStr = await http.get(pairurl);
+    return JSON.decode(pairsListStr.body);
+  }
+
+  buildCache(String server) async
+  {
+    for(String pair in await readMongoPairs(server))
     {
-      String pair = pairMap["name"];
       cache[pair] = <Map>[];
-      await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsync(pair,startDate,endDate))
+      for(Map dailyvalueMap in await readDailyValuesRangeAsync(server,pair,startDate,endDate))
       {
         cache[pair].add(dailyvalueMap);
       }
@@ -80,11 +91,9 @@ class ForexCache
 
 main() async
 {
-  //Map<String,List<Map>> cache = new Map<String,List<Map>>();
-  ForexMongo mongoLayer = new ForexMongo("debug");
-
-  DateTime startDate = DateTime.parse("2002-12-31");
-  DateTime endDate = DateTime.parse("2012-01-01");
+  String server ="localhost";
+  String startDate = "2002-12-31";
+  String endDate = "2012-01-01";
   List<IndicatorRule> rules = new List<IndicatorRule>();
   String ruleName = "BelowBollingerBandLower";
   double takeProfit = 0.997;
@@ -93,9 +102,8 @@ main() async
   IndicatorRule tradingRule = new IndicatorRule(ruleName,20);
   rules.add(tradingRule);
 
-  await mongoLayer.db.open();
-  ForexCache cache = new ForexCache(mongoLayer,startDate,endDate,rules);
-  await cache.buildCache();
+  ForexCache cache = new ForexCache(startDate,endDate,rules);
+  await cache.buildCache(server);
 
   print("cache built");
   cache.DailyValues();
@@ -104,7 +112,7 @@ main() async
   TradingSession testSession=new TradingSession();
   testSession.id='testSession$ruleName';
   testSession.sessionUser.id="testSessionUserNewSlope";
-  testSession.startDate = startDate;
+  testSession.startDate = DateTime.parse(startDate);
   testSession.fundAccount("primary",2000.0);
   Stopwatch watch = new Stopwatch();
   watch.start();
@@ -137,7 +145,7 @@ main() async
   PostData myData = new PostData();
   myData.data=testSession.toJson();
 
-  var url = "http://23.22.66.239/api/forexclasses/v1/addsessionpost";
+  var url = 'http://$server/api/forexclasses/v1/addsessionpost';
   var response = await http.post(url,body:myData.toJsonMap());
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");

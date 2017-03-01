@@ -27,6 +27,7 @@ double StdDev(Iterable x)
 
 double Slope(Iterable y)
 {
+  //See https://en.wikipedia.org/wiki/Simple_linear_regression
   var x = new List<double>.generate(y.length,(int index)=>index.toDouble()+1.0);
   double AverageX = Average(x);
   double AverageY = Average(y);

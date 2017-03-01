@@ -257,20 +257,16 @@ class ForexClasses
   }
 
   @ApiMethod(path: 'dailyvaluesrange/{pair}/{startDate}/{endDate}')
-  Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,String endDate)
+  Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,String endDate) async
   {
     List<ForexDailyValue> dailyvals=new List<ForexDailyValue>();
-    print("Here we are");
-    sendDailyValues(mapValues)
+    await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsync(pair,DateTime.parse(startDate),DateTime.parse(endDate)))
     {
-      for (Map mapDaily in mapValues)
-      {
-        ForexDailyValue val = new ForexDailyValue.fromJson(mapDaily);
-        dailyvals.add(val);
-      }
-      return dailyvals;
+      ForexDailyValue val = new ForexDailyValue.fromJson(dailyvalueMap);
+      dailyvals.add(val);
     }
-    return mongoLayer.readDailyValuesRange(pair,DateTime.parse(startDate),DateTime.parse(endDate)).then(sendDailyValues);
+
+     return dailyvals;
   }
 
   @ApiMethod(path: 'minutevalues/{pair}/{startDate}/{endDate}')

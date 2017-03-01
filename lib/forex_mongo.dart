@@ -79,17 +79,14 @@ class ForexMongo
     return db.collection('forexvaluesminute').find(condition).toList();
   }
 
-  Future<List<String>> readMongoPairs()
+  Future<List<String>> readMongoPairs() async
   {
-    print ("here");
     List<String> pairs=new List<String>();
-    return db.collection('currencypairs').find().forEach(
-            (pair)
-        {
-          print (pair["name"]);
-          pairs.add(pair["name"]);
-        }
-    ).then((dummy)=>pairs);
+    await for(Map pairMap in db.collection('currencypairs').find())
+    {
+       pairs.add(pairMap["name"]);
+    }
+    return pairs;
   }
 
   Stream readMongoPairsAsync() async*
