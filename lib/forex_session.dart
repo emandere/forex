@@ -422,10 +422,10 @@ class ForexSession extends PolymerElement
 
     currentSession = await loadSession(currentSessionId);
     updateSessionCards();
-    updateTradeMenu();
+    //updateTradeMenu();
     UpdatePrices();
 
-    SetUpDashboard();
+    //SetUpDashboard();
 
   }
 

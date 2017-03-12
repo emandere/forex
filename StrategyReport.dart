@@ -91,15 +91,18 @@ class ForexCache
 
 main() async
 {
-  String server ="localhost";
+  String server ="23.22.66.239";
   String startDate = "2002-12-31";
   String endDate = "2012-01-01";
-  List<IndicatorRule> rules = new List<IndicatorRule>();
-  String ruleName = "BelowBollingerBandLower";
+  String rulePosition="short";
+  String ruleName = "AboveBollingerBandHigher";
+
   double takeProfit = 0.997;
   double stopLoss = 1.01;
   int units = 15000;
+
   IndicatorRule tradingRule = new IndicatorRule(ruleName,20);
+  List<IndicatorRule> rules = new List<IndicatorRule>();
   rules.add(tradingRule);
 
   ForexCache cache = new ForexCache(startDate,endDate,rules);
@@ -116,6 +119,7 @@ main() async
   testSession.fundAccount("primary",2000.0);
   Stopwatch watch = new Stopwatch();
   watch.start();
+  var currentyear = "0";
   for(var dailyPairValues in cache.DailyValues())
   {
       for(Map dailyPairValue in dailyPairValues)
@@ -126,7 +130,7 @@ main() async
               "primary",
               dailyPairValue["pair"],
               units,
-              "short",
+              rulePosition,
               dailyPairValue["date"],
               dailyPairValue["close"],
               stopLoss * dailyPairValue["close"],
@@ -134,7 +138,6 @@ main() async
         }
       }
       testSession.updateSession(dailyPairValues);
-      //print(dailyPairValues.first["date"]);
   }
   watch.stop();
 

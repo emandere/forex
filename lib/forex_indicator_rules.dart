@@ -1,5 +1,11 @@
+library indicator_library;
 import 'dart:math';
 import 'forex_stats.dart';
+part 'indicators/AboveBollingerBandHigher.dart';
+part 'indicators/RandomRule.dart';
+part 'indicators/PositiveSlopeAndGreaterThanAverage.dart';
+part 'indicators/BelowBollingerBandLower.dart';
+part 'indicators/BelowBollingerBandLowerWithSlope.dart';
 
 abstract class IndicatorRule
 {
@@ -24,119 +30,6 @@ abstract class IndicatorRule
   String name;
   int dataPoints;
   bool IsMet(Iterable<Map> window,Map currentValue);
-}
-
-class PositiveSlopeAndGreaterThanAverage implements IndicatorRule
-{
-
-  String name;
-  int dataPoints;
-  PositiveSlopeAndGreaterThanAverage(this.name,this.dataPoints)
-  {
-
-  }
-  bool IsMet(Iterable<Map> window,Map currentValue)
-  {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
-    if(Slope(data)>0 && Average(data) < currentValue["close"])
-      return true;
-    else
-      return false;
-  }
-}
-
-
-class BelowBollingerBandLower implements IndicatorRule
-{
-
-  String name;
-  int dataPoints;
-  BelowBollingerBandLower(this.name,this.dataPoints)
-  {
-
-  }
-  bool IsMet(Iterable<Map> window,Map currentValue)
-  {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
-    if(BollingerLower(data) > currentValue["low"])
-      return true;
-    else
-      return false;
-  }
-}
-
-class BelowBollingerBandLowerWithSlope implements IndicatorRule
-{
-
-  String name;
-  int dataPoints;
-  BelowBollingerBandLowerWithSlope(this.name,this.dataPoints)
-  {
-
-  }
-  bool IsMet(Iterable<Map> window,Map currentValue)
-  {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
-    if(Slope(data)>0  && BollingerLower(data) > currentValue["low"])
-      return true;
-    else
-      return false;
-  }
-}
-
-class AboveBollingerBandHigher implements IndicatorRule
-{
-
-  String name;
-  int dataPoints;
-  AboveBollingerBandHigher(this.name,this.dataPoints)
-  {
-
-  }
-  bool IsMet(Iterable<Map> window,Map currentValue)
-  {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
-    if(BollingerUpper(data) < currentValue["high"])
-      return true;
-    else
-      return false;
-  }
-}
-
-
-class RandomRule implements IndicatorRule
-{
-
-  String name;
-  int dataPoints;
-  RandomRule(this.name,this.dataPoints)
-  {
-
-  }
-  bool IsMet(Iterable<Map> window,Map currentValue)
-  {
-    var rng = new Random();
-    if(rng.nextDouble()>0.5)
-      return true;
-    else
-      return false;
-  }
 }
 
 
