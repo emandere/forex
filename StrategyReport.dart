@@ -95,13 +95,30 @@ main() async
   String startDate = "2002-12-31";
   String endDate = "2012-01-01";
   String rulePosition="short";
-  String ruleName = "AboveBollingerBandHigher";
+  String ruleName = "RSIOverbought70";
+  String account = "primary";
 
-  double takeProfit = 0.997;
-  double stopLoss = 1.01;
+  double takeProfitPct = 0.003;
+  double stopLossPct = 0.01;
+
+  double takeProfit = 1.0;
+  double stopLoss = 1.0;
+  int window = 14;
+
+  if(rulePosition=="long")
+  {
+      takeProfit+=takeProfitPct;
+      stopLoss-=stopLossPct;
+  }
+  else
+  {
+      takeProfit-=takeProfitPct;
+      stopLoss+=stopLossPct;
+  }
+
   int units = 15000;
 
-  IndicatorRule tradingRule = new IndicatorRule(ruleName,20);
+  IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
   List<IndicatorRule> rules = new List<IndicatorRule>();
   rules.add(tradingRule);
 
@@ -127,7 +144,7 @@ main() async
         if(dailyPairValue[ruleName]) {
 
           testSession.executeTrade(
-              "primary",
+              account,
               dailyPairValue["pair"],
               units,
               rulePosition,

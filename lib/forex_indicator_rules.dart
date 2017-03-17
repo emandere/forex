@@ -1,11 +1,13 @@
 library indicator_library;
 import 'dart:math';
 import 'forex_stats.dart';
+import 'package:collection/collection.dart';
 part 'indicators/AboveBollingerBandHigher.dart';
 part 'indicators/RandomRule.dart';
 part 'indicators/PositiveSlopeAndGreaterThanAverage.dart';
 part 'indicators/BelowBollingerBandLower.dart';
 part 'indicators/BelowBollingerBandLowerWithSlope.dart';
+part 'indicators/RSIOverbought70.dart';
 
 abstract class IndicatorRule
 {
@@ -23,6 +25,8 @@ abstract class IndicatorRule
           return new BelowBollingerBandLower(ruleName,dataPoints);
         case "PositiveSlopeAndGreaterThanAverage":
           return new PositiveSlopeAndGreaterThanAverage(ruleName,dataPoints);
+        case "RSIOverbought70":
+          return new RSIOverbought70(ruleName,dataPoints);
         default:
           throw "Invalid Rule Name";
       }

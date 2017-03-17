@@ -41,3 +41,14 @@ double Slope(Iterable y)
 
   return numerator / denominator;
 }
+
+double RSI(Iterable y)
+{
+   var diff = y.map((t)=>t[1]-t[0]);
+   var gains = diff.where((t)=>t>0);
+   var losses = diff.where((t)=>t<0);
+   double RS = (Average(gains)/Average(losses)).abs();
+   double RSI = 100 - (100/(1+RS));
+
+   return RSI;
+}
