@@ -8,6 +8,7 @@ part 'indicators/PositiveSlopeAndGreaterThanAverage.dart';
 part 'indicators/BelowBollingerBandLower.dart';
 part 'indicators/BelowBollingerBandLowerWithSlope.dart';
 part 'indicators/RSIOverbought70.dart';
+part 'indicators/RSIOversold30.dart';
 
 abstract class IndicatorRule
 {
@@ -27,6 +28,8 @@ abstract class IndicatorRule
           return new PositiveSlopeAndGreaterThanAverage(ruleName,dataPoints);
         case "RSIOverbought70":
           return new RSIOverbought70(ruleName,dataPoints);
+        case "RSIOversold30":
+          return new RSIOversold30(ruleName,dataPoints);
         default:
           throw "Invalid Rule Name";
       }

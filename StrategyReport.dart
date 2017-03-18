@@ -94,8 +94,8 @@ main() async
   String server ="23.22.66.239";
   String startDate = "2002-12-31";
   String endDate = "2012-01-01";
-  String rulePosition="short";
-  String ruleName = "RSIOverbought70";
+  String rulePosition="long";
+  String ruleName = "RSIOversold30";
   String account = "primary";
 
   double takeProfitPct = 0.003;
