@@ -12,6 +12,8 @@ class ForexSessionDetail extends PolymerElement
   String _id;
   String _startDate;
   String _currentDate;
+  String _closedTrades;
+  String _pct;
   @property String get balance => _balance;
   @reflectable set balance(String value)
   {
@@ -41,6 +43,18 @@ class ForexSessionDetail extends PolymerElement
   {
     _currentDate=value;
     set('currentDate', _currentDate);
+  }
+  @property String get closedTrades => _closedTrades;
+  @reflectable set closedTrades(String value)
+  {
+    _closedTrades=value;
+    set('closedTrades', _closedTrades);
+  }
+  @property String get pct => _pct;
+  @reflectable set pct(String value)
+  {
+    _pct=value;
+    set('pct', _pct);
   }
   ForexSessionDetail.created() : super.created();
   factory ForexSessionDetail() => new Element.tag('forex-session-detail') as ForexSessionDetail;

@@ -70,12 +70,17 @@ class ForexSessionPanel extends PolymerElement {
     for (Map mapSession in sessions)
     {
       TradingSession session = new TradingSession.fromJSONMap(mapSession);
+      var closedTrades = session.sessionUser.closedTrades().length;
+      var pct = session.sessionUser.closedTrades().where((x)=>x.PL()>0).length.toDouble() / closedTrades.toDouble() ;
+      pct = pct * 100;
       menuSession.children.add(new ForexSessionDetail()
         ..id = session.id
         ..startDate=formatter.format(session.startDate)
         ..currentDate=formatter.format(session.currentTime)
         ..balance = session.balance().toStringAsFixed(2)
-        ..pl = session.PL().toStringAsFixed(2));
+        ..pl = session.PL().toStringAsFixed(2)
+        ..closedTrades=closedTrades.toString()
+        ..pct= pct.toStringAsFixed(2));
     }
   }
 

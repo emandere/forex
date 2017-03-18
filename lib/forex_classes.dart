@@ -648,6 +648,11 @@ class User
 
   }
 
+  List<Trade> closedTrades()
+  {
+     return new List<Trade>.from(primaryAccount.closedTrades)..addAll(secondaryAccount.closedTrades);
+  }
+
   updateHistory(String dt)
   {
     primaryAccount.AddHistory(dt,primaryAccount.NetAssetValue());
