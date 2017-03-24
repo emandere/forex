@@ -21,6 +21,7 @@ dependencies:
   intl: "^0.12.7"
   gcloud:
   parallel:
+  worker:
   googleapis: any
   googleapis_auth: any
 transformers:

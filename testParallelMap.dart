@@ -17,7 +17,7 @@ main(List<String> arguments) async
 
   Stopwatch stopwatch2 = new Stopwatch();
   stopwatch2.start();
-  await parallel(new List<int>.generate(count,(i)=>i+1.0)).pmap(longloop).toList();
+  await parallel(new List<int>.generate(count,(i)=>i+1)).pmap(longloop).toList();
   stopwatch2.stop();
 
   print(stopwatch2.elapsedMilliseconds.toString());
