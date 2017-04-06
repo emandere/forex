@@ -1,4 +1,5 @@
 import 'dart:isolate';
+
 import 'lib/forex_indicator_rules.dart';
 import 'lib/forex_classes.dart';
 import 'lib/forex_cache.dart';
@@ -72,4 +73,5 @@ main(List<String> args, SendPort replyTo) async
   myData.data=testSession.toJson();
 
   replyTo.send(args[0]+" Isolate Completed");
+ 
 }
