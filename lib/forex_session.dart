@@ -166,7 +166,7 @@ class ForexSession extends PolymerElement
   {
     double stopLossPrice = double.parse(stopLoss);
     double takeProfitPrice = double.parse(takeProfit);
-    currentSession.executeTrade(account,pair,units,position,currentTime,stopLossPrice,takeProfitPrice);
+    //currentSession.executeTrade(account,pair,units,position,currentTime,stopLossPrice,takeProfitPrice);
   }
 
 
@@ -242,7 +242,7 @@ class ForexSession extends PolymerElement
 
   play()
   {
-    countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
+    //countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
     playState = true;
     set('avicon','av:pause-circle-outline');
   }

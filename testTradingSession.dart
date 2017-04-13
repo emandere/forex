@@ -98,14 +98,14 @@ main() async
       }
 
 
-      if(line.startsWith("order"))
+     /* if(line.startsWith("order"))
       {
          List<String> parts = line.split(' ');
          if(parts[3]=="above")
             testSession.setOrder(parts[1],int.parse(parts[2]),double.parse(parts[3]),true);
          else
             testSession.setOrder(parts[1],int.parse(parts[2]),double.parse(parts[3]),false);
-      }
+      }*/
 
       if(line.startsWith("fund"))
       {

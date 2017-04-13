@@ -6,7 +6,6 @@ import 'dart:async';
 //import 'packages/rpc/rpc.dart';
 import 'package:rpc/rpc.dart';
 import 'package:http_server/http_server.dart';
-import 'lib/treeapi.dart';
 import 'lib/forex_data.dart';
 import 'lib/forex_api.dart';
 import 'lib/forex_mongo.dart';
@@ -84,7 +83,6 @@ main(List<String> arguments) async
   await mongoLayer.db.open();
   await setupDatabase(mongoLayer);
   print("DB set up complete");
-  _apiServer.addApi(new TreeApi());
   _apiServer.addApi(new ForexData());
   _apiServer.addApi(new ForexClasses(mongoLayer));
   _apiServer.enableDiscoveryApi();

@@ -1,171 +1,175 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'lib/forex_classes.dart';
 import 'lib/forex_mongo.dart';
 import 'lib/candle_stick.dart';
 import 'lib/forex_stats.dart';
-
+import 'lib/forex_indicator_rules.dart';
 import 'dart:collection';
+import "package:collection/collection.dart";
 
-import 'package:parallel/parallel.dart';
-import 'package:worker/worker.dart';
-
-
-
-/*class TestStrategies
+class ForexCache
 {
-  TestStrategies( )
+  Map cache;
+  //ForexMongo mongoLayer;
+  String startDate;
+  String endDate;
+  List<IndicatorRule> rules;
+  ForexCache(this.startDate,this.endDate,this.rules)
   {
-
-  }
-  call(ForexCache cache)
-  {
-     return TestSingleStrategy(cache);
-  }
-  TestSingleStrategy(List args)
-  {
-    Map cache = args[0];
-    String server ="23.22.66.239";
-    String startDate = "2002-12-31";
-    String endDate = "2012-01-01";
-    String rulePosition="long";
-    String ruleName = args[1];
-    String account = "primary";
-
-    double takeProfitPct = 0.003;
-    double stopLossPct = 0.01;
-    double takeProfit = 1.0;
-    double stopLoss = 1.0;
-
-    int window = 14;
-    TestStrategy
-      ( cache,
-        rulePosition,
-        takeProfit,
-        takeProfitPct,
-        stopLoss,
-        stopLossPct,
-        ruleName,
-        window,
-        startDate,
-        endDate,
-        server,
-        account);
-
-    return "success";
+    cache = {};
   }
 
-  TestStrategy(
-      Map cache,
-      String rulePosition,
-      double takeProfit,
-      double takeProfitPct,
-      double stopLoss,
-      double stopLossPct,
-      String ruleName,
-      int window,
-      String startDate,
-      String endDate,
-      String server,
-      String account) async {
-    if(rulePosition=="long")
+  readMongoPairs(String server) async
+  {
+    var pairurl = 'http://$server/api/forexclasses/v1/pairs';
+    var pairsListStr = await http.get(pairurl);
+    return JSON.decode(pairsListStr.body);
+  }
+
+  readDailyValuesRangeAsync(String server,String pair,String startDate,String endDate) async
+  {
+    var pairurl = 'http://$server/api/forexclasses/v1/dailyvaluesrange/$pair/$startDate/$endDate';
+    var pairsListStr = await http.get(pairurl);
+    return JSON.decode(pairsListStr.body);
+  }
+
+  buildCache(String server) async
+  {
+    for(String pair in await readMongoPairs(server))
     {
-      takeProfit+=takeProfitPct;
-      stopLoss-=stopLossPct;
-    }
-    else
-    {
-      takeProfit-=takeProfitPct;
-      stopLoss+=stopLossPct;
-    }
-
-    int units = 15000;
-
-    IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
-    List<IndicatorRule> rules = new List<IndicatorRule>();
-    rules.add(tradingRule);
-
-    //ForexCache cache = new ForexCache(startDate,endDate,rules);
-    //await cache.buildCache(server);
-
-    //print("cache built");
-    //cache.DailyValues();
-
-
-    TradingSession testSession=new TradingSession();
-    testSession.id='testSession$ruleName';
-    testSession.sessionUser.id="testSessionUserNewSlope";
-    testSession.startDate = DateTime.parse(startDate);
-    testSession.fundAccount("primary",2000.0);
-    Stopwatch watch = new Stopwatch();
-    watch.start();
-    var currentyear = "0";
-    for(var dailyPairValues in cache.DailyValues())
-    {
-      for(Map dailyPairValue in dailyPairValues)
+      cache[pair] = <Map>[];
+      for(Map dailyvalueMap in await readDailyValuesRangeAsync(server,pair,startDate,endDate))
       {
-        if(dailyPairValue[ruleName]) {
+        cache[pair].add(dailyvalueMap);
+      }
+    }
+  }
 
-          testSession.executeTrade(
-              account,
-              dailyPairValue["pair"],
-              units,
-              rulePosition,
-              dailyPairValue["date"],
-              dailyPairValue["close"],
-              stopLoss * dailyPairValue["close"],
-              takeProfit * dailyPairValue["close"]);
+  DailyValues()
+  {
+    GetPosition(pair,date)=>cache[pair].map((dailyvalue)=>dailyvalue['date']
+        .toString())
+        .toList()
+        .indexOf(date);
+    GetDailyValue(pair,date)=>cache[pair][GetPosition(pair,date)];
+    GetRange(pair,date,dataPoints)=>cache[pair].getRange(GetPosition(pair,date)-dataPoints,GetPosition(pair,date));
+    GetRuleResult(pair,date,rule,dataPoints)
+    {
+      if (GetPosition(pair,date) >= dataPoints)
+      {
+        return rule.IsMet(GetRange(pair, date, dataPoints), GetDailyValue(pair, date));
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    addRules(List dailyValues)
+    {
+      for(Map dailyValue in dailyValues )
+      {
+        for (var rule in rules)
+        {
+          dailyValue[rule.name]=GetRuleResult(dailyValue['pair'],dailyValue['date'],rule,rule.dataPoints);
         }
       }
-      testSession.updateSession(dailyPairValues);
+      return dailyValues;
     }
-    watch.stop();
 
-    testSession.printacc();
-    print(watch.elapsedMilliseconds.toString());
-
-
-    PostData myData = new PostData();
-    myData.data=testSession.toJson();
-
-    var url = 'http://$server/api/forexclasses/v1/addsessionpost';
-    //var response = await http.post(url,body:myData.toJsonMap());
-    //print("Response status: ${response.statusCode}");
-    //print("Response body: ${response.body}");
+    var dailyValuesZip = new IterableZip(cache.values);
+    return dailyValuesZip.map(addRules);
   }
-}*/
-
-main()  async {
-  Worker worker = new Worker();
-  Task task = new AckermannTask(1, 2);
-
-  Worker worker2 = new Worker();
-  Task task2 = new AckermannTask(1, 2);
 
 
-  List results=await Future.wait([worker.handle(task),worker2.handle(task2)]);
 
-  for(var result in results) {
-    print(result);
-  }
-  exit(0);
+
 }
 
-class AckermannTask implements Task {
-  int x, y;
+main() async
+{
+  String server ="23.22.66.239";
+  String startDate = "2002-12-31";
+  String endDate = "2012-01-01";
+  String rulePosition="long";
+  String ruleName = "RSIOversold30";
+  String account = "primary";
 
-  AckermannTask (this.x, this.y);
+  double takeProfitPct = 0.003;
+  double stopLossPct = 0.01;
 
-  int execute () {
-    return ackermann(x, y);
+  double takeProfit = 1.0;
+  double stopLoss = 1.0;
+  int window = 14;
+
+  if(rulePosition=="long")
+  {
+    takeProfit+=takeProfitPct;
+    stopLoss-=stopLossPct;
+  }
+  else
+  {
+    takeProfit-=takeProfitPct;
+    stopLoss+=stopLossPct;
   }
 
-  int ackermann (int m, int n) {
-    return 20;
+  int units = 15000;
+
+  IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
+  List<IndicatorRule> rules = new List<IndicatorRule>();
+  rules.add(tradingRule);
+
+  ForexCache cache = new ForexCache(startDate,endDate,rules);
+  await cache.buildCache(server);
+
+  print("cache built");
+  cache.DailyValues();
+
+
+  TradingSession testSession=new TradingSession();
+  testSession.id='testSession$ruleName';
+  testSession.sessionUser.id="testSessionUserNewSlope";
+  testSession.startDate = DateTime.parse(startDate);
+  testSession.fundAccount("primary",2000.0);
+  Stopwatch watch = new Stopwatch();
+  watch.start();
+
+  for(var dailyPairValues in cache.DailyValues())
+  {
+    for(Map dailyPairValue in dailyPairValues)
+    {
+      if(dailyPairValue[ruleName]) {
+
+        testSession.executeTrade(
+            account,
+            dailyPairValue["pair"],
+            units,
+            rulePosition,
+            dailyPairValue["date"],
+            dailyPairValue["close"],
+            stopLoss * dailyPairValue["close"],
+            takeProfit * dailyPairValue["close"]);
+      }
+    }
+    testSession.updateSession(dailyPairValues);
   }
+  watch.stop();
+
+  testSession.printacc();
+  print(watch.elapsedMilliseconds.toString());
+
+
+  PostData myData = new PostData();
+  myData.data=testSession.toJson();
+
+  var url = 'http://$server/api/forexclasses/v1/addsessionpost';
+  var response = await http.post(url,body:myData.toJsonMap());
+  print("Response status: ${response.statusCode}");
+  print("Response body: ${response.body}");
+
+  exit(1);
+
 }
-
-
-
