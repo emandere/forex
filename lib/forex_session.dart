@@ -10,6 +10,8 @@ import 'package:intl/intl.dart';
 import 'forex_pair_table.dart';
 import 'forex_session_panel.dart';
 import 'forex_trade.dart';
+import 'forex_session_detail.dart';
+import 'package:intl/intl.dart';
 
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
@@ -70,13 +72,13 @@ class ForexSession extends PolymerElement
      PaperDialog dialogCloseTrade=$['dialogCloseTrade'];
 
 
-
-
      PaperMenu menuPage=$['menuPage'];
      //PaperFab playpauseBtn =$['playpauseBtn'];
 
 
      sessionPanel=$['sessionPanel'];
+
+
      mainChart=$['mainChart'];
      tradeControl = $['tradeControl'];
      currentSession = new TradingSession();
@@ -155,11 +157,20 @@ class ForexSession extends PolymerElement
 
   loadSessions() async
   {
+    var pairUrl = "/api/forexclasses/v1/pairs";
+    String pairRequest = await HttpRequest.getString(pairUrl);
+    sessionPanel.currencyPairs = JSON.decode(pairRequest);
+
+
+
     var url = "/api/forexclasses/v1/sessions";
     String request = await HttpRequest.getString(url);
     sessions=JSON.decode(request);
     set('sessions',sessions );
     sessionPanel.sessions=sessions;
+
+
+
   }
 
   ExecuteTrade(String account,String pair,int units,String position,String currentTime,String stopLoss,String takeProfit)
@@ -434,6 +445,9 @@ class ForexSession extends PolymerElement
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
+
+    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
+
 
     if(currentSession.sessionUser.TradingPairs().length>0)
     {

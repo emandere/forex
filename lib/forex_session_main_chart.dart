@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'candle_stick.dart';
 import 'dart:async';
 import 'forex_classes.dart';
+import 'forex_session_detail.dart';
 import 'package:intl/intl.dart';
 
 import 'package:polymer/polymer.dart';
@@ -23,10 +24,27 @@ import 'package:polymer_elements/paper_header_panel.dart';
 import 'package:polymer_elements/paper_toolbar.dart';
 import 'package:polymer_elements/paper_item.dart';
 
+
 @PolymerRegister('forex-session-main-chart')
 class ForexMainChart extends PolymerElement
 {
+  ForexSessionDetail _sessionDetail;
   ForexMainChart.created() : super.created();
+  @property ForexSessionDetail get sessionDetail => _sessionDetail;
+  @reflectable set sessionDetail(ForexSessionDetail value)
+  {
+    ForexSessionDetail currentSession = $['sessionDetail'] as ForexSessionDetail;
+    currentSession..id = value.id
+      ..startDate=value.startDate
+      ..currentDate=value.currentDate
+      ..balance = value.balance
+      ..pl = value.pl
+      ..currencyPairs=value.currencyPairs
+      ..closedTrades=value.closedTrades
+      ..selectSession=false
+      ..pct= value.pct;
+
+  }
   loadCurrencyChart(String pair,List data)
   {
     GoogleChart mainChart = $['mainChart'];

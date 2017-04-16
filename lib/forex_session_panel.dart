@@ -12,9 +12,17 @@ import 'package:polymer_elements/paper_menu.dart';
 import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_input.dart';
+
+
 @PolymerRegister('forex-session-panel')
 class ForexSessionPanel extends PolymerElement {
   List<Map> _sessions;
+  List<String> _currencyPairs=[];
+  @property List<String> get currencyPairs => _currencyPairs;
+  @reflectable set currencyPairs(List<String> value)
+  {
+    _currencyPairs=value;
+  }
 
   @property List<Map> get sessions => _sessions;
 
@@ -66,7 +74,6 @@ class ForexSessionPanel extends PolymerElement {
     PaperMenu menuSession = $['menuSession'];
     DateFormat formatter = new DateFormat('yyyyMMdd');
     menuSession.children.clear();
-
     for (Map mapSession in sessions)
     {
       TradingSession session = new TradingSession.fromJSONMap(mapSession);
@@ -78,9 +85,11 @@ class ForexSessionPanel extends PolymerElement {
         ..startDate=formatter.format(session.startDate)
         ..currentDate=formatter.format(session.currentTime)
         ..balance = session.balance().toStringAsFixed(2)
+        ..currencyPairs=currencyPairs
         ..pl = session.PL().toStringAsFixed(2)
         ..closedTrades=closedTrades.toString()
         ..pct= pct.toStringAsFixed(2));
+
     }
   }
 
@@ -94,6 +103,12 @@ class ForexSessionPanel extends PolymerElement {
     sessionCard.currentDate=formatter.format(session.currentTime);
     sessionCard.balance=session.balance().toStringAsFixed(2);
     sessionCard.pl=session.PL().toStringAsFixed(2);
+  }
+
+  ForexSessionDetail GetSession(String id)
+  {
+    PaperMenu menuSession = $['menuSession'];
+    return menuSession.children.firstWhere((sessionCard)=>(sessionCard as ForexSessionDetail).id==id);
   }
 
   uncheckUnselectedSessions(String id)

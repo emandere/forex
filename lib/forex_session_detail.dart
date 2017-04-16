@@ -3,7 +3,11 @@ library forex.lib.forex_session_detail;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
 import 'package:polymer_elements/paper_checkbox.dart';
+import 'package:polymer_elements/paper_icon_button.dart';
+import 'package:polymer_elements/paper_listbox.dart';
+import 'package:polymer_elements/paper_item.dart';
 import 'package:web_components/web_components.dart';
+import 'package:polymer_elements/paper_dialog.dart';
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
 {
@@ -14,6 +18,26 @@ class ForexSessionDetail extends PolymerElement
   String _currentDate;
   String _closedTrades;
   String _pct;
+  bool _selectSession = true;
+  List<String> _currencyPairs =[];
+
+  @property bool get selectSession => _selectSession;
+  @reflectable set selectSession(bool value)
+  {
+    _selectSession=value;
+    PaperCheckbox selectSession = $['selectSession'];
+    PaperIconButton filterSession =$['filterSession'];
+    selectSession.hidden=!value;
+    filterSession.hidden=value;
+  }
+
+  @property List<String> get currencyPairs => _currencyPairs;
+  @reflectable set currencyPairs(List<String> value)
+  {
+    _currencyPairs=value;
+    set('currencyPairs', _currencyPairs);
+  }
+
   @property String get balance => _balance;
   @reflectable set balance(String value)
   {
@@ -61,7 +85,9 @@ class ForexSessionDetail extends PolymerElement
   ready()
   {
       PaperCheckbox selectSession = $['selectSession'];
+      PaperIconButton filterSession = $['filterSession'];
       selectSession.on["tap"].listen(sendSelectSession);
+      filterSession.on["tap"].listen(openDialog);
   }
 
   clearSelection()
@@ -73,5 +99,11 @@ class ForexSessionDetail extends PolymerElement
   void sendSelectSession(var event)
   {
     this.fire('selectsession',detail: {"id":id});
+  }
+
+  void openDialog(var event)
+  {
+      PaperDialog dialogFilter = $['dialogFilter'];
+      dialogFilter.open();
   }
 }
