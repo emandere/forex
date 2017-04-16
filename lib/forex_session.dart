@@ -35,6 +35,7 @@ import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/iron_iconset.dart';
 import 'package:polymer_elements/av_icons.dart';
 import 'package:polymer_elements/paper_icon_item.dart';
+
 @PolymerRegister('forex-session')
 class ForexSession extends PolymerElement
 {
@@ -482,6 +483,17 @@ class ForexSession extends PolymerElement
   {
       currentSession.closeTrade(detail["account"],int.parse(detail["id"]));
       updateTradeMenu();
+  }
+
+  @Listen('selectfiltersession')
+  OnSelectFilterSession(event, detail) async
+  {
+      DateFormat formatter = new DateFormat('yyyyMMdd');
+      String startdt=formatter.format(currentSession.startDate);
+      String enddt=formatter.format(currentSession.currentTime);
+      String pair = detail['pair'];
+      List values = await dailyValues(pair, startdt, enddt);
+      mainChart.loadCurrencyChart(pair,values);
   }
 
 }

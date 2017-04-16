@@ -6,8 +6,10 @@ import 'package:polymer_elements/paper_checkbox.dart';
 import 'package:polymer_elements/paper_icon_button.dart';
 import 'package:polymer_elements/paper_listbox.dart';
 import 'package:polymer_elements/paper_item.dart';
+import 'package:polymer_elements/paper_dropdown_menu.dart';
 import 'package:web_components/web_components.dart';
 import 'package:polymer_elements/paper_dialog.dart';
+import 'package:polymer_elements/paper_button.dart';
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
 {
@@ -86,8 +88,11 @@ class ForexSessionDetail extends PolymerElement
   {
       PaperCheckbox selectSession = $['selectSession'];
       PaperIconButton filterSession = $['filterSession'];
+      PaperButton btnFilterSession =$['btnFilterSession'];
+
       selectSession.on["tap"].listen(sendSelectSession);
       filterSession.on["tap"].listen(openDialog);
+      btnFilterSession.on["tap"].listen(sendFilterSession);
   }
 
   clearSelection()
@@ -98,7 +103,14 @@ class ForexSessionDetail extends PolymerElement
 
   void sendSelectSession(var event)
   {
+
     this.fire('selectsession',detail: {"id":id});
+  }
+
+  void sendFilterSession(var event)
+  {
+    PaperDropdownMenu currencyPairsMenu = $['currencyPairsMenu'];
+    this.fire('selectfiltersession',detail: {"pair":currencyPairsMenu.value});
   }
 
   void openDialog(var event)
