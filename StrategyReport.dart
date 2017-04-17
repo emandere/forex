@@ -158,6 +158,9 @@ main() async
   }
   watch.stop();
 
+  balanceHistPair( testSession,"USDJPY");
+
+
   testSession.printacc();
   print(watch.elapsedMilliseconds.toString());
 
@@ -172,4 +175,42 @@ main() async
 
   exit(1);
 
+}
+
+
+List balanceHistPair(TradingSession currentSession,String pair)
+{
+  List pairBalanceHistory = [];
+  findClosedTrades(String date)
+  {
+    return currentSession
+        .sessionUser
+        .closedTrades()
+        .where((trade)=>trade.pair==pair)
+        .where((trade)=>trade.closeDate==date);
+  }
+
+  var sessionDates = currentSession
+      .sessionUser
+      .primaryAccount
+      .balanceHistory
+      .map((dailyVal)=>dailyVal["date"]);
+
+  double amount = currentSession
+      .sessionUser
+      .primaryAccount
+      .balanceHistory[0]["amount"];
+
+  for(String sessionDate in sessionDates)
+  {
+    pairBalanceHistory.add([DateTime.parse(sessionDate),amount]);
+    if(findClosedTrades(sessionDate).isNotEmpty)
+    {
+      amount += findClosedTrades(sessionDate)
+          .map((trade) => trade.PL())
+          .reduce((t, e) => t + e);
+    }
+  }
+
+  return pairBalanceHistory;
 }

@@ -347,6 +347,43 @@ class ForexSession extends PolymerElement
         .toList();
   }
 
+  List balanceHistPair(String pair)
+  {
+     List pairBalanceHistory = [];
+     findClosedTrades(DateTime date)
+     {
+        return currentSession
+               .sessionUser
+               .closedTrades()
+               .where((trade)=>trade.pair==pair)
+               .where((trade)=>DateTime.parse(trade.closeDate)==date);
+     }
+
+     var sessionDates = currentSession
+                        .sessionUser
+                        .primaryAccount
+                        .balanceHistory
+                        .map((dailyVal)=>DateTime.parse(dailyVal["date"]));
+
+     double amount = currentSession
+                            .sessionUser
+                            .primaryAccount
+                            .balanceHistory[0]["amount"];
+
+     for(DateTime sessionDate in sessionDates)
+     {
+        pairBalanceHistory.add([sessionDate,amount]);
+        if(findClosedTrades(sessionDate).isNotEmpty)
+        {
+          amount += findClosedTrades(sessionDate)
+                    .map((trade) => trade.PL())
+                    .reduce((t, e) => t + e);
+        }
+     }
+
+    return pairBalanceHistory;
+  }
+
   List TradingHistogram()
   {
      return currentSession
@@ -494,6 +531,7 @@ class ForexSession extends PolymerElement
       String pair = detail['pair'];
       List values = await dailyValues(pair, startdt, enddt);
       mainChart.loadCurrencyChart(pair,values);
+      mainChart.loadBalanceChart("$currentSessionId Pair: $pair" ,balanceHistPair(pair));
   }
 
 }
