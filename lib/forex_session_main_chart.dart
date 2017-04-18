@@ -104,7 +104,7 @@ class ForexMainChart extends PolymerElement
   loadTradesTimeHistogram(String session,List data)
   {
     GoogleChart histogramTimeChart =$['histogramTimeChart'];
-    String chartTitle="Histogram of Trade Timespan";
+    String chartTitle="Histogram of Trade Timespan for $session";
     var options = {
       'title':chartTitle,
       'legend': 'none',

@@ -97,8 +97,6 @@ class ForexSession extends PolymerElement
      //playpauseBtn.on['tap'].listen((event)=>playpause());
 
 
-     countdownAmt=1;
-
 
 
      panel.forceNarrow=true;
@@ -107,7 +105,6 @@ class ForexSession extends PolymerElement
      loadSessions();
      loadCurrencyPairs();
      getDailyCurrencies();
-     pause();
   }
 
   redrawCharts(var e)
@@ -139,7 +136,6 @@ class ForexSession extends PolymerElement
      currentSessionId=sessions[$['menuSession'].selected]["id"].toString();
      set('currentSessionId',currentSessionId);
      currentSession = await loadSession(currentSessionId);
-     updateTradeMenu();
      UpdatePrices();
   }
 
@@ -160,9 +156,9 @@ class ForexSession extends PolymerElement
   {
     var pairUrl = "/api/forexclasses/v1/pairs";
     String pairRequest = await HttpRequest.getString(pairUrl);
-    sessionPanel.currencyPairs = JSON.decode(pairRequest);
-
-
+    List<String> pairs = ["<ALL>"];
+    pairs.addAll(JSON.decode(pairRequest));
+    sessionPanel.currencyPairs = pairs;
 
     var url = "/api/forexclasses/v1/sessions";
     String request = await HttpRequest.getString(url);
@@ -170,24 +166,9 @@ class ForexSession extends PolymerElement
     set('sessions',sessions );
     sessionPanel.sessions=sessions;
 
-
-
-  }
-
-  ExecuteTrade(String account,String pair,int units,String position,String currentTime,String stopLoss,String takeProfit)
-  {
-    double stopLossPrice = double.parse(stopLoss);
-    double takeProfitPrice = double.parse(takeProfit);
-    //currentSession.executeTrade(account,pair,units,position,currentTime,stopLossPrice,takeProfitPrice);
   }
 
 
-
-  void updateTradeMenu()
-  {
-    tradeControl.updateTrades( currentSession.openTrades("primary"));
-
-  }
 
   updateSessionCards()
   {
@@ -234,30 +215,9 @@ class ForexSession extends PolymerElement
   }
 
 
-  playpause()
-  {
-    if(playState)
-      pause();
-    else
-      play();
-  }
 
-  pause()
-  {
-    if(countdownSesssions!=null && countdownSesssions.isActive)
-    {
-      countdownSesssions.cancel();
-    }
-    playState=false;
-    set('avicon','av:play-circle-outline');
-  }
 
-  play()
-  {
-    //countdownSesssions = new Timer.periodic(durationCountdown,updateCountdown);
-    playState = true;
-    set('avicon','av:pause-circle-outline');
-  }
+
 
   Future<List> dailyValues(String pair,String startDt,String endDt ) async
   {
@@ -302,39 +262,39 @@ class ForexSession extends PolymerElement
     return data;
   }
 
-  updateCountdown(Timer e) async
+  SetUpDashboard() async
   {
-    countdownAmt=countdownAmt-1;
+    mainChart.loadBalanceChart(currentSessionId,balanceHist());
+    mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
+    mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
+
+    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
 
+    if(currentSession.sessionUser.TradingPairs().length>0)
+    {
+
+      DateFormat formatter = new DateFormat('yyyyMMdd');
+      String startdt=formatter.format(currentSession.startDate);
+      String enddt=formatter.format(currentSession.currentTime);
+      String pair = currentSession.sessionUser.TradingPairs()[0];
+      List values = await dailyValues(pair, startdt, enddt);
+      mainChart.loadCurrencyChart(pair,values);
+    }
+  }
+
+  SetUpDashboardPair(String pair) async
+  {
     DateFormat formatter = new DateFormat('yyyyMMdd');
-
     String startdt=formatter.format(currentSession.startDate);
     String enddt=formatter.format(currentSession.currentTime);
+    String title = "$currentSessionId Pair: $pair";
 
-    if(countdownAmt==0)
-    {
-      countdownAmt = 5;
-      //endDate=endDate.add(new Duration(days: 1));
-
-
-      await currentSession.updateTime(1,readDailyValue,readDailyValueMissing);
-      await currentSession.processOrders(readDailyValue,readDailyValueMissing);
-      currentSession.updateHistory();
-      updateTradeMenu();
-      UpdatePrices();
-      mainChart.loadBalanceChart(currentSessionId,balanceHist());
-      if(currentSession.sessionUser.TradingPairs().length>0)
-      {
-        String pair = currentSession.sessionUser.TradingPairs()[0];
-        List values = await dailyValues(pair, startdt, enddt);
-        mainChart.loadCurrencyChart(pair,values);
-      }
-      updateSession();
-
-    }
-
-    set('countdown',countdownAmt.toString());
+    List values = await dailyValues(pair, startdt, enddt);
+    mainChart.loadCurrencyChart(pair,values);
+    mainChart.loadBalanceChart( title,balanceHistPair(pair));
+    mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair));
+    mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair));;
   }
 
   List balanceHist()
@@ -381,7 +341,7 @@ class ForexSession extends PolymerElement
         }
      }
 
-    return pairBalanceHistory;
+     return pairBalanceHistory;
   }
 
   List TradingHistogram()
@@ -392,6 +352,17 @@ class ForexSession extends PolymerElement
          .closedTrades
          .map((trade)=>[trade.pair+trade.openDate,trade.PL()])
          .toList();
+  }
+
+  List TradingHistogramPair(String pair)
+  {
+    return currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .where((trade)=>trade.pair==pair)
+        .map((trade)=>[trade.pair+trade.openDate,trade.PL()])
+        .toList();
   }
 
   List TradingTimeHistogram()
@@ -406,6 +377,23 @@ class ForexSession extends PolymerElement
         .sessionUser
         .primaryAccount
         .closedTrades
+        .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
+        .toList();
+  }
+
+  List TradingTimeHistogramPair(String pair)
+  {
+    int DateDiff(Trade trade)
+    {
+      DateTime openDate = DateTime.parse(trade.openDate);
+      DateTime closeDate = DateTime.parse(trade.closeDate);
+      return closeDate.difference(openDate).inDays;
+    }
+    return currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .where((trade)=>trade.pair==pair)
         .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
         .toList();
   }
@@ -478,27 +466,6 @@ class ForexSession extends PolymerElement
 
   }
 
-  SetUpDashboard() async
-  {
-    mainChart.loadBalanceChart(currentSessionId,balanceHist());
-    mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
-    mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
-
-    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
-
-
-    if(currentSession.sessionUser.TradingPairs().length>0)
-    {
-
-      DateFormat formatter = new DateFormat('yyyyMMdd');
-      String startdt=formatter.format(currentSession.startDate);
-      String enddt=formatter.format(currentSession.currentTime);
-      String pair = currentSession.sessionUser.TradingPairs()[0];
-      List values = await dailyValues(pair, startdt, enddt);
-      mainChart.loadCurrencyChart(pair,values);
-    }
-  }
-
   @Listen('savesession')
   void saveSessionEvent(event, detail)
   {
@@ -506,32 +473,13 @@ class ForexSession extends PolymerElement
     SaveSession();
   }
 
-  @Listen('executetrade')
-  void onexecuteTrade(event,detail)
-  {
-     //window.alert(detail['pair']+" "+detail['account']+" "+detail['units']+" "+detail['position']+" "+detail['stopLoss']+" "+detail['takeProfit']);
-     ExecuteTrade(detail['account'],detail['pair'],int.parse(detail['units']),detail['position'],currentSession.currentTime.toString(),detail['stopLoss'],detail['takeProfit']);
-     updateTradeMenu();
-     play();
-  }
-
-  @Listen('closetrade')
-  void onCloseTradeEvent(event, detail)
-  {
-      currentSession.closeTrade(detail["account"],int.parse(detail["id"]));
-      updateTradeMenu();
-  }
-
   @Listen('selectfiltersession')
   OnSelectFilterSession(event, detail) async
   {
-      DateFormat formatter = new DateFormat('yyyyMMdd');
-      String startdt=formatter.format(currentSession.startDate);
-      String enddt=formatter.format(currentSession.currentTime);
-      String pair = detail['pair'];
-      List values = await dailyValues(pair, startdt, enddt);
-      mainChart.loadCurrencyChart(pair,values);
-      mainChart.loadBalanceChart("$currentSessionId Pair: $pair" ,balanceHistPair(pair));
+      if(detail["pair"]=="<ALL>")
+        SetUpDashboard();
+      else
+        SetUpDashboardPair(detail["pair"]);
   }
 
 }
