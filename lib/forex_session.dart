@@ -291,10 +291,32 @@ class ForexSession extends PolymerElement
     String title = "$currentSessionId Pair: $pair";
 
     List values = await dailyValues(pair, startdt, enddt);
+    List balanceHistPairList = balanceHistPair(pair);
+
     mainChart.loadCurrencyChart(pair,values);
-    mainChart.loadBalanceChart( title,balanceHistPair(pair));
+    mainChart.loadBalanceChart( title,balanceHistPairList);
     mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair));
-    mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair));;
+    mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair));
+
+
+    var closedTrades = currentSession.sessionUser.closedTrades()
+                                                  .where((t)=>t.pair==pair).length;
+    var pct = currentSession.sessionUser.closedTrades()
+                                        .where((t)=>t.pair==pair)
+                                        .where((x)=>x.PL()>0).length.toDouble() / closedTrades.toDouble() ;
+    pct = pct * 100;
+    var balance = balanceHistPairList.last[1];
+    var pl = balance - balanceHistPairList.first[1];
+
+    mainChart.sessionDetail= new ForexSessionDetail()
+      ..id = title
+      ..startDate=formatter.format(currentSession.startDate)
+      ..currentDate=formatter.format(currentSession.currentTime)
+      ..balance = balance.toStringAsFixed(2)
+      ..currencyPairs=sessionPanel.currencyPairs
+      ..pl = pl.toStringAsFixed(2)
+      ..closedTrades=closedTrades.toString()
+      ..pct= pct.toStringAsFixed(2);
   }
 
   List balanceHist()
