@@ -44,6 +44,15 @@ class ForexClasses
     return mongoLayer.readMongoPairs();
   }
 
+  @ApiMethod(path: 'starttime')
+  Future<Map<String,DateTime>> getStartTime() async
+  {
+    var x = await mongoLayer.getStartTime();
+    return {"time":x["time"]};
+  }
+
+
+
   @ApiMethod(path: 'sessions')
   Future<List<TradingSession>> getSessions() async
   {
