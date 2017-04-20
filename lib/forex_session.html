@@ -15,6 +15,14 @@
                 width:700px;
             }
 
+            .serverTime
+            {
+                font-family: Inconsolata, monospace;
+                color:white;
+                font-size: x-small;
+                margin-right: 10px;
+            }
+
             .pair
             {
                 font-family: Inconsolata, monospace;
@@ -92,7 +100,7 @@
             <paper-header-panel  main>
                 <paper-toolbar>
                     <paper-icon-button id="navIconMenu" icon="menu"></paper-icon-button>
-                    <span class="title">Forex Test Strategy Sessions</span>
+                    <span class="title">Forex Test Strategy Sessions<br><div class="serverTime">{{startTime}}</div></span>
                     <div>{{currentSessionId}}</div>
                     <paper-icon-button id="searchbutton" icon="search"></paper-icon-button>
                 </paper-toolbar>

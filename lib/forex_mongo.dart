@@ -208,12 +208,24 @@ class ForexMongo
 
   AddCurrencies(List<String> currencies) async
   {
-    await db.collection("currencypairs").drop();
+     await db.collection("currencypairs").drop();
      for(String pair in currencies)
      {
        await db.collection("currencypairs").insert({"name":pair});
      }
   }
+
+  AddServerStartTime(DateTime startTime) async
+  {
+      await db.collection("starttime").drop();
+      await db.collection("starttime").insert({"time":startTime});
+  }
+
+  getStartTime() async
+  {
+    return await db.collection('starttime').findOne();
+  }
+
 
   ClearForexValues() async
   {

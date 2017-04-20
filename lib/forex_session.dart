@@ -105,6 +105,17 @@ class ForexSession extends PolymerElement
      loadSessions();
      loadCurrencyPairs();
      getDailyCurrencies();
+     loadServerTime();
+  }
+
+  loadServerTime() async
+  {
+    final DateFormat formatter = new DateFormat('M/d/y HH:mm:ss');
+    var url = "/api/forexclasses/v1/starttime";
+    String request = await HttpRequest.getString(url);
+    var x = JSON.decode(request);
+
+    set('startTime',formatter.format(DateTime.parse(x['time']).toLocal()));
   }
 
   redrawCharts(var e)

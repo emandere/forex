@@ -81,6 +81,7 @@ main(List<String> arguments) async
 
   ForexMongo mongoLayer = new ForexMongo(arguments[0]);
   await mongoLayer.db.open();
+  await mongoLayer.AddServerStartTime(new DateTime.now());
   await setupDatabase(mongoLayer);
   print("DB set up complete");
   _apiServer.addApi(new ForexData());
