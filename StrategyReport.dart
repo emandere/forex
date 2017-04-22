@@ -95,7 +95,7 @@ main() async
   String startDate = "2002-12-31";
   String endDate = "2012-01-01";
   String rulePosition="long";
-  String ruleName = "RSIOversold30";
+  String ruleName = "RSIOversold30AvoidVolatility";
   String account = "primary";
 
   double takeProfitPct = 0.003;

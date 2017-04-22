@@ -9,6 +9,7 @@ part 'indicators/BelowBollingerBandLower.dart';
 part 'indicators/BelowBollingerBandLowerWithSlope.dart';
 part 'indicators/RSIOverbought70.dart';
 part 'indicators/RSIOversold30.dart';
+part 'indicators/RSIOversold30AvoidVolatility.dart';
 
 abstract class IndicatorRule
 {
@@ -30,6 +31,8 @@ abstract class IndicatorRule
           return new RSIOverbought70(ruleName,dataPoints);
         case "RSIOversold30":
           return new RSIOversold30(ruleName,dataPoints);
+        case "RSIOversold30AvoidVolatility":
+          return new RSIOversold30AvoidVolatility(ruleName,dataPoints);
         default:
           throw "Invalid Rule Name";
       }
