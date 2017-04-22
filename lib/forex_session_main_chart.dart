@@ -33,8 +33,8 @@ class ForexMainChart extends PolymerElement
   @property ForexSessionDetail get sessionDetail => _sessionDetail;
   @reflectable set sessionDetail(ForexSessionDetail value)
   {
-    ForexSessionDetail currentSession = $['sessionDetail'] as ForexSessionDetail;
-    currentSession..id = value.id
+    _sessionDetail = $['sessionDetail'] as ForexSessionDetail;
+    _sessionDetail..id = value.id
       ..startDate=value.startDate
       ..currentDate=value.currentDate
       ..balance = value.balance

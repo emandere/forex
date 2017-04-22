@@ -52,7 +52,11 @@
                     <paper-icon-button id="filterSession" class="small" icon="icons:filter-list"></paper-icon-button>
                     {{id}}
                     </div>
+                    <div>
+                        <paper-spinner id="filterSpinner"></paper-spinner>
+                    </div>
                 </div>
+
                 <table  style="width:280px">
                     <tr>
                         <td><div class ="sessioninfo">Start Date</div></td>
@@ -87,11 +91,12 @@
                 </table>
                 <br>
             </paper-card>
+
         </div>
         <paper-dialog id="dialogFilter">
             <h2>Filter Session Info</h2>
             <div align="left">
-                <paper-dropdown-menu id="currencyPairsMenu" label="Pairs">
+                <paper-dropdown-menu id="currencyPairsMenu" label="Pairs" noink no-animations>
                     <paper-listbox class="dropdown-content">
                         <template is="dom-repeat" items="{{currencyPairs}}">
                             <paper-item>{{item}}</paper-item>

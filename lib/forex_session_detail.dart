@@ -10,6 +10,8 @@ import 'package:polymer_elements/paper_dropdown_menu.dart';
 import 'package:web_components/web_components.dart';
 import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_button.dart';
+import 'package:polymer_elements/paper_spinner.dart';
+
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
 {
@@ -29,8 +31,12 @@ class ForexSessionDetail extends PolymerElement
     _selectSession=value;
     PaperCheckbox selectSession = $['selectSession'];
     PaperIconButton filterSession =$['filterSession'];
+
+
     selectSession.hidden=!value;
     filterSession.hidden=value;
+
+    SpinnerOff();
   }
 
   @property List<String> get currencyPairs => _currencyPairs;
@@ -95,6 +101,18 @@ class ForexSessionDetail extends PolymerElement
       btnFilterSession.on["tap"].listen(sendFilterSession);
   }
 
+  SpinnerOn()
+  {
+     PaperSpinner  filterSpinner = $['filterSpinner'];
+     filterSpinner.active=true;
+  }
+
+  SpinnerOff()
+  {
+    PaperSpinner  filterSpinner = $['filterSpinner'];
+    filterSpinner.active=false;
+  }
+
   clearSelection()
   {
     PaperCheckbox selectSession = $['selectSession'];
@@ -110,6 +128,7 @@ class ForexSessionDetail extends PolymerElement
   void sendFilterSession(var event)
   {
     PaperDropdownMenu currencyPairsMenu = $['currencyPairsMenu'];
+    SpinnerOn();
     this.fire('selectfiltersession',detail: {"pair":currencyPairsMenu.value});
   }
 

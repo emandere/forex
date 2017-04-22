@@ -328,6 +328,8 @@ class ForexSession extends PolymerElement
       ..pl = pl.toStringAsFixed(2)
       ..closedTrades=closedTrades.toString()
       ..pct= pct.toStringAsFixed(2);
+
+    mainChart.sessionDetail.SpinnerOff();
   }
 
   List balanceHist()
