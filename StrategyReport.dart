@@ -130,7 +130,7 @@ main() async
 
 
   TradingSession testSession=new TradingSession();
-  testSession.id='testSession$ruleName';
+  testSession.id=ruleName;
   testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.startDate = DateTime.parse(startDate);
   testSession.fundAccount("primary",2000.0);

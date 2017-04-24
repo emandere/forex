@@ -120,10 +120,10 @@ class ForexMainChart extends PolymerElement
 
   hideCharts()
   {
-    GoogleChart mainChart = $['mainChart'];
-    GoogleChart balanceChart =$['balanceChart'];
-    GoogleChart histogramChart =$['histogramChart'];
-    GoogleChart histogramTimeChart =$['histogramTimeChart'];
+    DivElement mainChart = $['paperMainChart'];
+    DivElement balanceChart =$['paperBalanceChart'];
+    DivElement histogramChart =$['paperHistogramChart'];
+    DivElement histogramTimeChart =$['paperHistogramTimeChart'];
 
     mainChart.hidden=true;
     balanceChart.hidden=true;
@@ -133,10 +133,11 @@ class ForexMainChart extends PolymerElement
 
   showCharts()
   {
-    GoogleChart mainChart = $['mainChart'];
-    GoogleChart balanceChart =$['balanceChart'];
-    GoogleChart histogramChart =$['histogramChart'];
-    GoogleChart histogramTimeChart =$['histogramTimeChart'];
+    DivElement mainChart = $['paperMainChart'];
+    DivElement balanceChart =$['paperBalanceChart'];
+    DivElement histogramChart =$['paperHistogramChart'];
+    DivElement histogramTimeChart =$['paperHistogramTimeChart'];
+
 
     mainChart.hidden=false;
     balanceChart.hidden=false;
