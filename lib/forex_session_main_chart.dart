@@ -118,4 +118,30 @@ class ForexMainChart extends PolymerElement
     histogramTimeChart.rows = data;
   }
 
+  hideCharts()
+  {
+    GoogleChart mainChart = $['mainChart'];
+    GoogleChart balanceChart =$['balanceChart'];
+    GoogleChart histogramChart =$['histogramChart'];
+    GoogleChart histogramTimeChart =$['histogramTimeChart'];
+
+    mainChart.hidden=true;
+    balanceChart.hidden=true;
+    histogramChart.hidden=true;
+    histogramTimeChart.hidden=true;
+  }
+
+  showCharts()
+  {
+    GoogleChart mainChart = $['mainChart'];
+    GoogleChart balanceChart =$['balanceChart'];
+    GoogleChart histogramChart =$['histogramChart'];
+    GoogleChart histogramTimeChart =$['histogramTimeChart'];
+
+    mainChart.hidden=false;
+    balanceChart.hidden=false;
+    histogramChart.hidden=false;
+    histogramTimeChart.hidden=false;
+  }
+
 }

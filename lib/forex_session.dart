@@ -92,8 +92,8 @@ class ForexSession extends PolymerElement
 
      //btnCreateTrade.on['tap'].listen(CreateTrade);
 
-     //menuPage.on['tap'].listen((event)=>panel.togglePanel());
-     menuPage.on['tap'].listen(redrawCharts);
+     menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     //menuPage.on['tap'].listen(redrawCharts);
      //playpauseBtn.on['tap'].listen((event)=>playpause());
 
 
@@ -121,9 +121,9 @@ class ForexSession extends PolymerElement
   redrawCharts(var e)
   {
     PaperDrawerPanel panel = $['drawerPanel'];
-    panel.togglePanel();
     if(!currentSessionId.isEmpty)
       SetUpDashboard();
+    panel.togglePanel();
   }
 
   loadCurrencyPairs() async
@@ -275,6 +275,7 @@ class ForexSession extends PolymerElement
 
   SetUpDashboard() async
   {
+    mainChart.showCharts();
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
@@ -304,6 +305,7 @@ class ForexSession extends PolymerElement
     List values = await dailyValues(pair, startdt, enddt);
     List balanceHistPairList = balanceHistPair(pair);
 
+    mainChart.showCharts();
     mainChart.loadCurrencyChart(pair,values);
     mainChart.loadBalanceChart( title,balanceHistPairList);
     mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair));
@@ -496,6 +498,9 @@ class ForexSession extends PolymerElement
     updateSessionCards();
     //updateTradeMenu();
     UpdatePrices();
+
+    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
+    mainChart.hideCharts();
 
     //SetUpDashboard();
 
