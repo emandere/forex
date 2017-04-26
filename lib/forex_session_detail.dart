@@ -11,6 +11,7 @@ import 'package:web_components/web_components.dart';
 import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_button.dart';
 import 'package:polymer_elements/paper_spinner.dart';
+import 'package:polymer_elements/paper_input.dart';
 
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
@@ -128,8 +129,16 @@ class ForexSessionDetail extends PolymerElement
   void sendFilterSession(var event)
   {
     PaperDropdownMenu currencyPairsMenu = $['currencyPairsMenu'];
+    PaperInput startFilterDateInput=$['startFilterDate'];
+    PaperInput endFilterDateInput=$['endFilterDate'];
+
+    var startFilterDate = startFilterDateInput.value.isEmpty ? startDate : startFilterDateInput.value;
+    var endFilterDate = endFilterDateInput.value.isEmpty ? currentDate : endFilterDateInput.value;
+    
     SpinnerOn();
-    this.fire('selectfiltersession',detail: {"pair":currencyPairsMenu.value});
+    this.fire('selectfiltersession',detail: { "pair":currencyPairsMenu.value,
+                                              "startFilterDate":startFilterDate,
+                                              "endFilterDate":endFilterDate});
   }
 
   void openDialog(var event)

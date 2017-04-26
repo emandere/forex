@@ -295,27 +295,33 @@ class ForexSession extends PolymerElement
     }
   }
 
-  SetUpDashboardPair(String pair) async
+  SetUpDashboardPair(String pair,DateTime startFilterDate,DateTime endFilterDate) async
   {
     DateFormat formatter = new DateFormat('yyyyMMdd');
     String startdt=formatter.format(currentSession.startDate);
     String enddt=formatter.format(currentSession.currentTime);
     String title = "$currentSessionId Pair: $pair";
 
-    List values = await dailyValues(pair, startdt, enddt);
-    List balanceHistPairList = balanceHistPair(pair);
+    List values = await dailyValues(pair, formatter.format(startFilterDate), formatter.format(endFilterDate));
+    List balanceHistPairList = balanceHistPair(pair,startFilterDate,endFilterDate);
 
     mainChart.showCharts();
     mainChart.loadCurrencyChart(pair,values);
     mainChart.loadBalanceChart( title,balanceHistPairList);
-    mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair));
-    mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair));
+    mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair,startFilterDate,endFilterDate));
+    mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair,startFilterDate,endFilterDate));
 
 
     var closedTrades = currentSession.sessionUser.closedTrades()
-                                                  .where((t)=>t.pair==pair).length;
+                                                  .where((t)=>t.pair==pair)
+                                                  .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
+                                                  .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
+                                                  .length;
+
     var pct = currentSession.sessionUser.closedTrades()
                                         .where((t)=>t.pair==pair)
+                                        .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
+                                        .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
                                         .where((x)=>x.PL()>0).length.toDouble() / closedTrades.toDouble() ;
     pct = pct * 100;
     var balance = balanceHistPairList.last[1];
@@ -323,8 +329,8 @@ class ForexSession extends PolymerElement
 
     mainChart.sessionDetail= new ForexSessionDetail()
       ..id = title
-      ..startDate=formatter.format(currentSession.startDate)
-      ..currentDate=formatter.format(currentSession.currentTime)
+      ..startDate=formatter.format(startFilterDate)
+      ..currentDate=formatter.format(endFilterDate)
       ..balance = balance.toStringAsFixed(2)
       ..currencyPairs=sessionPanel.currencyPairs
       ..pl = pl.toStringAsFixed(2)
@@ -344,7 +350,7 @@ class ForexSession extends PolymerElement
         .toList();
   }
 
-  List balanceHistPair(String pair)
+  List balanceHistPair(String pair,DateTime startFilterDate,DateTime endFilterDate)
   {
      List pairBalanceHistory = [];
      findClosedTrades(DateTime date)
@@ -360,7 +366,9 @@ class ForexSession extends PolymerElement
                         .sessionUser
                         .primaryAccount
                         .balanceHistory
-                        .map((dailyVal)=>DateTime.parse(dailyVal["date"]));
+                        .map((dailyVal)=>DateTime.parse(dailyVal["date"]))
+                        .where((dailyVal)=>dailyVal.isAfter(startFilterDate))
+                        .where((dailyVal)=>dailyVal.isBefore(endFilterDate));
 
      double amount = currentSession
                             .sessionUser
@@ -391,13 +399,15 @@ class ForexSession extends PolymerElement
          .toList();
   }
 
-  List TradingHistogramPair(String pair)
+  List TradingHistogramPair(String pair,DateTime startFilterDate,DateTime endFilterDate)
   {
     return currentSession
         .sessionUser
         .primaryAccount
         .closedTrades
         .where((trade)=>trade.pair==pair)
+        .where((trade)=>DateTime.parse(trade.closeDate).isAfter(startFilterDate))
+        .where((trade)=>DateTime.parse(trade.closeDate).isBefore(endFilterDate))
         .map((trade)=>[trade.pair+trade.openDate,trade.PL()])
         .toList();
   }
@@ -418,7 +428,7 @@ class ForexSession extends PolymerElement
         .toList();
   }
 
-  List TradingTimeHistogramPair(String pair)
+  List TradingTimeHistogramPair(String pair,DateTime startFilterDate,DateTime endFilterDate)
   {
     int DateDiff(Trade trade)
     {
@@ -431,6 +441,8 @@ class ForexSession extends PolymerElement
         .primaryAccount
         .closedTrades
         .where((trade)=>trade.pair==pair)
+        .where((trade)=>DateTime.parse(trade.closeDate).isAfter(startFilterDate))
+        .where((trade)=>DateTime.parse(trade.closeDate).isBefore(endFilterDate))
         .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
         .toList();
   }
@@ -519,7 +531,7 @@ class ForexSession extends PolymerElement
       if(detail["pair"]=="<ALL>")
         SetUpDashboard();
       else
-        SetUpDashboardPair(detail["pair"]);
+        SetUpDashboardPair(detail["pair"],DateTime.parse(detail["startFilterDate"]),DateTime.parse(detail["endFilterDate"]));
   }
 
 }
