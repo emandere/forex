@@ -134,7 +134,7 @@ class ForexSessionDetail extends PolymerElement
 
     var startFilterDate = startFilterDateInput.value.isEmpty ? startDate : startFilterDateInput.value;
     var endFilterDate = endFilterDateInput.value.isEmpty ? currentDate : endFilterDateInput.value;
-    
+
     SpinnerOn();
     this.fire('selectfiltersession',detail: { "pair":currencyPairsMenu.value,
                                               "startFilterDate":startFilterDate,

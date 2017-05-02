@@ -1,6 +1,7 @@
 library forex_mongo;
 import 'package:mongo_dart/mongo_dart.dart';
 import 'forex_classes.dart';
+import 'forex_prices.dart';
 import 'candle_stick.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -23,7 +24,6 @@ class ForexMongo
 
   Future<List<Map>> readDailyValues(pair)
   {
-    print ("here");
     return db.collection('forexvalues').find({"pair":pair}).toList();
   }
 
@@ -74,7 +74,6 @@ class ForexMongo
 
   Future<List<Map>> readMinuteValues(pair,DateTime startDate,DateTime endDate)
   {
-    print ("here");
     SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate).lte("datetime",endDate);
     return db.collection('forexvaluesminute').find(condition).toList();
   }
@@ -97,12 +96,12 @@ class ForexMongo
 
   Future<List<String>> readUserNames()
   {
-    print ("here");
+
     List<String> pairs=new List<String>();
     return db.collection('user').find().forEach(
         (pair)
     {
-      print (pair["id"]);
+
       pairs.add(pair["id"]);
     }
     ).then((dummy)=>pairs);
@@ -112,8 +111,8 @@ class ForexMongo
   {
     mongoAddUser()
     {
-      print("Adding USer");
-      print(user.toJson());
+
+
       return db.collection('user').insert(user.toJsonMap());
     }
     mongoResult(var result)
@@ -219,6 +218,11 @@ class ForexMongo
   {
       await db.collection("starttime").drop();
       await db.collection("starttime").insert({"time":startTime});
+  }
+
+  AddPrice(Price price) async
+  {
+      await db.collection("rawprices").insert(price.toJson());
   }
 
   getStartTime() async

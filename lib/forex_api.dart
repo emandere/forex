@@ -84,11 +84,6 @@ class ForexClasses
     List<String> testpairs=new List<String>();
     closedb(var dummy)
     {
-      for(var mypair in testpairs)
-      {
-        print (mypair);
-      }
-      print('closing db');
       db.close();
       return testpairs;
     }
@@ -145,35 +140,7 @@ class ForexClasses
   Future<List<String>> addUserPost(UserData fuser)
   {
     User user = new User.fromJson(fuser.data);
-    print(fuser.data);
     return mongoLayer.addUser(user);
-    /*//Map jsonuser = JSON.decode(userdata.data);
-    print(user.toJson());
-    //User user = new User.fromJson(userdata);
-    //print(user.id);
-    showMongoUser(var result)
-    {
-
-      List<String> testuser=new List<String>();
-      testuser.add(user.id);
-      return testuser;
-      /*return db.collection('user').find(where.eq('id',user.id)).forEach(
-              (user)
-          {
-            testuser.add(user.id);
-
-          }).then((dummy){return testuser;});
-      //return "Success";*/
-    }
-
-    mongoAddUser(var result)
-    {
-      //User user = new User(name);
-      return db.collection('user').insert(JSON.decode(user.toJson()));
-    }
-    db = new Db("mongodb://localhost/testdb");
-    return db.open().then(mongoAddUser).then(showMongoUser);//.then(closedb);*/
-
   }
 
   @ApiMethod(path:'getuser/{username}')
