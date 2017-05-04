@@ -94,6 +94,10 @@
                         <iron-icon icon="timeline" item-icon></iron-icon>
                         Trade
                     </paper-icon-item>
+                    <paper-icon-item id="priceItem">
+                        <iron-icon icon="swap-vertical-circle" item-icon></iron-icon>
+                        Real Time Prices
+                    </paper-icon-item>
                     <!--<paper-item id="tradeItem">Trade</paper-item>-->
                 </paper-menu>
             </paper-header-panel>
@@ -117,6 +121,9 @@
                         </div>
                         <div>
                             <forex-trade-control id="tradeControl"></forex-trade-control>
+                        </div>
+                        <div>
+                            <forex-price-control id="priceControl"></forex-price-control>
                         </div>
                     </iron-pages>
                   <div fit>

@@ -11,6 +11,7 @@ import 'forex_pair_table.dart';
 import 'forex_session_panel.dart';
 import 'forex_trade.dart';
 import 'forex_session_detail.dart';
+import 'forex_price_control.dart';
 import 'package:intl/intl.dart';
 
 import 'package:polymer/polymer.dart';

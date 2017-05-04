@@ -26,8 +26,15 @@ sudo docker stop [id]
 //Build forex docker container
 sudo docker build -t forexapp github.com/emandere/forex
 
+sudo docker build -t quoteapp -f DockerfileQuoteLogger github.com/emandere/forex
+
+
 //Run forex docker container
 sudo docker run -p 80:80 --link mongo:mongo forexapp -t
+
+sudo docker run -p 80:80 --link mongo:mongo quoteapp -t
+
+sudo docker run -v /home/ubuntu/tradedata/keys:/forex/keys --link mongo:mongo -t quoteapp
 
 //Start EC2 Instance
 
