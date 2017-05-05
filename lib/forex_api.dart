@@ -6,6 +6,7 @@ import 'forex_classes.dart';
 import 'forex_mongo.dart';
 import 'candle_stick.dart';
 import 'dart:convert';
+import 'forex_prices.dart';
 
 
 @ApiClass(
@@ -260,6 +261,15 @@ class ForexClasses
       return dailyvals;
     }
     return mongoLayer.readMinuteValues(pair,DateTime.parse(startDate),DateTime.parse(endDate)).then(sendDailyValues);
+  }
+
+  @ApiMethod(path:'latestprices/{pair}')
+  Future<Price> latestPrices(String pair) async
+  {
+      Map priceMap = await mongoLayer.readLatestPrice(pair);
+      List<Price> latestPrices = new List<Price>();
+      //latestPrices.add(new Price.fromJsonMap(priceMap));
+      return new Price.fromJsonMap(priceMap);
   }
 
 

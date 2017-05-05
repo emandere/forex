@@ -30,7 +30,7 @@ class Price
   setPrice(Map jsonNode)
   {
       instrument = jsonNode["instrument"].toString().replaceAll(new RegExp("_"),"");
-      time = DateTime.parse(jsonNode["time"]);
+      time = jsonNode["time"] is DateTime ? jsonNode["time"] : DateTime.parse(jsonNode["time"]);
       bid =jsonNode["bid"];
       ask = jsonNode["ask"];
   }

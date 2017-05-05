@@ -59,6 +59,13 @@ class ForexMongo
     return db.collection('forexvalues').find(condition).toList();
   }
 
+  Future<Map> readLatestPrice(String instrument)
+  {
+    SelectorBuilder condition = where.eq("instrument",instrument).sortBy("time",descending: true);
+    return db.collection('rawprices').findOne(condition);
+
+  }
+
   Future<List<Map>> readDailyValueMissing(pair,DateTime startDate)
   {
     SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate.add(new Duration(days:-7))).lte("datetime",startDate);

@@ -11,6 +11,7 @@ import 'forex_pair_table.dart';
 import 'forex_session_panel.dart';
 import 'forex_trade.dart';
 import 'forex_session_detail.dart';
+import 'forex_prices.dart';
 import 'forex_price_control.dart';
 import 'package:intl/intl.dart';
 
@@ -107,6 +108,10 @@ class ForexSession extends PolymerElement
      loadCurrencyPairs();
      getDailyCurrencies();
      loadServerTime();
+
+     const period = const Duration(seconds:10);
+     new Timer.periodic(period, (Timer t) async => await UpdateRealTimePrices());
+
   }
 
   loadServerTime() async
@@ -154,6 +159,22 @@ class ForexSession extends PolymerElement
   Future UpdatePrices() async {
     List<Map> prices = await readDailyValueAll(currentSession.currentTime);
     updatePairs(prices);
+  }
+
+  Future UpdateRealTimePrices() async
+  {
+
+      await loadCurrencyPairs();
+      List<Price> currentPrices = <Price>[];
+      for(String pair in currencyPairs)
+      {
+        var url = "/api/forexclasses/v1/latestprices/$pair";
+        String priceJson = await HttpRequest.getString(url);
+        currentPrices.add(new Price.fromJson(priceJson));
+      }
+
+      ForexPriceControl priceControl = $["priceControl"];
+      priceControl.prices=currentPrices;
   }
 
   Future<TradingSession> loadSession(String id) async
