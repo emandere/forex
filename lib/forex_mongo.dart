@@ -61,7 +61,7 @@ class ForexMongo
 
   Future<Map> readLatestPrice(String instrument)
   {
-    SelectorBuilder condition = where.eq("instrument",instrument).sortBy("time",descending: true);
+    SelectorBuilder condition = where.eq("instrument",instrument).sortBy("time",descending: true).limit(1);
     return db.collection('rawprices').findOne(condition);
 
   }
