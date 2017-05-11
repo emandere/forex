@@ -275,6 +275,25 @@ class ForexMongo
     return mongoAddForexDailyValue().then(mongoResult);
   }
 
+  Future<Map> readLatestCandle(String pair)
+  {
+    SelectorBuilder condition = where.eq("pair",pair).sortBy("date",descending: true).limit(1);
+    return db.collection('forexdailyprices').findOne(condition);
+  }
 
+  Stream readPricesAsync(String pair) async*
+  {
+    SelectorBuilder condition = where.eq("instrument",pair);
+    yield* db.collection('rawprices').find(condition);
+  }
+
+  Stream readPricesAsyncByDate(String pair,DateTime date) async*
+  {
+    SelectorBuilder condition = where.eq("instrument",pair)
+                                      .gte("time",date)
+                                      .lte("time",date.add(new Duration(days:1)))
+                                      .sortBy("time");
+    yield* db.collection('rawprices').find(condition);
+  }
 
 }
