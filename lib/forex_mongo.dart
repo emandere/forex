@@ -232,6 +232,11 @@ class ForexMongo
       await db.collection("rawprices").insert(price.toJson());
   }
 
+  AddCandle(ForexDailyValue dailyValue) async
+  {
+    await db.collection("forexdailyprices").save(dailyValue.toJsonMap());
+  }
+
   getStartTime() async
   {
     return await db.collection('starttime').findOne();
@@ -277,13 +282,19 @@ class ForexMongo
 
   Future<Map> readLatestCandle(String pair)
   {
-    SelectorBuilder condition = where.eq("pair",pair).sortBy("date",descending: true).limit(1);
+    SelectorBuilder condition = where.eq("pair",pair).sortBy("datetime",descending: true).limit(1);
     return db.collection('forexdailyprices').findOne(condition);
   }
 
   Stream readPricesAsync(String pair) async*
   {
     SelectorBuilder condition = where.eq("instrument",pair);
+    yield* db.collection('rawprices').find(condition);
+  }
+
+  Stream readPricesAsyncLatest(String pair,DateTime date) async*
+  {
+    SelectorBuilder condition = where.eq("instrument",pair).gt("time",date.add(new Duration(days:1)));
     yield* db.collection('rawprices').find(condition);
   }
 
