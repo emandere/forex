@@ -49,7 +49,6 @@ CreateAllCandles(String pair,ForexMongo mongoLayer) async
 
   for(DateTime day in days)
   {
-      print(day.toUtc().toString());
       await CreateCandle(pair,day,mongoLayer);
   }
 }
