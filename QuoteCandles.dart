@@ -36,7 +36,7 @@ main(List<String> arguments) async
     }
   }
 
-  const period = const Duration(seconds:10);
+  const period = const Duration(minutes: 30);
   new Timer.periodic(period, (Timer t) async => await CreateCandles());
 
 
