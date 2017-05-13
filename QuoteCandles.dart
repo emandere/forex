@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:collection';
 import 'dart:convert';
@@ -13,24 +14,32 @@ main(List<String> arguments) async
   ForexMongo mongoLayer = new ForexMongo(arguments[0]);
   await mongoLayer.db.open();
 
-  var pairs = await mongoLayer.readMongoPairs();
-
-  for(var pair in pairs)
+  CreateCandles () async
   {
-     print(pair);
-     var latestDateMap = await mongoLayer.readLatestCandle(pair);
-     if(latestDateMap == null)
-     {
-        await CreateAllCandles(pair,mongoLayer);
-     }
-     else
-     {
-       var latestDate = new ForexDailyValue.fromJson(latestDateMap);
-       await CreateLatestCandles(pair,latestDate, mongoLayer);
-     }
+    var pairs = await
+    mongoLayer.readMongoPairs();
+    for (var pair in pairs)
+    {
+      print(pair);
+      var latestDateMap = await mongoLayer.readLatestCandle(pair);
+      if (latestDateMap == null)
+      {
+        await CreateAllCandles
+        (pair,mongoLayer);
+      }
+      else
+      {
+        var latestDate = new ForexDailyValue.fromJson(latestDateMap);
+        await CreateLatestCandles
+        (pair,latestDate, mongoLayer);
+      }
+    }
   }
 
-  exit(0);
+  const period = const Duration(seconds:10);
+  new Timer.periodic(period, (Timer t) async => await CreateCandles());
+
+
 }
 
 CreateAllCandles(String pair,ForexMongo mongoLayer) async
