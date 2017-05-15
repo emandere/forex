@@ -50,7 +50,7 @@ class ForexDailyValue
 
   Map toJsonMap()
   {
-    return{"pair":pair,"date":date,"open":open,"high":high,"low":low,"close":close,"datetime":datetime};
+    return{"_id":pair+date,"pair":pair,"date":date,"open":open,"high":high,"low":low,"close":close,"datetime":datetime};
   }
 }
 

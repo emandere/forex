@@ -39,7 +39,6 @@ main(List<String> arguments) async
   const period = const Duration(minutes: 30);
   new Timer.periodic(period, (Timer t) async => await CreateCandles());
 
-
 }
 
 CreateAllCandles(String pair,ForexMongo mongoLayer) async

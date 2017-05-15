@@ -294,7 +294,7 @@ class ForexMongo
 
   Stream readPricesAsyncLatest(String pair,DateTime date) async*
   {
-    SelectorBuilder condition = where.eq("instrument",pair).gt("time",date.add(new Duration(days:1)));
+    SelectorBuilder condition = where.eq("instrument",pair).gte("time",date);
     yield* db.collection('rawprices').find(condition);
   }
 
