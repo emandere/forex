@@ -18,6 +18,15 @@ class ForexPriceControl extends PolymerElement
     setDivPrices(value);
   }
 
+  padzeros(String str)
+  {
+    for(int i=str.length;i<=6;i++)
+    {
+      str=str+"0";
+    }
+    return str;
+  }
+
   setDivPrices(List<Price> prices)
   {
     final DateFormat formatter = new DateFormat('M/d/y HH:mm:ss');
@@ -29,7 +38,7 @@ class ForexPriceControl extends PolymerElement
       {
         divcurrprices.children.add(new ForexPrice()
           ..pair=priceVal.instrument
-          ..price=priceVal.ask.toString()
+          ..price=padzeros(priceVal.ask.toString())
           ..date=formatter.format(priceVal.time)
         );
       }
