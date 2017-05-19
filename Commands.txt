@@ -9,6 +9,7 @@ docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
 //Query mongo database
 docker exec -it mongo bash
 
+sudo /etc/init.d/jenkins restart
 
 # Delete every Docker containers
 # Must be run first because images are attached to containers

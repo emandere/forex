@@ -1,9 +1,11 @@
 @HtmlImport('forex_price_control.html')
 library forex.lib.forex_price_control;
 import 'dart:html';
+import 'package:intl/intl.dart';
 import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
 import 'forex_prices.dart';
+import 'forex_price.dart';
 
 @PolymerRegister('forex-price-control')
 class ForexPriceControl extends PolymerElement
@@ -18,15 +20,18 @@ class ForexPriceControl extends PolymerElement
 
   setDivPrices(List<Price> prices)
   {
+    final DateFormat formatter = new DateFormat('M/d/y HH:mm:ss');
     DivElement divcurrprices=$['divcurrprices'];
     if(prices.length>0)
     {
       divcurrprices.children.clear();
       for(Price priceVal in prices)
       {
-        DivElement divPrice = new DivElement();
-        divPrice.text =  priceVal.instrument+": "+ priceVal.ask.toString()+": "+priceVal.time.toIso8601String();
-        divcurrprices.children.add(divPrice);
+        divcurrprices.children.add(new ForexPrice()
+          ..pair=priceVal.instrument
+          ..price=priceVal.ask.toString()
+          ..date=formatter.format(priceVal.time)
+        );
       }
     }
   }

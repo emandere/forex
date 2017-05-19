@@ -1,0 +1,65 @@
+<dom-module id="forex-price">
+    <template>
+        <style is="custom-style">
+           paper-card
+           {
+               width:450px;
+           }
+
+           paper-icon-button.small {
+               width: 32px;
+               height: 32px;
+           }
+
+           .pair
+           {
+               font-family: Inconsolata, monospace;
+               font-weight: 600;
+               margin-right: 12px;
+           }
+           .price
+           {
+               font-family: Inconsolata, monospace;
+               padding-right: 12px;
+           }
+
+           @media screen and (max-width: 360px)
+           {
+
+               paper-card
+               {
+                   width:340px;
+               }
+
+
+               .pair
+               {
+                   font-family: Inconsolata, monospace;
+                   font-weight: 600;
+                   margin-right: 12px;
+                   font-size:x-small;
+
+               }
+
+               .price
+               {
+                   font-family: Inconsolata, monospace;
+                   padding-right: 12px;
+                   font-size:x-small;
+               }
+
+           }
+
+
+        </style>
+        <div>
+            <paper-card>
+                <div class="card-content layout horizontal">
+                    <div class="pair">{{pair}} </div>
+                    <div class="price">{{price}}</div>
+                    <div class="price">{{date}}</div>
+                </div>
+            </paper-card>
+        </div>
+    </template>
+</dom-module>
