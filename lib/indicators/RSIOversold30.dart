@@ -9,12 +9,12 @@ class RSIOversold30 implements IndicatorRule
   }
   bool IsMet(Iterable<Map> window,Map currentValue)
   {
-    var open = window.map((t)=>t["open"]);
-    var close = window.map((t)=>t["close"]);
-    var RSIValue = RSI(new IterableZip([open,close]));
+    var RSIValue = RSI(datafromZipWindow(window));
     if(RSIValue<30)
       return true;
     else
       return false;
   }
+
+  double indicator(Iterable<Map> window)=>RSI(datafromZipWindow(window));
 }

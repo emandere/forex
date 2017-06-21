@@ -10,14 +10,11 @@ class AboveBollingerBandHigher implements IndicatorRule
   }
   bool IsMet(Iterable<Map> window,Map currentValue)
   {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
+    List<double> data = dataFromWindow(window);
     if(BollingerUpper(data) < currentValue["high"])
       return true;
     else
       return false;
   }
+  double indicator(Iterable<Map> window)=>BollingerUpper(dataFromWindow(window));
 }

@@ -16,4 +16,5 @@ class RandomRule implements IndicatorRule
     else
       return false;
   }
+  double indicator(Iterable<Map> window)=>0.5;
 }

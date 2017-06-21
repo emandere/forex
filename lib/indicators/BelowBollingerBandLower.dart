@@ -10,14 +10,11 @@ class BelowBollingerBandLower implements IndicatorRule
   }
   bool IsMet(Iterable<Map> window,Map currentValue)
   {
-    List<double> data = <double>[];
-    for(Map day in window)
-    {
-      data.add(day["close"]);
-    }
+    List<double> data = dataFromWindow(window);
     if(BollingerLower(data) > currentValue["low"])
       return true;
     else
       return false;
   }
+  double indicator(Iterable<Map> window)=>BollingerLower(dataFromWindow(window));
 }

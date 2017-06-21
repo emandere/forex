@@ -10,7 +10,13 @@ part 'indicators/BelowBollingerBandLowerWithSlope.dart';
 part 'indicators/RSIOverbought70.dart';
 part 'indicators/RSIOversold30.dart';
 part 'indicators/RSIOversold30AvoidVolatility.dart';
-
+List<double> dataFromWindow(Iterable<Map> window)=>window.map((day)=>day["close"]).toList();
+IterableZip datafromZipWindow(Iterable<Map> window)
+{
+  var open = window.map((t)=>t["open"]);
+  var close = window.map((t)=>t["close"]);
+  return new IterableZip([open,close]);
+}
 abstract class IndicatorRule
 {
   factory IndicatorRule(String ruleName,int dataPoints)
@@ -40,6 +46,7 @@ abstract class IndicatorRule
   String name;
   int dataPoints;
   bool IsMet(Iterable<Map> window,Map currentValue);
+  double indicator(Iterable<Map> window);
 }
 
 

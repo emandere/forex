@@ -307,4 +307,13 @@ class ForexMongo
     yield* db.collection('rawprices').find(condition);
   }
 
+  Stream<Map> readPriceRangeAsyncByDate(String pair,DateTime startDate,DateTime endDate) async*
+  {
+    SelectorBuilder condition = where.eq("pair",pair)
+        .gte("datetime",startDate)
+        .lte("datetime",endDate)
+        .sortBy("datetime");
+    yield* db.collection('forexdailyprices').find(condition);
+  }
+
 }
