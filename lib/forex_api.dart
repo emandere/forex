@@ -1,12 +1,12 @@
 
+import 'dart:async';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:rpc/rpc.dart';
-import 'dart:async';
+import 'candle_stick.dart';
+import 'forex_prices.dart';
 import 'forex_classes.dart';
 import 'forex_mongo.dart';
-import 'candle_stick.dart';
-import 'dart:convert';
-import 'forex_prices.dart';
+import 'forex_indicator_rules.dart';
 
 
 @ApiClass(
@@ -272,5 +272,16 @@ class ForexClasses
       return new Price.fromJsonMap(priceMap);
   }
 
+  @ApiMethod(path:'dailyindicator/{ruleName}/{windowStr}/{pair}/{currentDate}')
+  Future<List<double>> indicator(String ruleName, String windowStr,String pair,String currentDate) async
+  {
+    int window = int.parse(windowStr);
+    IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
+    var dailyRange = await mongoLayer
+                            .readPriceRangeAsyncByDate(pair,DateTime.parse(currentDate).add(new Duration(days:-window))
+                                                           ,DateTime.parse(currentDate)).toList();
+
+    return [tradingRule.indicator(dailyRange)];
+  }
 
 }
