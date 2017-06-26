@@ -5,6 +5,7 @@ class Price
   DateTime time;
   double bid;
   double ask;
+  String indicator;
   Map toJson()
   {
     return

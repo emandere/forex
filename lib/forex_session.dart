@@ -170,11 +170,26 @@ class ForexSession extends PolymerElement
       {
         var url = "/api/forexclasses/v1/latestprices/$pair";
         String priceJson = await HttpRequest.getString(url);
-        currentPrices.add(new Price.fromJson(priceJson));
+
+        Price latestPrice = new Price.fromJson(priceJson);
+
+        DateFormat formatter = new DateFormat('yyyyMMdd');
+        String currentDate=formatter.format(latestPrice.time);
+
+        String indicator = await GetIndicator("RSIOversold30", pair, currentDate, "10");
+        latestPrice.indicator=indicator;
+        currentPrices.add(latestPrice);
       }
 
       ForexPriceControl priceControl = $["priceControl"];
       priceControl.prices=currentPrices;
+  }
+
+  Future<String> GetIndicator(String ruleName,String pair,String date,String window) async
+  {
+       var url="/api/forexclasses/v1/dailyindicator/$ruleName/$window/$pair/$date";
+       String request = await HttpRequest.getString(url);
+       return JSON.decode(request)[0].toString();
   }
 
   Future<TradingSession> loadSession(String id) async

@@ -281,7 +281,7 @@ class ForexClasses
                             .readPriceRangeAsyncByDate(pair,DateTime.parse(currentDate).add(new Duration(days:-window))
                                                            ,DateTime.parse(currentDate)).toList();
 
-    return [tradingRule.indicator(dailyRange)];
+    return [tradingRule.indicator(dailyRange).toStringAsFixed(0)];
   }
 
 }

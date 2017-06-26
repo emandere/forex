@@ -40,6 +40,7 @@ class ForexPriceControl extends PolymerElement
           ..pair=priceVal.instrument
           ..price=padzeros(priceVal.ask.toString())
           ..date=formatter.format(priceVal.time)
+          ..indicator=priceVal.indicator
         );
       }
     }

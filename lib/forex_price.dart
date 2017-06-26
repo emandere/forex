@@ -14,6 +14,7 @@ class ForexPrice extends PolymerElement
   String _pair;
   String _price;
   String _date;
+  String _indicator;
 
   @property String get pair => _pair;
   @reflectable set pair(String value)
@@ -32,6 +33,13 @@ class ForexPrice extends PolymerElement
   {
     _date=value;
     set('date', _date);
+  }
+
+  @property String get indicator => _indicator;
+  @reflectable set indicator(String value)
+  {
+    _indicator=value;
+    set('indicator', _indicator);
   }
 
   ForexPrice.created() : super.created();
