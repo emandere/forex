@@ -171,7 +171,7 @@ class ForexSession extends PolymerElement
         var url = "/api/forexclasses/v1/latestdailyprices/$pair";
         String priceJson = await HttpRequest.getString(url);
 
-        ForexDailyValue latestDailyValue = new ForexDailyValue.fromString(priceJson);
+        ForexDailyValue latestDailyValue = new ForexDailyValue.fromJson(JSON.decode(priceJson));
 
         DateFormat formatter = new DateFormat('yyyyMMdd');
         String currentDate=formatter.format(latestDailyValue.datetime);
