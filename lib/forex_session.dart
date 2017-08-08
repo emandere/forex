@@ -176,7 +176,7 @@ class ForexSession extends PolymerElement
         DateFormat formatter = new DateFormat('yyyyMMdd');
         String currentDate=formatter.format(latestDailyValue.datetime);
 
-        String indicator = await GetIndicator("RSIOversold30", pair, currentDate, "10");
+        String indicator = await GetIndicator("RSIOversold30", pair, currentDate, "20");
         latestDailyValue.indicator = indicator;
         currentPrices.add(latestDailyValue);
       }
