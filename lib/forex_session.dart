@@ -165,20 +165,20 @@ class ForexSession extends PolymerElement
   {
 
       await loadCurrencyPairs();
-      List<Price> currentPrices = <Price>[];
+      List<ForexDailyValue> currentPrices = <ForexDailyValue>[];
       for(String pair in currencyPairs)
       {
-        var url = "/api/forexclasses/v1/latestprices/$pair";
+        var url = "/api/forexclasses/v1/latestdailyprices/$pair";
         String priceJson = await HttpRequest.getString(url);
 
-        Price latestPrice = new Price.fromJson(priceJson);
+        ForexDailyValue latestDailyValue = new ForexDailyValue.fromString(priceJson);
 
         DateFormat formatter = new DateFormat('yyyyMMdd');
-        String currentDate=formatter.format(latestPrice.time);
+        String currentDate=formatter.format(latestDailyValue.datetime);
 
         String indicator = await GetIndicator("RSIOversold30", pair, currentDate, "10");
-        latestPrice.indicator=indicator;
-        currentPrices.add(latestPrice);
+        latestDailyValue.indicator = indicator;
+        currentPrices.add(latestDailyValue);
       }
 
       ForexPriceControl priceControl = $["priceControl"];

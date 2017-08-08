@@ -6,6 +6,7 @@ class ForexDailyValue
   double high;
   double low;
   double close;
+  String indicator;
   String time;
   DateTime datetime;
   ForexDailyValue();

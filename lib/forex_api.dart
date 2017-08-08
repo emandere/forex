@@ -272,6 +272,15 @@ class ForexClasses
       return new Price.fromJsonMap(priceMap);
   }
 
+  @ApiMethod(path:'latestdailyprices/{pair}')
+  Future<ForexDailyValue> latestDailyPrices(String pair) async
+  {
+    Map priceMap = await mongoLayer.readLatestDailyPrice(pair);
+    List<ForexDailyValue> latestPrices = new List<ForexDailyValue>();
+    //latestPrices.add(new Price.fromJsonMap(priceMap));
+    return new ForexDailyValue.fromJson(priceMap);
+  }
+
   @ApiMethod(path:'dailyindicator/{ruleName}/{windowStr}/{pair}/{currentDate}')
   Future<List<double>> indicator(String ruleName, String windowStr,String pair,String currentDate) async
   {

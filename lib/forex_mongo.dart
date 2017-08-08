@@ -66,6 +66,13 @@ class ForexMongo
 
   }
 
+  Future<Map> readLatestDailyPrice(String instrument)
+  {
+    SelectorBuilder condition = where.eq("pair",instrument).sortBy("datetime",descending: true).limit(1);
+    return db.collection('forexdailyprices').findOne(condition);
+
+  }
+
   Future<List<Map>> readDailyValueMissing(pair,DateTime startDate)
   {
     SelectorBuilder condition = where.eq("pair",pair).gte("datetime",startDate.add(new Duration(days:-7))).lte("datetime",startDate);
@@ -305,6 +312,16 @@ class ForexMongo
                                       .lte("time",date.add(new Duration(days:1)))
                                       .sortBy("time");
     yield* db.collection('rawprices').find(condition);
+  }
+
+
+  Stream readDailyAsyncByDate(String pair,DateTime date) async*
+  {
+    SelectorBuilder condition = where.eq("pair",pair)
+        .gte("datetime",date)
+        .lte("datetime",date.add(new Duration(days:1)))
+        .sortBy("datetime");
+    yield* db.collection('forexdailyprices').find(condition);
   }
 
   Stream<Map> readPriceRangeAsyncByDate(String pair,DateTime startDate,DateTime endDate) async*
