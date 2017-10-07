@@ -103,7 +103,7 @@ class ForexSession extends PolymerElement
 
      panel.forceNarrow=true;
      set('itemIndex',0);
-
+     UpdateRealTimePrices();
      loadSessions();
      loadCurrencyPairs();
      getDailyCurrencies();

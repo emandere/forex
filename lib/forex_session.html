@@ -78,9 +78,9 @@
                     <paper-icon-button id="navIconMenuBack" icon="arrow-back"></paper-icon-button>
                 </paper-toolbar>
                 <paper-menu id="menuPage" selected="{{itemIndex}}">
-                    <paper-icon-item id="sessionItem">
-                        <iron-icon icon="donut-large" item-icon></iron-icon>
-                        Sessions
+                    <paper-icon-item id="priceItem">
+                        <iron-icon icon="swap-vertical-circle" item-icon></iron-icon>
+                        Real Time Prices
                     </paper-icon-item>
                     <paper-icon-item id="dashboardItem">
                         <iron-icon icon="dashboard" item-icon></iron-icon>
@@ -94,9 +94,10 @@
                         <iron-icon icon="timeline" item-icon></iron-icon>
                         Trade
                     </paper-icon-item>
-                    <paper-icon-item id="priceItem">
-                        <iron-icon icon="swap-vertical-circle" item-icon></iron-icon>
-                        Real Time Prices
+
+                    <paper-icon-item id="sessionItem">
+                        <iron-icon icon="donut-large" item-icon></iron-icon>
+                        Sessions
                     </paper-icon-item>
                     <!--<paper-item id="tradeItem">Trade</paper-item>-->
                 </paper-menu>
@@ -111,7 +112,7 @@
                 <div class="content fit" align="center">
                     <iron-pages selected="{{itemIndex}}">
                         <div>
-                            <forex-session-panel id="sessionPanel"></forex-session-panel>
+                            <forex-price-control id="priceControl"></forex-price-control>
                         </div>
                         <div>
                             <forex-session-main-chart id="mainChart"></forex-session-main-chart>
@@ -123,7 +124,7 @@
                             <forex-trade-control id="tradeControl"></forex-trade-control>
                         </div>
                         <div>
-                            <forex-price-control id="priceControl"></forex-price-control>
+                            <forex-session-panel id="sessionPanel"></forex-session-panel>
                         </div>
                     </iron-pages>
                   <div fit>
