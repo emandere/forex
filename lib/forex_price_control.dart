@@ -6,13 +6,14 @@ import 'package:polymer/polymer.dart';
 import 'package:web_components/web_components.dart';
 import 'candle_stick.dart';
 import 'forex_price.dart';
+import 'forex_prices.dart';
 
 @PolymerRegister('forex-price-control')
 class ForexPriceControl extends PolymerElement
 {
-  List<ForexDailyValue> _prices;
-  @property List<ForexDailyValue> get prices => _prices;
-  @reflectable set prices(List<ForexDailyValue> value)
+  List<Price> _prices;
+  @property List<Price> get prices => _prices;
+  @reflectable set prices(List<Price> value)
   {
     _prices = value;
     setDivPrices(value);
@@ -27,19 +28,19 @@ class ForexPriceControl extends PolymerElement
     return str;
   }
 
-  setDivPrices(List<ForexDailyValue> prices)
+  setDivPrices(List<Price> prices)
   {
     final DateFormat formatter = new DateFormat('M/d/y HH:mm:ss');
     DivElement divcurrprices=$['divcurrprices'];
     if(prices.length>0)
     {
       divcurrprices.children.clear();
-      for(ForexDailyValue priceVal in prices)
+      for(Price priceVal in prices)
       {
         divcurrprices.children.add(new ForexPrice()
-          ..pair=priceVal.pair
-          ..price=padzeros(priceVal.close.toString())
-          ..date=formatter.format(priceVal.datetime)
+          ..pair=priceVal.instrument
+          ..price=padzeros(priceVal.ask.toString())
+          ..date=formatter.format(priceVal.time)
           ..indicator=priceVal.indicator
         );
       }

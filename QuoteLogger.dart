@@ -47,6 +47,7 @@ main(List<String> arguments) async
             || !lastQuotes[currPrice.instrument].time.isAtSameMomentAs(currPrice.time))
         {
             await mongoLayer.AddPrice(currPrice);
+            await mongoLayer.AddCurrentPrice(currPrice);
             lastQuotes[currPrice.instrument]=currPrice;
             print(currPrice.instrument+" "+currPrice.time.toIso8601String());
         }

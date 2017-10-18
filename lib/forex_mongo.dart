@@ -62,7 +62,7 @@ class ForexMongo
   Future<Map> readLatestPrice(String instrument)
   {
     SelectorBuilder condition = where.eq("instrument",instrument).sortBy("time",descending: true).limit(1);
-    return db.collection('rawprices').findOne(condition);
+    return db.collection('rawpriceslatest').findOne(condition);
 
   }
 
@@ -237,6 +237,12 @@ class ForexMongo
   AddPrice(Price price) async
   {
       await db.collection("rawprices").insert(price.toJson());
+  }
+
+  AddCurrentPrice(Price price) async
+  {
+     await db.collection("rawpriceslatest").remove({"instrument":price.instrument});
+     await db.collection("rawpriceslatest").insert(price.toJson());
   }
 
   AddCandle(ForexDailyValue dailyValue) async
