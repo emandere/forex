@@ -5,6 +5,7 @@ import 'candle_stick.dart';
 import 'forex_stats.dart';
 import 'dart:collection';
 import "package:collection/collection.dart";
+import 'forex_prices.dart';
 
 class UserData
 {
@@ -891,6 +892,15 @@ class TradingSession
         sessionUser.executeTrade(acc, pair, units,position, openDate, stopLoss, takeProfit);
         setStopLossAndTakeProfit(acc, openDate, position, stopLoss, takeProfit);
       }
+   }
+
+   executeTradePrice(String acc,Price currPrice, int units,String position,double stopLoss,double takeProfit)
+   {
+     if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (currPrice.bid  * units.toDouble()))
+     {
+       sessionUser.executeTrade(acc, currPrice.instrument, units,position, currPrice.time.toIso8601String(), stopLoss, takeProfit);
+       setStopLossAndTakeProfit(acc, currPrice.time.toIso8601String(), position, stopLoss, takeProfit);
+     }
    }
 
    setStopLossAndTakeProfit(String account,String openDate,String position,double stopLossPrice,double takeProfitPrice)
