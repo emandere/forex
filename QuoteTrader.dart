@@ -14,6 +14,7 @@ main(List<String> arguments) async
   ForexMongo mongoLayer = new ForexMongo(arguments[0]);
   await mongoLayer.db.open();
 
+  var server ="localhost";
   var file = new File("keys");
   var authorization = {"Authorization": await file.readAsString()};
   var ruleName = "RSIOverbought70";
@@ -74,6 +75,11 @@ main(List<String> arguments) async
     return false;
   }
 
+  Future<bool> checkRule2(Price p) async
+  {
+     return true;
+  }
+
   bool newquote(Price currPrice)
   {
     if(!lastQuotes.containsKey(currPrice.instrument)
@@ -122,6 +128,18 @@ main(List<String> arguments) async
             stopLoss * currPrice.bid,
             takeProfit * currPrice.bid);
       }
+      tradingSession.printacc();
+      tradingSession.upsateSessioPrice(currPrice);
+
+
+      PostData myData = new PostData();
+      myData.data=tradingSession.toJson();
+
+      var url = 'http://$server/api/forexclasses/v1/addsessionpost';
+      var response = await http.post(url,body:myData.toJsonMap());
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
     }
   }
 

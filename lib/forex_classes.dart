@@ -649,6 +649,16 @@ class User
 
   }
 
+  updateTradesPrice(Price currPrice)
+  {
+    List<Trade> allTrades = new List<Trade>.from(primaryAccount.Trades)..addAll(secondaryAccount.Trades);
+    List<Trade> selectedTrades = allTrades.where((trade)=>trade.pair==currPrice.instrument).toList();
+    for(Trade currTrade in selectedTrades)
+    {
+        currTrade.updateTrade(currPrice.time.toIso8601String(), currPrice.bid);
+    }
+  }
+
   List<Trade> closedTrades()
   {
      return new List<Trade>.from(primaryAccount.closedTrades)..addAll(secondaryAccount.closedTrades);
@@ -721,6 +731,13 @@ class User
       primaryAccount.processOrdersNew(pair,currentValue);
       secondaryAccount.processOrdersNew(pair,currentValue);
   }
+
+  processOrdersNewPrice(Price currPrice)
+  {
+    primaryAccount.processOrdersNew(currPrice.instrument,currPrice.bid);
+    secondaryAccount.processOrdersNew(currPrice.instrument,currPrice.bid);
+  }
+
   setOrder(String acc,String openDate,int index,double price,bool direction)
   {
     if(acc=="primary")
@@ -844,6 +861,13 @@ class TradingSession
 
    }
 
+   upsateSessioPrice(Price currPrice)
+   {
+     currentTime =currPrice.time;
+     sessionUser.updateTradesPrice(currPrice);
+     sessionUser.processOrdersNew(currPrice.instrument,currPrice.bid);
+     updateHistory();
+   }
 
    Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,Function dailyValuesCall,Function dailyValuesCallMissing) async
    {

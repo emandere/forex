@@ -17,6 +17,11 @@ class Price
       };
   }
 
+  Price()
+  {
+
+  }
+
   Price.fromJson(String json)
   {
     Map jsonNode = JSON.decode(json);
