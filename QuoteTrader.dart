@@ -127,6 +127,7 @@ main(List<String> arguments) async
             tradePosition,
             stopLoss * currPrice.bid,
             takeProfit * currPrice.bid);
+        availableTrades[currPrice.instrument]=false;
       }
       tradingSession.printacc();
       tradingSession.upsateSessioPrice(currPrice);
