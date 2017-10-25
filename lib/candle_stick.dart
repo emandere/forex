@@ -45,7 +45,7 @@ class ForexDailyValue
     open = json["open"];//double.parse(json["open"]);
     high = json["high"];//double.parse(json["high"]);
     low  = json["low"];//double.parse(json["low"]);
-    close= json["close"];//double.parse(json["close"]);
+    close= double.parse(json["close"].toString());
     time=json["time"];
   }
 
@@ -88,18 +88,19 @@ class ForexMinuteValue
   ForexMinuteValue.fromJson(Map json)
   {
     //Map jsonvalue = JSON.decode(json);
-    if(json["pair"]!=null)
-      pair=json["pair"];
+    if (json["pair"] != null)
+      pair = json["pair"];
 
-    if(json["date"].contains("-"))
-      date =json["date"];
+    if (json["date"].contains("-"))
+      date = json["date"];
     else
-      date = json["date"].substring(0,4)+"-"+json["date"].substring(4,6)+"-"+json["date"].substring(6,8);//json["date"];
-    time=json["time"];
-    open = json["open"];//double.parse(json["open"]);
-    high = json["high"];//double.parse(json["high"]);
-    low  = json["low"];//double.parse(json["low"]);
-    close= json["close"];//double.parse(json["close"]);
+      date = json["date"].substring(0, 4) + "-" + json["date"].substring(4, 6) +
+          "-" + json["date"].substring(6, 8); //json["date"];
+    time = json["time"];
+    open = json["open"]; //double.parse(json["open"]);
+    high = json["high"]; //double.parse(json["high"]);
+    low = json["low"]; //double.parse(json["low"]);
+    close = double.parse(json["close"].toString());
   }
 
   Map toJsonMap()

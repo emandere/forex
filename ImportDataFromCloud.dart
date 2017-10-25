@@ -20,15 +20,19 @@ main() async
   
   for(String pair in pairs) 
   {
-    var url = 'http://$server/api/forexclasses/v1/dailyvaluesrange/$pair/$startDate/$endDate';
+    var url = 'http://$server/api/forexclasses/v1/dailypricesrange/$pair/$startDate/$endDate';
     var  listCandleJson = await http.get(url);
     List<Map> listCandleJSonMap = JSON.decode(listCandleJson.body);
+    print(pair);
     for(Map candleJson in listCandleJSonMap)
     {
+      print(candleJson["close"].toString());
       ForexDailyValue dailyValue=new ForexDailyValue.fromJson(candleJson);
-      mongoLayer.AddCandle(dailyValue);
+      await mongoLayer.AddCandle(dailyValue);
+      var dat = dailyValue.datetime.toIso8601String();
+      print(" $dat");
     }
-    print(pair);
+
   }
 
   exit(1);
