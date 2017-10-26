@@ -259,6 +259,19 @@ class ForexClasses
     return dailyvals;
   }
 
+
+  @ApiMethod(path: 'dailyrealtimeprices/{pair}/{day}')
+  Future <List<Price>> dailyRealTimePrices(String pair,String day) async
+  {
+    var dailyvals=<Price>[];
+    await for(Map dailyvalueMap in mongoLayer.readPricesAsyncByDate(pair, DateTime.parse(day)))
+    {
+      var val = new Price.fromJsonMap(dailyvalueMap);
+      dailyvals.add(val);
+    }
+     return dailyvals;
+  }
+
   @ApiMethod(path: 'minutevalues/{pair}/{startDate}/{endDate}')
   Future <List<ForexDailyValue>> minuteValues(String pair,String startDate,String endDate)
   {
