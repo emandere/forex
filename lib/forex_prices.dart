@@ -10,6 +10,7 @@ class Price
   {
     return
       {
+        "_id":instrument+time.toIso8601String(),
         "instrument":instrument,
         "time":time,
         "bid":bid,
@@ -37,7 +38,7 @@ class Price
   {
       instrument = jsonNode["instrument"].toString().replaceAll(new RegExp("_"),"");
       time = jsonNode["time"] is DateTime ? jsonNode["time"] : DateTime.parse(jsonNode["time"]);
-      bid =jsonNode["bid"];
-      ask = jsonNode["ask"];
+      bid =double.parse( jsonNode["bid"].toString());
+      ask = double.parse(jsonNode["ask"].toString());
   }
 }

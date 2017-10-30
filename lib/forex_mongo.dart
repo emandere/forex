@@ -236,7 +236,7 @@ class ForexMongo
 
   AddPrice(Price price) async
   {
-      await db.collection("rawprices").insert(price.toJson());
+      await db.collection("rawprices").save(price.toJson());
   }
 
   AddCurrentPrice(Price price) async

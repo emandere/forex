@@ -17,20 +17,38 @@ main() async
   var startDate="20110101";
   var endDate="20300101";
   var pairs=await readMongoPairs(server);
+
+  DateFormat formatter = new DateFormat('yyyyMMdd');
+
   
   for(String pair in pairs) 
   {
+    var startCandleMap = await mongoLayer.readLatestCandle(pair);
+    if(startCandleMap!=null)
+    {
+      var startCandle = new ForexDailyValue.fromJson(startCandleMap);
+      startDate = formatter.format(startCandle.datetime.add(new Duration(days:-1)));
+    }
     var url = 'http://$server/api/forexclasses/v1/dailypricesrange/$pair/$startDate/$endDate';
+
     var  listCandleJson = await http.get(url);
     List<Map> listCandleJSonMap = JSON.decode(listCandleJson.body);
     print(pair);
     for(Map candleJson in listCandleJSonMap)
     {
-      print(candleJson["close"].toString());
       ForexDailyValue dailyValue=new ForexDailyValue.fromJson(candleJson);
       await mongoLayer.AddCandle(dailyValue);
-      var dat = dailyValue.datetime.toIso8601String();
-      print(" $dat");
+
+      String day=formatter.format(dailyValue.datetime);
+      var urlPrice = 'http://$server/api/forexclasses/v1/dailyrealtimeprices/$pair/$day';
+      var  listPriceJson = await http.get(urlPrice);
+      List<Map> listPriceJSonMap = JSON.decode(listPriceJson.body);
+      for(Map priceJson in listPriceJSonMap)
+      {
+           Price dailyPrice = new Price.fromJsonMap(priceJson);
+           await mongoLayer.AddPrice(dailyPrice);
+      }
+      print(" $day");
     }
 
   }
