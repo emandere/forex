@@ -15,7 +15,7 @@ main() async
   await mongoLayer.db.open();
   var server= "23.22.66.239";
   var startDate="20110101";
-  var endDate="20400101";
+  var endDate="20300101";
   var pairs=await readMongoPairs(server);
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
