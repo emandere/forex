@@ -43,18 +43,29 @@
                 margin-top: 1px;
                 margin-bottom: 1px;
             }
+
+            .delete
+            {
+                position: relative;
+                left: 195px;
+                top:-8px;
+            }
         </style>
         <div>
             <paper-card>
                 <div class="card-content layout horizontal" style="margin-top: 0;margin-bottom: 0">
-                    <paper-checkbox id="selectSession" noink></paper-checkbox>
-                    <div class="id">
-                    <paper-icon-button id="filterSession" class="small" icon="icons:filter-list"></paper-icon-button>
-                    {{id}}
-                    </div>
+                    <paper-checkbox id="selectSession" class="small" noink></paper-checkbox>
                     <div>
                         <paper-spinner id="filterSpinner"></paper-spinner>
                     </div>
+                    <div class="delete">
+                        <paper-icon-button id="deleteSession"  class="small" icon="icons:cancel"></paper-icon-button>
+                    </div>
+                </div>
+
+                <div class="id">
+                    <paper-icon-button id="filterSession" class="small" icon="icons:filter-list"></paper-icon-button>
+                    {{id}}
                 </div>
 
                 <table  style="width:280px">
