@@ -95,11 +95,13 @@ class ForexSessionDetail extends PolymerElement
   {
       PaperCheckbox selectSession = $['selectSession'];
       PaperIconButton filterSession = $['filterSession'];
+      PaperIconButton deleteSession=$['deleteSession'];
       PaperButton btnFilterSession =$['btnFilterSession'];
 
       selectSession.on["tap"].listen(sendSelectSession);
       filterSession.on["tap"].listen(openDialog);
       btnFilterSession.on["tap"].listen(sendFilterSession);
+      deleteSession.on["tap"].listen(sendDeleteSession);
   }
 
   SpinnerOn()
@@ -124,6 +126,11 @@ class ForexSessionDetail extends PolymerElement
   {
 
     this.fire('selectsession',detail: {"id":id});
+  }
+
+  void sendDeleteSession(var event)
+  {
+    this.fire('deletesession',detail: {"id":id});
   }
 
   void sendFilterSession(var event)

@@ -39,6 +39,14 @@ class ForexClasses
     return mongoLayer.readSession(sessionid).then(getSessionString);
   }
 
+  @ApiMethod(path: 'deletesession/{sessionid}')
+  Future<List<String>> deleteSession(String sessionid) async
+  {
+
+    await mongoLayer.deleteSession(sessionid);
+    return ["passed"];
+  }
+
   @ApiMethod(path: 'pairs')
   Future<List<String>> readMongoPairs()
   {

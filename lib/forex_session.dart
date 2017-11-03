@@ -200,6 +200,17 @@ class ForexSession extends PolymerElement
 
   }
 
+  deleteSession(String id) async
+  {
+    var url = "/api/forexclasses/v1/deletesession/$id";
+    String request = await HttpRequest.getString(url);
+    await loadSessions();
+    PaperToast toastSession=$['toastSession'];
+    toastSession.text="$id deleted";
+    toastSession.duration=3000;
+    toastSession.open();
+  }
+
   loadSessions() async
   {
     var pairUrl = "/api/forexclasses/v1/pairs";
@@ -560,6 +571,12 @@ class ForexSession extends PolymerElement
   {
     tradeSession = new TradingSession.fromJSONMap(detail["session"]);
     SaveSession();
+  }
+
+  @Listen('deletesession')
+  OnDeleteSessionEvent(event, detail) async
+  {
+    await deleteSession(detail["id"]);
   }
 
   @Listen('selectfiltersession')

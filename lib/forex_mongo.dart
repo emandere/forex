@@ -219,6 +219,11 @@ class ForexMongo
     return mongoDeleteUser().then(mongoResult);
   }
 
+  deleteSession(String sessionId) async
+  {
+    return await db.collection('session').remove(where.eq("_id",sessionId));
+  }
+
   AddCurrencies(List<String> currencies) async
   {
      await db.collection("currencypairs").drop();
