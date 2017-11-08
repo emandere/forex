@@ -54,3 +54,5 @@ sudo docker pull mongo:latest
 sudo docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
 sudo docker build -t forexapp github.com/emandere/forex
 sudo docker run -p 80:80 --link mongo:mongo forexapp -t
+
+pub run test UnitTests.dart
