@@ -4,6 +4,7 @@ class Strategy
 {
   String ruleName;
   int window;
+  int units;
   IndicatorRule rule;
   double stopLoss;
   double takeProfit;
@@ -13,6 +14,7 @@ class Strategy
       {
         "ruleName":ruleName,
         "window":window,
+        "units":units,
         "stopLoss":stopLoss,
         "takeProfit":takeProfit
       };
@@ -38,6 +40,7 @@ class Strategy
   {
     ruleName = jsonNode["ruleName"].toString();
     window = int.parse(jsonNode["window"].toString()) ;
+    units = int.parse(jsonNode["units"].toString()) ;
     stopLoss =double.parse( jsonNode["stopLoss"].toString());
     takeProfit = double.parse(jsonNode["takeProfit"].toString());
     rule = new IndicatorRule(ruleName, window);
