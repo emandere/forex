@@ -6,6 +6,11 @@ import 'forex_stats.dart';
 import 'dart:collection';
 import "package:collection/collection.dart";
 import 'forex_prices.dart';
+import 'dart:convert';
+import 'forex_indicator_rules.dart';
+part 'forexclasses/forex_trade_class.dart';
+part 'forexclasses/forex_strategy_class.dart';
+
 
 class UserData
 {
@@ -35,7 +40,7 @@ class PostData
   }
 }
 
-class Trade
+/*class Trade
 {
    String pair;
    int units;
@@ -116,7 +121,7 @@ class Trade
      closeDate=dt;
      closePrice=price;
    }
-}
+}*/
 
 class Order
 {

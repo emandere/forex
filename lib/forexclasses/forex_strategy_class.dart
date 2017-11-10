@@ -1,13 +1,14 @@
-import 'dart:convert';
-import 'forex_indicator_rules.dart';
+part of forex_classes;
 class Strategy
 {
   String ruleName;
+  String position;
   int window;
   int units;
   IndicatorRule rule;
   double stopLoss;
   double takeProfit;
+
   Map toJson()
   {
     return
@@ -16,7 +17,8 @@ class Strategy
         "window":window,
         "units":units,
         "stopLoss":stopLoss,
-        "takeProfit":takeProfit
+        "takeProfit":takeProfit,
+        "position":position
       };
   }
 
@@ -43,6 +45,7 @@ class Strategy
     units = int.parse(jsonNode["units"].toString()) ;
     stopLoss =double.parse( jsonNode["stopLoss"].toString());
     takeProfit = double.parse(jsonNode["takeProfit"].toString());
+    position=jsonNode["position"].toString();
     rule = new IndicatorRule(ruleName, window);
   }
 }
