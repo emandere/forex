@@ -6,6 +6,7 @@ class TestTradeClass
     {
       test("Test Trade Class Constructor",testTradeConstructor);
       test("Test Trade Class PL", testPL);
+      test("Test Trade Class Init Price", testInitPrice);
     }
 
     testTradeConstructor()
@@ -36,6 +37,7 @@ class TestTradeClass
       testMap["openPrice"]=100.0;
       testMap["closePrice"]=101.0;
       testMap["id"]=1;
+      testMap["init"]=true;
       return testMap;
     }
 
@@ -47,5 +49,18 @@ class TestTradeClass
       Trade test = new Trade.fromJsonMap(testMap);
       expect(test.PL(), 1);
 
+    }
+
+    testInitPrice()
+    {
+      var testMap = getTestMap();
+
+      Trade test = new Trade.fromJsonMap(testMap);
+      test.updateTrade("201701", 500.0);
+      expect(test.PL(), 0.0);
+      expect(test.openPrice, 500.0);
+
+      test.updateTrade("201701", 501.0);
+      expect(test.PL(), 1.0);
     }
 }
