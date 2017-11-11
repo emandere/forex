@@ -6,7 +6,7 @@ class TestTradeClass
     {
       test("Test Trade Class Constructor",testTradeConstructor);
       test("Test Trade Class PL", testPL);
-      test("Test Trade Class Init Price", testInitPrice);
+      test("Test Trade Class Init Price and Update Price", testInitPrice);
     }
 
     testTradeConstructor()
