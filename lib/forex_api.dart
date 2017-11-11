@@ -145,12 +145,12 @@ class ForexClasses
   }
 
 
-  @ApiMethod(method: 'POST',path: 'adduserpost')
+  /*@ApiMethod(method: 'POST',path: 'adduserpost')
   Future<List<String>> addUserPost(UserData fuser)
   {
     User user = new User.fromJson(fuser.data);
     return mongoLayer.addUser(user);
-  }
+  }*/
 
   @ApiMethod(path:'getuser/{username}')
   Future<List<User>> getUser(String username)
@@ -165,11 +165,11 @@ class ForexClasses
      return mongoLayer.getUser(username).then(getUserString);
   }
 
-  @ApiMethod(method: 'POST',path: 'removeuser')
+  /*@ApiMethod(method: 'POST',path: 'removeuser')
   Future<List<String>> removeUser(UserData userid)
   {
      return mongoLayer.removeUserById(userid.data);
-  }
+  }*/
 
   @ApiMethod(path: 'dailyvalues/{pair}')
   Future <List<ForexDailyValue>> dailyValues(String pair)

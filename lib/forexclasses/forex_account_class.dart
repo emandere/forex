@@ -136,8 +136,8 @@ class Account
 
     id=jsonNode["id"];
     realizedPL=double.parse(jsonNode["realizedPL"].toString());
-    Margin = double.parse(jsonNode["Margin"].toString());
-    MarginRatio = double.parse(jsonNode["MarginRatio"].toString());
+    Margin = double.parse(jsonNode["Margin"]?.toString()??"0.0");
+    MarginRatio = double.parse(jsonNode["MarginRatio"]?.toString()??"50.0");
     cash=double.parse(jsonNode["cash"].toString());
     idcount=jsonNode["idcount"];
     Trades=new List<Trade>();
@@ -153,7 +153,7 @@ class Account
       closedTrades.add(new Trade.fromJsonMap(trade));
     }
 
-    for(Map order in jsonNode["orders"])
+    for(Map order in jsonNode["orders"]??[])
     {
       orders.add(new Order.fromJsonMap(order));
     }
@@ -331,6 +331,27 @@ class Account
           twinOrder?.expired=true;
         }
       }
+    }
+  }
+
+  updateTrades(String pair,String dt,double price)
+  {
+    for(Trade currTrade in Trades)
+    {
+      if(currTrade.pair==pair)
+      {
+        currTrade.updateTrade(dt,price);
+      }
+    }
+
+  }
+
+  updateTradesPrice(Price currPrice)
+  {
+    List<Trade> selectedTrades = Trades.where((trade)=>trade.pair==currPrice.instrument).toList();
+    for(Trade currTrade in selectedTrades)
+    {
+      currTrade.updateTrade(currPrice.time.toIso8601String(), currPrice.bid);
     }
   }
 

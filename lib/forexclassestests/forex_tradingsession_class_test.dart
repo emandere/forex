@@ -1,45 +1,39 @@
 import 'package:test/test.dart';
 import '../forex_classes.dart';
 import '../forex_prices.dart';
-class TestAccountClass
+class TestTradingSessionClass
 {
   testSuite()
   {
-    test("Test Account Class Constructor",testAccountConstructor);
-    test("Test Account Class Fund Account",testFundAccount);
-    test("Test Account Class Execute Trade",testExecuteTrade);
-    test("Test Account Class Stop Loss",testStopLoss);
-    test("Test Account Class Take Profit",testTakeProfit);
-    test("Test Account Class Test Update Price",testUpdatePrice);
+    test("Test TradingSession Class Constructor",testTradingSessionConstructor);
+    test("Test TradingSession Class Execute Trade with Strategy",testExecutePriceStrategy);
   }
 
-  testAccountConstructor()
+  testTradingSessionConstructor()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
+    var testTradingSession = new TradingSession.fromJSONMap(getTestTradingSession());
+    var testUser = testTradingSession.sessionUser;
 
-    expect(testAccount.id, "primary");
-    expect(testAccount.orders.length,1 );
-    expect(testAccount.closedTrades.length,0 );
-    expect(testAccount.Trades.length, 0);
-    expect(testAccount.MarginRatio,50.0 );
-    expect(testAccount.Margin,0.0 );
-    expect(testAccount.orders[0].expirationDate, "20170101");
+    expect(testUser.id, "testUser");
 
-    var testAccount2 = new Account.fromJsonMap(testAccount.toJson());
+    var testUser2 = new User.fromJsonMap(testUser.toJsonMap());
 
-    expect(testAccount2.id, "primary");
-    expect(testAccount2.orders.length,1 );
-    expect(testAccount2.closedTrades.length,0 );
-    expect(testAccount2.Trades.length, 0);
-    expect(testAccount2.MarginRatio,50.0 );
-    expect(testAccount2.Margin,0.0 );
-    expect(testAccount2.orders[0].expirationDate, "20170101");
+    expect(testUser2.id, "testUser");
+    expect(testUser2.status, "live");
+    expect(testUser2.primaryAccount.MarginRatio, 50.0);
 
+  }
+
+  testRealizedPL()
+  {
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    expect(testUser.RealizedPL(), 0.0);
   }
 
   testFundAccount()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    var testAccount = testUser.primaryAccount;
 
     testAccount.fundAccount(2000.0);
 
@@ -48,7 +42,8 @@ class TestAccountClass
 
   testExecuteTrade()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    var testAccount = testUser.primaryAccount;
     var testTrade = new Trade.fromJsonMap(getTestMapTrade());
     var testTradeOpposite = new Trade.fromJsonMap(getTestMapTradeOpposite());
     testAccount.fundAccount(2000.0);
@@ -77,7 +72,8 @@ class TestAccountClass
 
   testStopLoss()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    var testAccount = testUser.primaryAccount;
     var testTrade = new Trade.fromJsonMap(getTestMapTrade());
 
     testAccount.orders.clear();
@@ -98,7 +94,8 @@ class TestAccountClass
 
   testTakeProfit()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    var testAccount = testUser.primaryAccount;
     var testTrade = new Trade.fromJsonMap(getTestMapTrade());
 
     testAccount.orders.clear();
@@ -116,28 +113,61 @@ class TestAccountClass
     expect(testAccount.Trades.length, 0);
   }
 
-  testUpdatePrice()
+  testExecutePriceStrategy()
   {
-    var testAccount = new Account.fromJsonMap(getTestMapAccount());
-    var testTrade = new Trade.fromJsonMap(getTestMapTrade());
-
-    testAccount.orders.clear();
-
-    testAccount.executeTrade(testTrade);
-    testAccount.setTakeProfit(testTrade, 104.0);
-
     Price testPrice = new Price();
     testPrice.instrument="USDJPY";
     testPrice.bid=107.0;
     testPrice.time=new DateTime.now();
+    
+    Strategy currStrategy = new Strategy.fromJsonMap(getTestStrategy());
+    var testTradingSession = new TradingSession.fromJSONMap(getTestTradingSession());
+    testTradingSession.sessionUser.primaryAccount.orders.clear();
+    testTradingSession.sessionUser.primaryAccount.fundAccount(2000.0);
 
-    testAccount.updateTradesPrice(testPrice);
+    testTradingSession.executeTradeStrategyPrice("primary", currStrategy, testPrice);
 
-    expect(testAccount.Trades[0].closePrice, testPrice.bid);
+    expect(testTradingSession.sessionUser.primaryAccount.orders[0].triggerprice, testPrice.bid*currStrategy.takeProfit);
+    expect(testTradingSession.sessionUser.primaryAccount.orders[1].triggerprice, testPrice.bid*currStrategy.stopLoss);
+  }
+  
+  getTestStrategy()
+  {
+    var testMap={};
+    testMap["ruleName"]="RSIOverbought70";
+    testMap["window"]=100;
+    testMap["stopLoss"]=0.97;
+    testMap["takeProfit"]=1.001;
+    testMap["units"]=2000;
+    testMap["position"]="long";
+    return testMap;
   }
 
+  getTestTradingSession()
+  {
+     var testTradingSession={};
+     testTradingSession["id"]="liveSession";
+     testTradingSession["startDate"]="20110101";
+     testTradingSession["currentTime"]="20170101";
+     testTradingSession["sessionUser"]=getTestMapUser();
+     return testTradingSession;
+  }
 
-  getTestMapAccount()
+  getTestMapUser()
+  {
+    var Accounts=<String,Map>{};
+    Accounts["primary"]=getTestMapAccountPrimary();
+    Accounts["secondary"]=getTestMapAccountSecondary();
+    var testMapUser={};
+    testMapUser["id"]="testUser";
+    testMapUser["status"]="live";
+    testMapUser["Accounts"]=Accounts;
+
+    return testMapUser;
+
+  }
+
+  getTestMapAccountPrimary()
   {
     var testMapAccount={};
     List<Map> MapTrades = new List<Map>();
@@ -147,6 +177,28 @@ class TestAccountClass
     MapOrders.add(getTestMapOrder());
 
     testMapAccount["id"]="primary";
+    testMapAccount["cash"]=0.0;
+    testMapAccount["Margin"]=0.0;
+    testMapAccount["MarginRatio"]=50.0;
+    testMapAccount["idcount"]=0;
+    testMapAccount["realizedPL"]=0.0;
+    testMapAccount["Trades"]=MapTrades;
+    testMapAccount["closedTrades"]=MapClosedTrades;
+    testMapAccount["orders"]=MapOrders;
+
+    return testMapAccount;
+  }
+
+  getTestMapAccountSecondary()
+  {
+    var testMapAccount={};
+    List<Map> MapTrades = new List<Map>();
+    List<Map> MapClosedTrades = new List<Map>();
+    List<Map> MapOrders=new List<Map>();
+
+    MapOrders.add(getTestMapOrder());
+
+    testMapAccount["id"]="secondary";
     testMapAccount["cash"]=0.0;
     testMapAccount["Margin"]=0.0;
     testMapAccount["MarginRatio"]=50.0;
