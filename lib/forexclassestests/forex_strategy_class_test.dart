@@ -18,15 +18,12 @@ class TestStrategyClass
     testMap["position"]="long";
 
     Strategy test = new Strategy.fromJsonMap(testMap);
-    expect(test.rule.name,"RSIOverbought70");
-    expect(test.rule.dataPoints, 100);
     expect(test.units, 2000);
     expect(test.position, "long");
 
-    Map testJSONOut = test.toJson();
+    Map testJSONOut = test.toJsonMap();
     Strategy test2 = new Strategy.fromJsonMap(testJSONOut);
-    expect(test2.rule.name,"RSIOverbought70");
-    expect(test2.rule.dataPoints, 100);
+
     expect(test2.units, 2000);
     expect(test2.position, "long");
   }

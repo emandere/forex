@@ -1,13 +1,17 @@
 part of forex_classes;
+enum SessionType
+{
+  live,
+  test
+}
 class TradingSession
 {
   User sessionUser;
   DateTime startDate;
   DateTime endDate;
   DateTime currentTime;
-
-
-
+  SessionType sessionType;
+  Strategy  strategy;
   String id;
 
   TradingSession()
@@ -15,8 +19,8 @@ class TradingSession
     sessionUser=new User();
     currentTime = DateTime.parse("2007-01-01T05:00Z");
     startDate = DateTime.parse("2007-01-01T05:00Z");
-
-
+    sessionType=SessionType.test;
+    strategy=new Strategy();
   }
 
   TradingSession.fromJSON(String json)
@@ -35,9 +39,13 @@ class TradingSession
   setSession(Map jsonMap)
   {
     id=jsonMap["id"];
+    sessionType=SessionType.values.
+                  firstWhere((e) => e.toString() == (jsonMap["sessionType"]??"SessionType.test"),
+                  orElse: () => SessionType.test);
     startDate=DateTime.parse(jsonMap["startDate"].toString());
     currentTime=DateTime.parse(jsonMap["currentTime"].toString());
     sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
+    strategy=jsonMap["strategy"]==null?new Strategy():new Strategy.fromJsonMap(jsonMap["strategy"]);
   }
 
 
@@ -50,9 +58,11 @@ class TradingSession
     return {
       "_id":id,
       "id":id,
+      "sessionType":sessionType.toString(),
       "startDate":startDate.toString(),
       "endDate":endDate.toString(),
       "currentTime":currentTime.toString(),
+      "strategy":strategy.toJsonMap(),
       "sessionUser":sessionUser.toJsonMap()
     };
   }

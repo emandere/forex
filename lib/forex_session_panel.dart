@@ -12,7 +12,7 @@ import 'package:polymer_elements/paper_menu.dart';
 import 'package:polymer_elements/paper_item.dart';
 import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_input.dart';
-
+import 'package:polymer_elements/paper_dropdown_menu.dart';
 
 @PolymerRegister('forex-session-panel')
 class ForexSessionPanel extends PolymerElement {
@@ -38,10 +38,13 @@ class ForexSessionPanel extends PolymerElement {
     PaperMenu menuSession = $['menuSession'];
     PaperButton btnAddSession = $['btnAddSession'];
     PaperButton btnCreateSession = $['btnCreateSession'];
+    PaperButton btnAddStrategy = $['btnAddStrategy'];
     PaperDialog dialogSession = $['dialogSession'];
+    PaperDialog dialogStrategy = $['dialogStrategy'];
 
     menuSession.on['iron-select'].listen(sendSelectedSession);
     btnAddSession.on['tap'].listen((event) => dialogSession.open());
+    btnAddStrategy.on['tap'].listen((event) => dialogStrategy.open());
     btnCreateSession.on['tap'].listen(sendUserSession);
   }
 
@@ -54,6 +57,12 @@ class ForexSessionPanel extends PolymerElement {
     PaperInput startDate = $['startDate'];
     PaperInput primaryAmount = $['primaryAmount'];
     PaperInput secondaryAmount = $['secondaryAmount'];
+    PaperInput rule = $['rule'];
+    PaperInput window = $['window'];
+    PaperInput units = $['units'];
+    PaperInput stopLoss = $['stopLoss'];
+    PaperInput takeProfit = $['takeProfit'];
+    PaperDropdownMenu sessionTypeMenu = $['sessionTypeMenu'];
 
 
     TradingSession tradeSession = new TradingSession();
@@ -61,8 +70,17 @@ class ForexSessionPanel extends PolymerElement {
     tradeSession.sessionUser.id = "testSessionUser";
     tradeSession.startDate = DateTime.parse(startDate.value);
     tradeSession.currentTime = DateTime.parse(startDate.value);
+    tradeSession.sessionType=SessionType.values.firstWhere((x)=>x.toString()=="SessionType.${sessionTypeMenu.value}");
+
     tradeSession.fundAccount("primary", double.parse(primaryAmount.value));
     tradeSession.fundAccount("secondary", double.parse(secondaryAmount.value));
+
+    tradeSession.strategy.ruleName=rule.value;
+    tradeSession.strategy.window=window.value;
+    tradeSession.strategy.units=units.value;
+    tradeSession.strategy.stopLoss=stopLoss.value;
+    tradeSession.strategy.takeProfit=takeProfit.value;
+
 
     this.fire('savesession', detail: {"session":tradeSession.toJsonMap()});
 

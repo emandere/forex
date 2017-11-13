@@ -150,6 +150,7 @@ class TestTradingSessionClass
      testTradingSession["startDate"]="20110101";
      testTradingSession["currentTime"]="20170101";
      testTradingSession["sessionUser"]=getTestMapUser();
+     //testTradingSession["strategy"]=getTestStrategy();
      return testTradingSession;
   }
 

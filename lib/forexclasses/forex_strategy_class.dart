@@ -5,11 +5,16 @@ class Strategy
   String position;
   int window;
   int units;
-  IndicatorRule rule;
+
   double stopLoss;
   double takeProfit;
 
-  Map toJson()
+  String toJson()
+  {
+     return JSON.encode(toJsonMap());
+  }
+
+  Map toJsonMap()
   {
     return
       {
@@ -24,7 +29,12 @@ class Strategy
 
   Strategy()
   {
-
+    ruleName = "default";
+    window =0 ;
+    units = 0 ;
+    stopLoss =0.0;
+    takeProfit = 0.0;
+    position="long";
   }
 
   Strategy.fromJson(String json)
@@ -46,6 +56,6 @@ class Strategy
     stopLoss =double.parse( jsonNode["stopLoss"].toString());
     takeProfit = double.parse(jsonNode["takeProfit"].toString());
     position=jsonNode["position"].toString();
-    rule = new IndicatorRule(ruleName, window);
+
   }
 }

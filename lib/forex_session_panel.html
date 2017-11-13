@@ -3,7 +3,7 @@
         <paper-card>
             <div class="card-actions">
                 <paper-button raised class="colored" id="btnAddSession">Add Session</paper-button>
-                <paper-button raised class="colored" id="btnDeleteSession">Delete Session</paper-button>
+                <paper-button raised class="colored" id="btnAddStrategy">Add Strategy</paper-button>
             </div>
             <div class="card-content">
                 <div id="menuSession">
@@ -13,16 +13,39 @@
         </paper-card>
 
         <paper-dialog id="dialogSession">
+        <h2>New Session</h2>
+        <div align="left">
+            <paper-input id="sessionId" label="Session Name" floatingLabel></paper-input>
+            <paper-input id="startDate" label="Starting Date" floatingLabel></paper-input>
+            <paper-input id="primaryAmount" label="Starting Amount(PRIM)" floatingLabel></paper-input>
+            <paper-input id="secondaryAmount" label="Starting Amount(SEC)" floatingLabel></paper-input>
+            <paper-dropdown-menu id="sessionTypeMenu" label="Session Type" noink no-animations>
+                <paper-listbox class="dropdown-content">
+                    <paper-item>live</paper-item>
+                    <paper-item>test</paper-item>
+                </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
+        <div  align="center">
+            <paper-button raised class="colored" id="btnCreateSession" dialog-dismiss>Create</paper-button>
+            <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
+        </div>
+        </paper-dialog>
+        <paper-dialog id="dialogStrategy">
             <h2>New Session</h2>
             <div align="left">
-                <paper-input id="sessionId" label="Session Name" floatingLabel></paper-input>
-                <paper-input id="startDate" label="Starting Date" floatingLabel></paper-input>
-                <paper-input id="primaryAmount" label="Starting Amount(PRIM)" floatingLabel></paper-input>
-                <paper-input id="secondaryAmount" label="Starting Amount(SEC)" floatingLabel></paper-input>
+
+                <paper-input id="rule" label="Trading Rule" floatingLabel></paper-input>
+                <paper-input id="position" label="Position" floatingLabel></paper-input>
+                <paper-input id="window" label="Data Window" floatingLabel></paper-input>
+                <paper-input id="units" label="Units" floatingLabel></paper-input>
+                <paper-input id="stopLoss" label="Stop Loss" floatingLabel></paper-input>
+                <paper-input id="takeProfit" label="Take Profit" floatingLabel></paper-input>
+
             </div>
             <div  align="center">
-                <paper-button raised class="colored" id="btnCreateSession" dialog-dismiss>Create</paper-button>
-                <paper-button raised class="colored" id="btnCancel" dialog-dismiss>Cancel</paper-button>
+                <paper-button raised class="colored" id="btnCreateStrategy" dialog-dismiss>Create</paper-button>
+                <paper-button raised class="colored" id="btnCancelStrategy" dialog-dismiss>Cancel</paper-button>
             </div>
         </paper-dialog>
     </template>
