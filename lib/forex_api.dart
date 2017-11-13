@@ -251,6 +251,12 @@ class ForexClasses
       dailyvals.add(val);
     }
 
+    await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsyncLatest(pair,DateTime.parse(startDate),DateTime.parse(endDate)))
+    {
+      ForexDailyValue val = new ForexDailyValue.fromJson(dailyvalueMap);
+      dailyvals.add(val);
+    }
+
      return dailyvals;
   }
 

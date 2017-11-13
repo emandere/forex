@@ -34,6 +34,14 @@ class Price
      setPrice(jsonMap);
   }
 
+  Price.fromJsonDailyValue(Map dailyPairValue)
+  {
+      instrument=dailyPairValue["pair"];
+      bid=dailyPairValue["close"];
+      ask=dailyPairValue["close"];
+      time=DateTime.parse(dailyPairValue["date"]);
+  }
+
   setPrice(Map jsonNode)
   {
       instrument = jsonNode["instrument"].toString().replaceAll(new RegExp("_"),"");

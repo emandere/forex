@@ -6,6 +6,7 @@ import 'lib/forex_classes.dart';
 import 'lib/forex_mongo.dart';
 import 'lib/candle_stick.dart';
 import 'lib/forex_stats.dart';
+import 'lib/forex_prices.dart';
 import 'lib/forex_indicator_rules.dart';
 import 'dart:collection';
 import "package:collection/collection.dart";
@@ -35,6 +36,8 @@ class ForexCache
     var pairsListStr = await http.get(pairurl);
     return JSON.decode(pairsListStr.body);
   }
+
+
 
   buildCache(String server) async
   {
@@ -91,32 +94,22 @@ class ForexCache
 
 main() async
 {
-  String server ="23.22.66.239";
-  String startDate = "2002-12-31";
-  String endDate = "2012-01-01";
-  String rulePosition="short";
-  String ruleName = "RSIOverbought70";
+  String server ="localhost";//"23.22.66.239";
   String account = "primary";
 
-  double takeProfitPct = 0.003;
-  double stopLossPct = 0.01;
 
-  double takeProfit = 1.0;
-  double stopLoss = 1.0;
+  String startDate = "2017-04-20";
+  String endDate = "2018-01-01";
+
+  String ruleName = "RSIOverbought70";
+  String rulePosition="short";
   int window = 14;
+  Strategy testStrategies = setStrategy(ruleName, rulePosition, window);
 
-  if(rulePosition=="long")
-  {
-    takeProfit+=takeProfitPct;
-    stopLoss-=stopLossPct;
-  }
-  else
-  {
-    takeProfit-=takeProfitPct;
-    stopLoss+=stopLossPct;
-  }
 
-  int units = 15000;
+
+
+
 
   IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
   List<IndicatorRule> rules = new List<IndicatorRule>();
@@ -130,7 +123,7 @@ main() async
 
 
   TradingSession testSession=new TradingSession();
-  testSession.id=ruleName;
+  testSession.id=ruleName+"-2000";
   testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.startDate = DateTime.parse(startDate);
   testSession.fundAccount("primary",2000.0);
@@ -141,17 +134,9 @@ main() async
   {
     for(Map dailyPairValue in dailyPairValues)
     {
-      if(dailyPairValue[ruleName]) {
-
-        testSession.executeTrade(
-            account,
-            dailyPairValue["pair"],
-            units,
-            rulePosition,
-            dailyPairValue["date"],
-            dailyPairValue["close"],
-            stopLoss * dailyPairValue["close"],
-            takeProfit * dailyPairValue["close"]);
+      if(dailyPairValue[ruleName])
+      {
+        testSession.executeTradeStrategyPrice(account, testStrategies, new Price.fromJsonDailyValue(dailyPairValue));
       }
     }
     testSession.updateSession(dailyPairValues);
@@ -175,6 +160,39 @@ main() async
 
   exit(1);
 
+}
+
+
+setStrategy(String ruleName,String rulePosition,int window)
+{
+
+  double takeProfitPct = 0.003;
+  double stopLossPct = 0.01;
+
+  double takeProfit = 1.0;
+  double stopLoss = 1.0;
+
+
+  if(rulePosition=="long")
+  {
+    takeProfit+=takeProfitPct;
+    stopLoss-=stopLossPct;
+  }
+  else
+  {
+    takeProfit-=takeProfitPct;
+    stopLoss+=stopLossPct;
+  }
+
+  int units = 2000;
+  Strategy testStrategies = new Strategy();
+  testStrategies.ruleName=ruleName;
+  testStrategies.position="short";
+  testStrategies.window=window;
+  testStrategies.stopLoss=stopLoss;
+  testStrategies.takeProfit=takeProfit;
+  testStrategies.units=units;
+  return testStrategies;
 }
 
 
