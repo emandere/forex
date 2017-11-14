@@ -37,6 +37,7 @@ class ForexSessionPanel extends PolymerElement {
   ready() {
     PaperMenu menuSession = $['menuSession'];
     PaperButton btnAddSession = $['btnAddSession'];
+    PaperButton btnCreateStrategy = $['btnCreateStrategy'];
     PaperButton btnCreateSession = $['btnCreateSession'];
     PaperButton btnAddStrategy = $['btnAddStrategy'];
     PaperDialog dialogSession = $['dialogSession'];
@@ -45,6 +46,8 @@ class ForexSessionPanel extends PolymerElement {
     menuSession.on['iron-select'].listen(sendSelectedSession);
     btnAddSession.on['tap'].listen((event) => dialogSession.open());
     btnAddStrategy.on['tap'].listen((event) => dialogStrategy.open());
+
+    btnCreateStrategy.on['tap'].listen((event) => dialogStrategy.open());
     btnCreateSession.on['tap'].listen(sendUserSession);
   }
 
