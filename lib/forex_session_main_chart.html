@@ -22,6 +22,11 @@
             width: 800px;
         }
 
+        #barchartTradeByPair
+        {
+            width: 800px;
+        }
+
         paper-fab.blue
         {
             background: #03A9F4;
@@ -49,6 +54,11 @@
             }
 
             #histogramTimeChart
+            {
+                width: 350px;
+            }
+
+            #barchartTradeByPair
             {
                 width: 350px;
             }
@@ -95,6 +105,14 @@
                 </div>
             </paper-card>
 
+        </div>
+        <br>
+        <div id="paperBarchartTradeByPair">
+            <paper-card >
+                <div class="card-content">
+                    <google-chart id="barchartTradeByPair"></google-chart>
+                </div>
+            </paper-card>
         </div>
     </div>
 

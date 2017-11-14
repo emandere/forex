@@ -103,6 +103,7 @@ class ForexMainChart extends PolymerElement
 
   loadTradesTimeHistogram(String session,List data)
   {
+
     GoogleChart histogramTimeChart =$['histogramTimeChart'];
     String chartTitle="Histogram of Trade Timespan for $session";
     var options = {
@@ -118,17 +119,35 @@ class ForexMainChart extends PolymerElement
     histogramTimeChart.rows = data;
   }
 
+  loadBarchartTradeByPair(String session,List data)
+  {
+
+    GoogleChart barchartTradeByPair =$['barchartTradeByPair'];
+
+    String chartTitle="Trades by Pair for $session";
+    var options = {
+      'title': chartTitle
+    };
+
+    barchartTradeByPair.options=options;
+    barchartTradeByPair.type="bar";
+    barchartTradeByPair.cols=[ {"type":"string"},{"type":"number"}];
+    barchartTradeByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
+  }
+
   hideCharts()
   {
     DivElement mainChart = $['paperMainChart'];
     DivElement balanceChart =$['paperBalanceChart'];
     DivElement histogramChart =$['paperHistogramChart'];
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
+    DivElement barchartTradeByPair =$['paperBarchartTradeByPair'];
 
     mainChart.hidden=true;
     balanceChart.hidden=true;
     histogramChart.hidden=true;
     histogramTimeChart.hidden=true;
+    barchartTradeByPair.hidden=true;
   }
 
   showCharts()
@@ -137,12 +156,14 @@ class ForexMainChart extends PolymerElement
     DivElement balanceChart =$['paperBalanceChart'];
     DivElement histogramChart =$['paperHistogramChart'];
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
+    DivElement barchartTradeByPair =$['paperBarchartTradeByPair'];
 
 
     mainChart.hidden=false;
     balanceChart.hidden=false;
     histogramChart.hidden=false;
     histogramTimeChart.hidden=false;
+    barchartTradeByPair.hidden=false;
   }
 
 }

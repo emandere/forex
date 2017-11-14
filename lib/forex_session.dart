@@ -327,6 +327,7 @@ class ForexSession extends PolymerElement
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
+    mainChart.loadBarchartTradeByPair(title, BarchartTradeByPair());
 
     mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
@@ -358,6 +359,7 @@ class ForexSession extends PolymerElement
     mainChart.loadBalanceChart( title,balanceHistPairList);
     mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair,startFilterDate,endFilterDate));
     mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair,startFilterDate,endFilterDate));
+
 
 
     var closedTrades = currentSession.sessionUser.closedTrades()
@@ -435,6 +437,19 @@ class ForexSession extends PolymerElement
      }
 
      return pairBalanceHistory;
+  }
+
+
+  List BarchartTradeByPair()
+  {
+    return currencyPairs.map((pair)=>[pair,
+        currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .where((trade)=>trade.pair==pair)
+        .length
+    ]);
   }
 
   List TradingHistogram()
