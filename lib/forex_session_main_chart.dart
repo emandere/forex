@@ -86,6 +86,7 @@ class ForexMainChart extends PolymerElement
 
   loadTradesHistogram(String session,List data)
   {
+
     GoogleChart histogramChart =$['histogramChart'];
     String chartTitle="Histogram of P/L for Closed Trades for $session";
     var options = {
@@ -117,6 +118,7 @@ class ForexMainChart extends PolymerElement
     histogramTimeChart.type="histogram";
     histogramTimeChart.cols=[ {"type":"string"},{"type":"number"}];
     histogramTimeChart.rows = data;
+
   }
 
   loadBarchartTradeByPair(String session,List data)

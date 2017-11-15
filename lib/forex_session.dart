@@ -323,11 +323,13 @@ class ForexSession extends PolymerElement
 
   SetUpDashboard() async
   {
+
     mainChart.showCharts();
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
     mainChart.loadBarchartTradeByPair(title, BarchartTradeByPair());
+
 
     mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
@@ -346,6 +348,7 @@ class ForexSession extends PolymerElement
 
   SetUpDashboardPair(String pair,DateTime startFilterDate,DateTime endFilterDate) async
   {
+
     DateFormat formatter = new DateFormat('yyyyMMdd');
     String startdt=formatter.format(currentSession.startDate);
     String enddt=formatter.format(currentSession.currentTime);
@@ -449,7 +452,7 @@ class ForexSession extends PolymerElement
         .closedTrades
         .where((trade)=>trade.pair==pair)
         .length
-    ]);
+    ]).toList();
   }
 
   List TradingHistogram()
@@ -597,10 +600,16 @@ class ForexSession extends PolymerElement
   @Listen('selectfiltersession')
   OnSelectFilterSession(event, detail) async
   {
-      if(detail["pair"]=="<ALL>")
-        SetUpDashboard();
+
+      if(detail["pair"]=="<ALL>") {
+        await SetUpDashboard();
+      }
       else
-        SetUpDashboardPair(detail["pair"],DateTime.parse(detail["startFilterDate"]),DateTime.parse(detail["endFilterDate"]));
+      {
+        await SetUpDashboardPair(
+            detail["pair"], DateTime.parse(detail["startFilterDate"]),
+            DateTime.parse(detail["endFilterDate"]));
+      }
   }
 
 }
