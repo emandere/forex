@@ -1,5 +1,11 @@
-FROM forexapp
+FROM google/dart
+
 WORKDIR /forex
-ADD QuoteCandles.dart /forex/QuoteLogger.dart
+ADD pubspec.* /forex/
+ADD lib /forex/lib
+ADD QuoteLogger.dart /forex/QuoteLogger.dart
+RUN pub get --trace
+ADD . /forex
+RUN pub get --offline
 CMD []
 ENTRYPOINT ["/usr/bin/dart","QuoteLogger.dart","release"]

@@ -285,6 +285,18 @@ class Account
     print("Average Realized PL "+averageTradePL().toString());
     print("Std Dev Realized PL "+stdDevTradePL().toString());
     printAverageClosedTradeByPair();
+    int DateDiff(Trade trade)
+    {
+      DateTime openDate = DateTime.parse(trade.openDate);
+      DateTime closeDate = DateTime.parse(trade.closeDate);
+      return closeDate.difference(openDate).inDays;
+    }
+
+    for(Trade closedTrade in closedTrades)
+    {
+      if(DateDiff(closedTrade)<0)
+        print("${closedTrade.id.toString()} ${closedTrade.pair} ${closedTrade.openDate} ${closedTrade.closeDate}");
+    }
   }
 
   printAverageClosedTradeByPair()

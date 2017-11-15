@@ -98,7 +98,7 @@ main() async
   String account = "primary";
 
 
-  String startDate = "2017-04-20";
+  String startDate = "2017-05-20";
   String endDate = "2018-01-01";
 
   String ruleName = "RSIOverbought70";

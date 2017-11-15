@@ -8,6 +8,7 @@ class TestUserClass
     test("Test User Class Constructor",testUserConstructor);
     test("Test User Class Realized PL",testRealizedPL);
     test("Test User Class Execute Price Strategy",testExecutePriceStrategy);
+    test("Test User Class All Trading Pairs",testAllTradingPairs);
   }
 
   testUserConstructor()
@@ -69,6 +70,20 @@ class TestUserClass
 
 
   }
+
+  testAllTradingPairs()
+  {
+    var testUser = new User.fromJsonMap(getTestMapUser());
+    var testAccount = testUser.primaryAccount;
+    var testTrade = new Trade.fromJsonMap(getTestMapTrade());
+    var testTradeOpposite = new Trade.fromJsonMap(getTestMapTradeOpposite());
+
+    testAccount.fundAccount(2000.0);
+    testAccount.executeTrade(testTrade);
+    expect(testUser.AllTradingPairs(), ["USDJPY"]);
+
+  }
+
 
   testStopLoss()
   {

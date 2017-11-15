@@ -328,19 +328,19 @@ class ForexSession extends PolymerElement
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
-    mainChart.loadBarchartTradeByPair(title, BarchartTradeByPair());
-
+    mainChart.loadBarChartTradeByPair(title, BarChartTradeByPair());
+    mainChart.loadBarChartPLByPair(title, BarChartPLByPair());
 
     mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
 
-    if(currentSession.sessionUser.TradingPairs().length>0)
+    if(currentSession.sessionUser.AllTradingPairs().length>0)
     {
 
       DateFormat formatter = new DateFormat('yyyyMMdd');
       String startdt=formatter.format(currentSession.startDate);
       String enddt=formatter.format(currentSession.currentTime);
-      String pair = currentSession.sessionUser.TradingPairs()[0];
+      String pair = currentSession.sessionUser.AllTradingPairs()[0];
       List values = await dailyValues(pair, startdt, enddt);
       mainChart.loadCurrencyChart(pair,values);
     }
@@ -443,7 +443,7 @@ class ForexSession extends PolymerElement
   }
 
 
-  List BarchartTradeByPair()
+  List BarChartTradeByPair()
   {
     return currencyPairs.map((pair)=>[pair,
         currentSession
@@ -452,6 +452,27 @@ class ForexSession extends PolymerElement
         .closedTrades
         .where((trade)=>trade.pair==pair)
         .length
+    ]).toList();
+  }
+
+  List BarChartPLByPair()
+  {
+
+    Set pairSet =new Set.from(currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .map((trade)=>trade.pair)
+        .toList()..sort());
+
+    return pairSet.toList().map((pair)=>[pair,
+    currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .where((trade)=>trade.pair==pair)
+        .map((trade)=>trade.PL())
+        .reduce((x,y)=>x+y)
     ]).toList();
   }
 

@@ -108,11 +108,20 @@ class User
   {
     return UnRealizedPL() + RealizedPL();
   }
+  List<String> AllTradingPairs()
+  {
+    List<Trade> allTrades = new List<Trade>.from(primaryAccount.Trades)
+                        ..addAll(primaryAccount.closedTrades)
+                        ..addAll(secondaryAccount.Trades)
+                        ..addAll(secondaryAccount.closedTrades);
+    var pairSet = new Set.from(allTrades.map((trade)=>trade.pair).toList());
+    return pairSet.toList();
+  }
 
   List<String> TradingPairs()
   {
     List<String> pairs= new List<String>();
-    //List<Trade> allTrades = new List<Trade>.from(primaryAccount.Trades)..addAll(primaryAccount.Trades);
+
     for(Trade currTrade in new List<Trade>.from(primaryAccount.Trades)..addAll(secondaryAccount.Trades))
     {
       if(!pairs.contains(currTrade.pair))

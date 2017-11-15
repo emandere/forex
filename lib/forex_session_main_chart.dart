@@ -121,20 +121,36 @@ class ForexMainChart extends PolymerElement
 
   }
 
-  loadBarchartTradeByPair(String session,List data)
+  loadBarChartTradeByPair(String session,List data)
   {
 
-    GoogleChart barchartTradeByPair =$['barchartTradeByPair'];
+    GoogleChart barChartTradeByPair =$['barChartTradeByPair'];
 
     String chartTitle="Trades by Pair for $session";
     var options = {
       'title': chartTitle
     };
 
-    barchartTradeByPair.options=options;
-    barchartTradeByPair.type="bar";
-    barchartTradeByPair.cols=[ {"type":"string"},{"type":"number"}];
-    barchartTradeByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
+    barChartTradeByPair.options=options;
+    barChartTradeByPair.type="bar";
+    barChartTradeByPair.cols=[ {"type":"string"},{"type":"number"}];
+    barChartTradeByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
+  }
+
+  loadBarChartPLByPair(String session,List data)
+  {
+
+    GoogleChart barChartPLByPair =$['barChartPLByPair'];
+
+    String chartTitle="PL by Pair for $session";
+    var options = {
+      'title': chartTitle
+    };
+
+    barChartPLByPair.options=options;
+    barChartPLByPair.type="bar";
+    barChartPLByPair.cols=[ {"type":"string"},{"type":"number"}];
+    barChartPLByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
   }
 
   hideCharts()
@@ -143,13 +159,15 @@ class ForexMainChart extends PolymerElement
     DivElement balanceChart =$['paperBalanceChart'];
     DivElement histogramChart =$['paperHistogramChart'];
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
-    DivElement barchartTradeByPair =$['paperBarchartTradeByPair'];
+    DivElement barChartTradeByPair =$['paperBarChartTradeByPair'];
+    DivElement barChartPLByPair =$['paperBarChartPLByPair'];
 
     mainChart.hidden=true;
     balanceChart.hidden=true;
     histogramChart.hidden=true;
     histogramTimeChart.hidden=true;
-    barchartTradeByPair.hidden=true;
+    barChartTradeByPair.hidden=true;
+    barChartPLByPair.hidden=true;
   }
 
   showCharts()
@@ -158,14 +176,15 @@ class ForexMainChart extends PolymerElement
     DivElement balanceChart =$['paperBalanceChart'];
     DivElement histogramChart =$['paperHistogramChart'];
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
-    DivElement barchartTradeByPair =$['paperBarchartTradeByPair'];
-
+    DivElement barChartTradeByPair =$['paperBarChartTradeByPair'];
+    DivElement barChartPLByPair =$['paperBarChartPLByPair'];
 
     mainChart.hidden=false;
     balanceChart.hidden=false;
     histogramChart.hidden=false;
     histogramTimeChart.hidden=false;
-    barchartTradeByPair.hidden=false;
+    barChartTradeByPair.hidden=false;
+    barChartPLByPair.hidden=false;
   }
 
 }
