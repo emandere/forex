@@ -109,6 +109,12 @@ class ForexSessionPanel extends PolymerElement {
         ..currencyPairs=currencyPairs
         ..pl = session.PL().toStringAsFixed(2)
         ..closedTrades=closedTrades.toString()
+        ..ruleName=session.strategy.ruleName
+        ..window=session.strategy.window.toString()
+        ..stopLoss=session.strategy.stopLoss.toString()
+        ..takeProfit=session.strategy.takeProfit.toString()
+        ..units=session.strategy.units.toString()
+        ..position=session.strategy.position
         ..pct= pct.toStringAsFixed(2));
 
     }
@@ -124,6 +130,7 @@ class ForexSessionPanel extends PolymerElement {
     sessionCard.currentDate=formatter.format(session.currentTime);
     sessionCard.balance=session.balance().toStringAsFixed(2);
     sessionCard.pl=session.PL().toStringAsFixed(2);
+    sessionCard.ruleName=session.strategy.ruleName;
   }
 
   ForexSessionDetail GetSession(String id)

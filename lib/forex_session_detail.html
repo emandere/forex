@@ -6,6 +6,11 @@
                 width:320px;
             }
 
+            #paperStrategy
+            {
+                width:300px;
+            }
+
             paper-icon-button.small {
                 width: 32px;
                 height: 32px;
@@ -102,7 +107,46 @@
                 </table>
                 <br>
             </paper-card>
-
+            <br>
+        </div>
+        <br>
+        <br>
+        <div>
+            <paper-card id="paperStrategy">
+                <table  style="width:280px">
+                    <tr>
+                        <td><div class ="sessioninfo">Rule Name</div></td>
+                        <td></td>
+                        <td><div class ="sessioninfo">Window</div></td>
+                    </tr>
+                    <tr>
+                        <td>{{ruleName}}</td>
+                        <td></td>
+                        <td>{{window}}</td>
+                    </tr>
+                    <tr>
+                        <td><div class ="sessioninfo">Stop Loss</div></td>
+                        <td></td>
+                        <td><div class ="sessioninfo">Take Profit</div></td>
+                    </tr>
+                    <tr>
+                        <td>{{stopLoss}}</td>
+                        <td></td>
+                        <td>{{takeProfit}}</td>
+                    </tr>
+                    <tr>
+                        <td><div class ="sessioninfo">Units</div></td>
+                        <td></td>
+                        <td><div class ="sessioninfo">Position</div></td>
+                    </tr>
+                    <tr>
+                        <td>{{units}}</td>
+                        <td></td>
+                        <td>{{position}}</td>
+                    </tr>
+                </table>
+                <br>
+            </paper-card>
         </div>
         <paper-dialog id="dialogFilter">
             <h2>Filter Session Info</h2>

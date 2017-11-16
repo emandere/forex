@@ -41,6 +41,12 @@ class ForexMainChart extends PolymerElement
       ..pl = value.pl
       ..currencyPairs=value.currencyPairs
       ..closedTrades=value.closedTrades
+      ..ruleName=value.ruleName
+      ..window=value.window
+      ..stopLoss=value.stopLoss
+      ..takeProfit=value.takeProfit
+      ..units=value.units
+      ..position=value.position
       ..selectSession=false
       ..pct= value.pct;
 

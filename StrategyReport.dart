@@ -126,6 +126,7 @@ main() async
   testSession.id=ruleName+"-2000";
   testSession.sessionUser.id="testSessionUserNewSlope";
   testSession.startDate = DateTime.parse(startDate);
+  testSession.strategy=testStrategies;
   testSession.fundAccount("primary",2000.0);
   Stopwatch watch = new Stopwatch();
   watch.start();

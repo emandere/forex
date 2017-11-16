@@ -12,6 +12,7 @@ import 'package:polymer_elements/paper_dialog.dart';
 import 'package:polymer_elements/paper_button.dart';
 import 'package:polymer_elements/paper_spinner.dart';
 import 'package:polymer_elements/paper_input.dart';
+import 'package:polymer_elements/paper_card.dart';
 
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
@@ -23,6 +24,12 @@ class ForexSessionDetail extends PolymerElement
   String _currentDate;
   String _closedTrades;
   String _pct;
+  String _ruleName;
+  String _window;
+  String _stopLoss;
+  String _takeProfit;
+  String _units;
+  String _position;
   bool _selectSession = true;
   List<String> _currencyPairs =[];
 
@@ -32,10 +39,11 @@ class ForexSessionDetail extends PolymerElement
     _selectSession=value;
     PaperCheckbox selectSession = $['selectSession'];
     PaperIconButton filterSession =$['filterSession'];
-
+    PaperCard paperStrategy =$['paperStrategy'];
 
     selectSession.hidden=!value;
     filterSession.hidden=value;
+    paperStrategy.hidden=value;
 
     SpinnerOff();
   }
@@ -88,6 +96,48 @@ class ForexSessionDetail extends PolymerElement
   {
     _pct=value;
     set('pct', _pct);
+  }
+
+  @property String get ruleName => _ruleName;
+  @reflectable set ruleName(String value)
+  {
+    _ruleName=value;
+    set('ruleName', _ruleName);
+  }
+
+  @property String get window => _window;
+  @reflectable set window(String value)
+  {
+    _window=value;
+    set('window', _window);
+  }
+
+  @property String get stopLoss => _stopLoss;
+  @reflectable set stopLoss(String value)
+  {
+    _stopLoss=value;
+    set('stopLoss', _stopLoss);
+  }
+
+  @property String get takeProfit => _takeProfit;
+  @reflectable set takeProfit(String value)
+  {
+    _takeProfit=value;
+    set('takeProfit', _takeProfit);
+  }
+
+  @property String get position => _position;
+  @reflectable set position(String value)
+  {
+    _position=value;
+    set('position', _position);
+  }
+
+  @property String get units => _units;
+  @reflectable set units(String value)
+  {
+    _units=value;
+    set('units', _units);
   }
   ForexSessionDetail.created() : super.created();
   factory ForexSessionDetail() => new Element.tag('forex-session-detail') as ForexSessionDetail;

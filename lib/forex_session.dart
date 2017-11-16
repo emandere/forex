@@ -388,7 +388,10 @@ class ForexSession extends PolymerElement
       ..currencyPairs=sessionPanel.currencyPairs
       ..pl = pl.toStringAsFixed(2)
       ..closedTrades=closedTrades.toString()
-      ..pct= pct.toStringAsFixed(2);
+      ..pct= pct.toStringAsFixed(2)
+      ..ruleName=currentSession.strategy.ruleName
+      ..window=currentSession.strategy.window.toString()
+    ;
 
     mainChart.sessionDetail.SpinnerOff();
   }
