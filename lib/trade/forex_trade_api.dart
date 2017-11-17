@@ -17,6 +17,7 @@ Stream<Price> getquotes(List<String> pairs,ForexMongo mongoLayer) async*
       try {
         Map priceJSON = await mongoLayer.readLatestPrice(pair.replaceAll(new RegExp("_"),""));
         var price = new Price.fromJsonMap(priceJSON);
+        print("Running at ${ new DateTime.now().toIso8601String()}");
         yield price;
       }
       catch(exception,stackTrace)

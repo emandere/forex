@@ -1,0 +1,5 @@
+FROM forexapp
+WORKDIR /forex
+ADD QuoteTrader.dart /forex/QuoteTrader.dart
+CMD []
+ENTRYPOINT ["/usr/bin/dart","QuoteTrader.dart","release"]

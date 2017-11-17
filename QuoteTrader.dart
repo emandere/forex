@@ -14,7 +14,7 @@ main(List<String> arguments) async
   ForexMongo mongoLayer = new ForexMongo(arguments[0]);
   await mongoLayer.db.open();
 
-  var server ="localhost";
+  var server ="23.22.66.239";
   var file = new File("keys");
   var authorization = {"Authorization": await file.readAsString()};
   var ruleName = "RSIOverbought70";
