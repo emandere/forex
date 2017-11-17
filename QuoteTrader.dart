@@ -15,8 +15,6 @@ main(List<String> arguments) async
   await mongoLayer.db.open();
 
   var server ="23.22.66.239";
-  var file = new File("keys");
-  var authorization = {"Authorization": await file.readAsString()};
   var ruleName = "RSIOverbought70";
   var window = 14;
   var rsiRule = new IndicatorRule(ruleName, window);
