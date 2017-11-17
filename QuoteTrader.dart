@@ -116,28 +116,31 @@ main(List<String> arguments) async
       {
          resetAvailableTrades();
       }
-      if(await checkRule(currPrice))
+
+      if(availableTrades[currPrice.instrument])
       {
-        tradingSession.executeTradePrice(
-            account,
-            currPrice,
-            units,
-            tradePosition,
-            stopLoss * currPrice.bid,
-            takeProfit * currPrice.bid);
-        availableTrades[currPrice.instrument]=false;
+        if (await checkRule(currPrice)) {
+          tradingSession.executeTradePrice(
+              account,
+              currPrice,
+              units,
+              tradePosition,
+              stopLoss * currPrice.bid,
+              takeProfit * currPrice.bid);
+          availableTrades[currPrice.instrument] = false;
+        }
+        tradingSession.printacc();
+        tradingSession.updateSessionPrice(currPrice);
+
+
+        PostData myData = new PostData();
+        myData.data = tradingSession.toJson();
+
+        var url = 'http://$server/api/forexclasses/v1/addsessionpost';
+        var response = await http.post(url, body: myData.toJsonMap());
+        print("Response status: ${response.statusCode}");
+        print("Response body: ${response.body}");
       }
-      tradingSession.printacc();
-      tradingSession.upsateSessioPrice(currPrice);
-
-
-      PostData myData = new PostData();
-      myData.data=tradingSession.toJson();
-
-      var url = 'http://$server/api/forexclasses/v1/addsessionpost';
-      var response = await http.post(url,body:myData.toJsonMap());
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
 
     }
   }

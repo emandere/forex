@@ -100,7 +100,7 @@ class TradingSession
 
   }
 
-  upsateSessioPrice(Price currPrice)
+  updateSessionPrice(Price currPrice)
   {
     currentTime =currPrice.time;
     sessionUser.updateTradesPrice(currPrice);
