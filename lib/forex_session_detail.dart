@@ -23,7 +23,9 @@ class ForexSessionDetail extends PolymerElement
   String _startDate;
   String _currentDate;
   String _closedTrades;
+  String _openTrades;
   String _pct;
+  String _pctOpen;
   String _ruleName;
   String _window;
   String _stopLoss;
@@ -91,11 +93,26 @@ class ForexSessionDetail extends PolymerElement
     _closedTrades=value;
     set('closedTrades', _closedTrades);
   }
+
+  @property String get openTrades => _openTrades;
+  @reflectable set openTrades(String value)
+  {
+    _openTrades=value;
+    set('openTrades', _openTrades);
+  }
+
   @property String get pct => _pct;
   @reflectable set pct(String value)
   {
     _pct=value;
     set('pct', _pct);
+  }
+
+  @property String get pctOpen => _pctOpen;
+  @reflectable set pctOpen(String value)
+  {
+    _pctOpen=value;
+    set('pctOpen', _pctOpen);
   }
 
   @property String get ruleName => _ruleName;

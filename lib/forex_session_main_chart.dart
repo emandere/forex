@@ -48,7 +48,10 @@ class ForexMainChart extends PolymerElement
       ..units=value.units
       ..position=value.position
       ..selectSession=false
-      ..pct= value.pct;
+      ..pct= value.pct
+      ..pctOpen=value.pctOpen
+      ..openTrades=value.openTrades
+    ;
 
   }
   loadCurrencyChart(String pair,List data)
@@ -159,6 +162,22 @@ class ForexMainChart extends PolymerElement
     barChartPLByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
   }
 
+  loadBarChartOpenTradeByPair(String session,List data)
+  {
+
+    GoogleChart barChartOpenTradeByPair =$['barChartOpenTradeByPair'];
+
+    String chartTitle="Open Trades by Pair for $session";
+    var options = {
+      'title': chartTitle
+    };
+
+    barChartOpenTradeByPair.options=options;
+    barChartOpenTradeByPair.type="bar";
+    barChartOpenTradeByPair.cols=[ {"type":"string"},{"type":"number"}];
+    barChartOpenTradeByPair.rows = data;//[["AUDUSD",10],["USDJPY",20]];
+  }
+
   hideCharts()
   {
     DivElement mainChart = $['paperMainChart'];
@@ -167,6 +186,7 @@ class ForexMainChart extends PolymerElement
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
     DivElement barChartTradeByPair =$['paperBarChartTradeByPair'];
     DivElement barChartPLByPair =$['paperBarChartPLByPair'];
+    DivElement barChartOpenTradeByPair =$['paperBarChartOpenTradeByPair'];
 
     mainChart.hidden=true;
     balanceChart.hidden=true;
@@ -174,6 +194,7 @@ class ForexMainChart extends PolymerElement
     histogramTimeChart.hidden=true;
     barChartTradeByPair.hidden=true;
     barChartPLByPair.hidden=true;
+    barChartOpenTradeByPair.hidden=true;
   }
 
   showCharts()
@@ -184,6 +205,7 @@ class ForexMainChart extends PolymerElement
     DivElement histogramTimeChart =$['paperHistogramTimeChart'];
     DivElement barChartTradeByPair =$['paperBarChartTradeByPair'];
     DivElement barChartPLByPair =$['paperBarChartPLByPair'];
+    DivElement barChartOpenTradeByPair =$['paperBarChartOpenTradeByPair'];
 
     mainChart.hidden=false;
     balanceChart.hidden=false;
@@ -191,6 +213,7 @@ class ForexMainChart extends PolymerElement
     histogramTimeChart.hidden=false;
     barChartTradeByPair.hidden=false;
     barChartPLByPair.hidden=false;
+    barChartOpenTradeByPair.hidden=false;
   }
 
 }

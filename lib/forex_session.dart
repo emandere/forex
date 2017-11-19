@@ -330,6 +330,7 @@ class ForexSession extends PolymerElement
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
     mainChart.loadBarChartTradeByPair(title, BarChartTradeByPair());
     mainChart.loadBarChartPLByPair(title, BarChartPLByPair());
+    mainChart.loadBarChartOpenTradeByPair(title, BarChartOpenTradesByPair());
 
     mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
@@ -366,19 +367,29 @@ class ForexSession extends PolymerElement
 
 
     var closedTrades = currentSession.sessionUser.closedTrades()
-                                                  .where((t)=>t.pair==pair)
-                                                  .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
-                                                  .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
-                                                  .length;
+        .where((t)=>t.pair==pair)
+        .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
+        .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
+        .length;
 
-    var pct = currentSession.sessionUser.closedTrades()
-                                        .where((t)=>t.pair==pair)
-                                        .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
-                                        .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
-                                        .where((x)=>x.PL()>0).length.toDouble() / closedTrades.toDouble() ;
+    var pct =closedTrades==0? 0 : currentSession.sessionUser.closedTrades()
+        .where((t)=>t.pair==pair)
+        .where((t)=>DateTime.parse(t.closeDate).isAfter(startFilterDate))
+        .where((t)=>DateTime.parse(t.closeDate).isBefore(endFilterDate))
+        .where((x)=>x.PL()>0).length.toDouble() / closedTrades.toDouble() ;
     pct = pct * 100;
-    var balance = balanceHistPairList.last[1];
-    var pl = balance - balanceHistPairList.first[1];
+
+    var openTrades = currentSession.sessionUser.openTrades()
+        .where((t)=>t.pair==pair)
+        .length;
+
+    var pctOpen =openTrades==0? 0 : currentSession.sessionUser.openTrades()
+        .where((t)=>t.pair==pair)
+        .where((x)=>x.PL()>0).length.toDouble() / openTrades.toDouble() ;
+    pctOpen = pctOpen * 100;
+
+    var balance =balanceHistPairList.length==0 ? 0: balanceHistPairList.last[1];
+    var pl = balanceHistPairList.length==0 ? 0:(balance - balanceHistPairList.first[1]);
 
     mainChart.sessionDetail= new ForexSessionDetail()
       ..id = title
@@ -388,7 +399,9 @@ class ForexSession extends PolymerElement
       ..currencyPairs=sessionPanel.currencyPairs
       ..pl = pl.toStringAsFixed(2)
       ..closedTrades=closedTrades.toString()
+      ..openTrades=openTrades.toString()
       ..pct= pct.toStringAsFixed(2)
+      ..pctOpen=pctOpen.toStringAsFixed(2)
       ..ruleName=currentSession.strategy.ruleName
       ..window=currentSession.strategy.window.toString()
     ;
@@ -453,6 +466,17 @@ class ForexSession extends PolymerElement
         .sessionUser
         .primaryAccount
         .closedTrades
+        .where((trade)=>trade.pair==pair)
+        .length
+    ]).toList();
+  }
+
+  List BarChartOpenTradesByPair()
+  {
+    return currencyPairs.map((pair)=>[pair,
+    currentSession
+        .sessionUser
+        .openTrades()
         .where((trade)=>trade.pair==pair)
         .length
     ]).toList();

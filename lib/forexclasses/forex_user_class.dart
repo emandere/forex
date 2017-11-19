@@ -150,6 +150,11 @@ class User
     return new List<Trade>.from(primaryAccount.closedTrades)..addAll(secondaryAccount.closedTrades);
   }
 
+  List<Trade> openTrades()
+  {
+    return new List<Trade>.from(primaryAccount.Trades)..addAll(secondaryAccount.Trades);
+  }
+
   updateHistory(String dt)
   {
     primaryAccount.AddHistory(dt,primaryAccount.NetAssetValue());
