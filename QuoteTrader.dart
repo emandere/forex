@@ -90,20 +90,13 @@ main(List<String> arguments) async
       return false;
   }
 
-  bool resetAvailableTrades()
+  bool pairTraded(Price price)
   {
-    for(String pair in pairs)
-    {
-       availableTrades[pair]=true;
-    }
-  }
-
-  bool isNewday(DateTime lastTime,DateTime currTime)
-  {
-    if(lastTime.day>currTime.day)
-      return true;
-    else
-      return false;
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    return tradingSession.openTrades("primary")
+        .where((trade)=>trade.pair==price.instrument)
+        .map((trade)=>formatter.format(trade.openDate))
+        .contains(formatter.format(price.time));
   }
 
 
@@ -112,9 +105,10 @@ main(List<String> arguments) async
 
     if(newquote(currPrice))
     {
-      if(isNewday(lastQuotes[currPrice.instrument].time, currPrice.time))
+      tradingSession.updateSessionPrice(currPrice);
+      if(!pairTraded(currPrice))
       {
-         resetAvailableTrades();
+        availableTrades[currPrice.instrument]=true;
       }
 
       if(availableTrades[currPrice.instrument])
