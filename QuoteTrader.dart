@@ -113,7 +113,8 @@ main(List<String> arguments) async
 
       if(availableTrades[currPrice.instrument])
       {
-        if (await checkRule(currPrice)) {
+        if (await checkRule(currPrice))
+        {
           tradingSession.executeTradePrice(
               account,
               currPrice,
@@ -125,16 +126,15 @@ main(List<String> arguments) async
         }
         tradingSession.printacc();
         tradingSession.updateSessionPrice(currPrice);
-
-
-        PostData myData = new PostData();
-        myData.data = tradingSession.toJson();
-
-        var url = 'http://$server/api/forexclasses/v1/addsessionpost';
-        var response = await http.post(url, body: myData.toJsonMap());
-        print("Response status: ${response.statusCode}");
-        print("Response body: ${response.body}");
       }
+
+      PostData myData = new PostData();
+      myData.data = tradingSession.toJson();
+
+      var url = 'http://$server/api/forexclasses/v1/addsessionpost';
+      var response = await http.post(url, body: myData.toJsonMap());
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
 
     }
   }
