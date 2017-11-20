@@ -622,7 +622,7 @@ class ForexSession extends PolymerElement
 
     currentSession = await loadSession(currentSessionId);
     updateSessionCards();
-    //updateTradeMenu();
+    updateTradeMenu();
     UpdatePrices();
 
     mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
@@ -630,6 +630,11 @@ class ForexSession extends PolymerElement
 
     //SetUpDashboard();
 
+  }
+
+  void updateTradeMenu()
+  {
+    tradeControl.updateTrades( currentSession.openTrades("primary"));
   }
 
   @Listen('savesession')

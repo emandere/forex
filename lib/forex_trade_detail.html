@@ -1,35 +1,72 @@
 <dom-module id="forex-trade-detail">
     <template>
         <style is="custom-style">
+            paper-card
+            {
+                width:320px;
+            }
 
+            paper-icon-button.small
+            {
+                width: 32px;
+                height: 32px;
+            }
+
+            .sessioninfo
+            {
+                font-family: Inconsolata, monospace;
+                color:blue;
+                font-size: x-small;
+                margin-right: 10px;
+            }
+            .delete
+            {
+                position: relative;
+                left: 250px;
+                top:-8px;
+            }
         </style>
         <paper-card>
-            <div class="card-content">
-                <div class="card-content layout vertical">
-                    <div class="card-content layout vertical">
-                        <paper-icon-button id="navCloseTrade" icon="close"></paper-icon-button>
-                        <div>Pair {{pair}}</div>
-                        <div>Units {{units}}</div>
-                        <div>Current Price {{currentPrice}}</div>
-                        <div>Value {{tradeValue}}</div>
-                        <div>PL {{PL}}</div>
-                    </div>
-                    <div class="card-content layout horizontal">
-                        <div class="card-content layout vertical">
-                            <div>Open Date {{openDate}}</div>
-                            <div>Open Price</div>
-                            <div>Stop Loss</div>
-                            <div>Take Profit</div>
-                        </div>
-                        <div class="card-content layout vertical">
-                            <div>Current Date {{currentDate}}</div>
-                            <div>Distance from SL</div>
-                            <div>Distance from TP</div>
-                            <div>Value</div>
-                        </div>
-                    </div>
+            <div class="card-content layout horizontal" style="margin-top: 0;margin-bottom: 0">
+                <div class="delete">
+                    <paper-icon-button id="navCloseTrade"  class="small" icon="icons:cancel"></paper-icon-button>
                 </div>
             </div>
+            <table  style="width:280px">
+                <tr>
+                    <td><div class ="sessioninfo">Pair</div></td>
+                    <td></td>
+                    <td><div class ="sessioninfo">Units</div></td>
+                </tr>
+                <tr>
+                    <td>{{pair}}</td>
+                    <td></td>
+                    <td>{{units}}</td>
+                </tr>
+                <tr>
+                    <td><div class ="sessioninfo">Current Price</div></td>
+                    <td></td>
+                    <td><div class ="sessioninfo">P/L</div></td>
+                </tr>
+                <tr>
+                    <td>{{currentPrice}}</td>
+                    <td></td>
+                    <td>{{PL}}</td>
+                </tr>
+                <tr>
+                    <td><div class ="sessioninfo">Open Date</div></td>
+                    <td></td>
+                    <td><div class ="sessioninfo">Current Date</div></td>
+                </tr>
+                <tr>
+                    <td>{{openDate}}</td>
+                    <td></td>
+                    <td>{{currentDate}}</td>
+                </tr>
+            </table>
+            <br>
         </paper-card>
+        <br>
+        <br>
     </template>
 </dom-module>
