@@ -95,7 +95,7 @@ main(List<String> arguments) async
     DateFormat formatter = new DateFormat('yyyyMMdd');
     return tradingSession.openTrades("primary")
         .where((trade)=>trade.pair==price.instrument)
-        .map((trade)=>formatter.format(trade.openDate))
+        .map((trade)=>formatter.format(DateTime.parse(trade.openDate)))
         .contains(formatter.format(price.time));
   }
 
