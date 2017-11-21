@@ -158,11 +158,29 @@ class Account
       orders.add(new Order.fromJsonMap(order));
     }
 
-    balanceHistory = jsonNode["balanceHistory"];
-    /* for(Map day in jsonNode["balanceHistory"])
+    List history = jsonNode["balanceHistory"];
+
+    getDayFromString(String date)
     {
-      balanceHistory.add(day);
-    }*/
+      DateFormat formatter = new DateFormat('yyyyMMdd');
+      return formatter.format(DateTime.parse(date));
+    }
+
+    balanceHistory=<Map<String,double>>[];
+    if(history!=null)
+    {
+      String currentDate="";
+      for(Map singleHistory in history)
+      {
+        if(currentDate!=getDayFromString(singleHistory["date"]))
+        {
+          balanceHistory.add(singleHistory);
+          currentDate=getDayFromString(singleHistory["date"]);
+        }
+
+      }
+    }
+
   }
 
   Map toJson()

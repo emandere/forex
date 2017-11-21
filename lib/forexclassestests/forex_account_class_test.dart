@@ -24,6 +24,7 @@ class TestAccountClass
     expect(testAccount.MarginRatio,50.0 );
     expect(testAccount.Margin,0.0 );
     expect(testAccount.orders[0].expirationDate, "20170101");
+    expect(testAccount.balanceHistory[1]["date"], "2017-05-03T03:02:03.636Z");
 
     var testAccount2 = new Account.fromJsonMap(testAccount.toJson());
 
@@ -143,6 +144,7 @@ class TestAccountClass
     List<Map> MapTrades = new List<Map>();
     List<Map> MapClosedTrades = new List<Map>();
     List<Map> MapOrders=new List<Map>();
+    List<Map<String,double>> MapBalanceHistory=getTestMapHistory();
 
     MapOrders.add(getTestMapOrder());
 
@@ -155,8 +157,19 @@ class TestAccountClass
     testMapAccount["Trades"]=MapTrades;
     testMapAccount["closedTrades"]=MapClosedTrades;
     testMapAccount["orders"]=MapOrders;
-
+    testMapAccount["balanceHistory"]=MapBalanceHistory;
     return testMapAccount;
+  }
+
+  getTestMapHistory()
+  {
+    List<Map<String,double>> MapBalanceHistory=<Map<String,double>>[];
+    MapBalanceHistory.add({"date":"2017-05-02T03:02:03.636Z","amount":100.0});
+    MapBalanceHistory.add({"date":"2017-05-02T03:03:03.636Z","amount":101.0});
+    MapBalanceHistory.add({"date":"2017-05-03T03:02:03.636Z","amount":102.0});
+    MapBalanceHistory.add({"date":"2017-05-03T03:04:03.636Z","amount":103.0});
+    MapBalanceHistory.add({"date":"2017-05-04T03:04:03.636Z","amount":103.0});
+    return MapBalanceHistory;
   }
 
   getTestMapOrder() {
