@@ -196,6 +196,45 @@ class ForexSession extends PolymerElement
 
       ForexPriceControl priceControl = $["priceControl"];
       priceControl.prices=currentPrices;
+      await UpdateLiveSession();
+  }
+
+
+  UpdateLiveSession() async
+  {
+    ForexPriceControl priceControl = $["priceControl"];
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+    TradingSession session = await loadSession("liveSession");
+    var closedTrades = session.sessionUser.closedTrades().length;
+    var pct = closedTrades==0?0:session.sessionUser.closedTrades()
+        .where((x)=>x.PL()>0)
+        .length.toDouble() / closedTrades.toDouble() ;
+    pct = pct * 100;
+
+    var openTrades = session.sessionUser.openTrades().length;
+    var pctOpen = openTrades==0?0:session.sessionUser.openTrades()
+        .where((x)=>x.PL()>0)
+        .length.toDouble() / openTrades.toDouble() ;
+    pctOpen = pctOpen * 100;
+
+    priceControl.sessionDetail=
+      new ForexSessionDetail()
+      ..id = session.id
+      ..startDate=formatter.format(session.startDate)
+      ..currentDate=formatter.format(session.currentTime)
+      ..balance = session.balance().toStringAsFixed(2)
+      ..currencyPairs=currencyPairs
+      ..pl = session.PL().toStringAsFixed(2)
+      ..closedTrades=closedTrades.toString()
+      ..openTrades=openTrades.toString()
+      ..ruleName=session.strategy.ruleName
+      ..window=session.strategy.window.toString()
+      ..stopLoss=session.strategy.stopLoss.toString()
+      ..takeProfit=session.strategy.takeProfit.toString()
+      ..units=session.strategy.units.toString()
+      ..position=session.strategy.position
+      ..pct= pct.toStringAsFixed(2)
+      ..pctOpen=pctOpen.toStringAsFixed(2);
   }
 
   Future<String> GetIndicator(String ruleName,String pair,String date,String window) async

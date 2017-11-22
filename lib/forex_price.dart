@@ -8,6 +8,8 @@ import 'package:polymer_elements/iron_flex_layout/classes/iron_flex_layout.dart'
 import 'package:polymer_elements/iron_iconset.dart';
 import 'package:polymer_elements/iron_icon.dart';
 import 'package:polymer_elements/paper_icon_button.dart';
+
+
 @PolymerRegister('forex-price')
 class ForexPrice extends PolymerElement
 {

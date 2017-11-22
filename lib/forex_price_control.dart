@@ -7,16 +7,43 @@ import 'package:web_components/web_components.dart';
 import 'candle_stick.dart';
 import 'forex_price.dart';
 import 'forex_prices.dart';
+import 'forex_session_detail.dart';
 
 @PolymerRegister('forex-price-control')
 class ForexPriceControl extends PolymerElement
 {
   List<Price> _prices;
+  ForexSessionDetail _sessionDetail;
   @property List<Price> get prices => _prices;
   @reflectable set prices(List<Price> value)
   {
     _prices = value;
     setDivPrices(value);
+  }
+
+  @property ForexSessionDetail get sessionDetail => _sessionDetail;
+  @reflectable set sessionDetail(ForexSessionDetail value)
+  {
+    _sessionDetail = $['sessionDetail'] as ForexSessionDetail;
+    _sessionDetail..id = value.id
+      ..startDate=value.startDate
+      ..currentDate=value.currentDate
+      ..balance = value.balance
+      ..pl = value.pl
+      ..currencyPairs=value.currencyPairs
+      ..closedTrades=value.closedTrades
+      ..ruleName=value.ruleName
+      ..window=value.window
+      ..stopLoss=value.stopLoss
+      ..takeProfit=value.takeProfit
+      ..units=value.units
+      ..position=value.position
+      ..selectSession=true
+      ..pct= value.pct
+      ..pctOpen=value.pctOpen
+      ..openTrades=value.openTrades
+    ;
+
   }
 
   padzeros(String str)

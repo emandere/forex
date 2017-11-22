@@ -203,6 +203,7 @@ class ForexMongo
     return db.collection('session').find();
   }
 
+
   Future<Map> getUser(String id)
   {
 
