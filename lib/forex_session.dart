@@ -56,7 +56,7 @@ class ForexSession extends PolymerElement
   String countdown;
   String currentSessionId;
   int countdownAmt;
-  bool playState;
+  bool firstLoad;
   Timer countdownSesssions;
   DateTime startDate;
   DateTime endDate;
@@ -94,7 +94,8 @@ class ForexSession extends PolymerElement
 
      //btnCreateTrade.on['tap'].listen(CreateTrade);
 
-     menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     //menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     menuPage.on['tap'].listen(menuPageSwitcher);
      //menuPage.on['tap'].listen(redrawCharts);
      //playpauseBtn.on['tap'].listen((event)=>playpause());
 
@@ -102,9 +103,10 @@ class ForexSession extends PolymerElement
 
 
      panel.forceNarrow=true;
+     firstLoad=true;
      set('itemIndex',0);
      UpdateRealTimePrices();
-     loadSessions();
+     //loadSessions();
      loadCurrencyPairs();
      getDailyCurrencies();
      loadServerTime();
@@ -112,6 +114,17 @@ class ForexSession extends PolymerElement
      const period = const Duration(seconds:10);
      new Timer.periodic(period, (Timer t) async => await UpdateRealTimePrices());
 
+  }
+
+  menuPageSwitcher(var event)
+  {
+    if(get('itemIndex')==4 && firstLoad)
+    {
+      loadSessions();
+      firstLoad=false;
+    }
+    PaperDrawerPanel panel = $['drawerPanel'];
+    panel.togglePanel();
   }
 
   loadServerTime() async
