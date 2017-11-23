@@ -197,7 +197,7 @@ class ForexSession extends PolymerElement
       ForexPriceControl priceControl = $["priceControl"];
       priceControl.prices=currentPrices;
       await UpdateLiveSession();
-      await updateTradeMenu();
+      updateTradeMenu();
   }
 
 
@@ -670,6 +670,7 @@ class ForexSession extends PolymerElement
   {
     //int selected=detail['session'];
     //currentSessionId=sessions[selected]["id"];
+    ForexPriceControl priceControl = $["priceControl"];
     currentSessionId = detail["id"];
     set('currentSessionId',currentSessionId);
 
@@ -678,8 +679,16 @@ class ForexSession extends PolymerElement
     updateTradeMenu();
     UpdatePrices();
 
-    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
-    mainChart.hideCharts();
+    if(currentSessionId=="liveSession")
+    {
+      mainChart.sessionDetail= priceControl.sessionDetail;
+      mainChart.hideCharts();
+    }
+    else
+    {
+      mainChart.sessionDetail = sessionPanel.GetSession(currentSessionId);
+      mainChart.hideCharts();
+    }
 
     //SetUpDashboard();
 
