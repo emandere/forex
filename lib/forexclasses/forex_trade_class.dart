@@ -57,6 +57,8 @@ class Trade
     openPrice=double.parse(jsonNode["openPrice"].toString());
     closePrice=double.parse(jsonNode["closePrice"].toString());
     id=int.parse(jsonNode["id"]?.toString()??"0");
+    stopLoss=double.parse(jsonNode["stopLoss"]?.toString()??"0.0");
+    takeProfit=double.parse(jsonNode["takeProfit"]?.toString()??"0.0");
   }
   Map toJson()
   {
@@ -67,6 +69,8 @@ class Trade
       "long":long,
       "openPrice":openPrice,
       "closePrice":closePrice,
+      "stopLoss":stopLoss,
+      "takeProfit":takeProfit,
       "id":id,
       "init":init
     };

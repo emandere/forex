@@ -197,6 +197,7 @@ class ForexSession extends PolymerElement
       ForexPriceControl priceControl = $["priceControl"];
       priceControl.prices=currentPrices;
       await UpdateLiveSession();
+      await updateTradeMenu();
   }
 
 

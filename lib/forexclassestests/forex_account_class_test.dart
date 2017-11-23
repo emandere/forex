@@ -113,6 +113,9 @@ class TestAccountClass
     testAccount.processOrdersNew("USDJPY", 103.0);
     expect(testAccount.Trades.length, 1);
 
+    Account testAccount2 = new Account.fromJsonMap(testAccount.toJson());
+    expect(testAccount2.Trades[0].takeProfit,104);
+
     testAccount.processOrdersNew("USDJPY", 104.0);
     expect(testAccount.Trades.length, 0);
   }

@@ -157,6 +157,47 @@ class Account
     {
       orders.add(new Order.fromJsonMap(order));
     }
+    
+    for(Trade trade in Trades) 
+    {
+       if(trade.long)
+       {
+          var stopLossOrder = orders.firstWhere(
+                  (order)=>order.trade.pair==trade.pair
+                  &&order.trade.openDate==trade.openDate
+                  &&!order.above
+              ,orElse: ()=>null);
+
+          trade.stopLoss=stopLossOrder?.triggerprice??0.0;
+
+          var takeProfitOrder = orders.firstWhere(
+                  (order)=>order.trade.pair==trade.pair
+                  &&order.trade.openDate==trade.openDate
+
+                  &&order.above
+              ,orElse: ()=>null);
+
+          trade.takeProfit=takeProfitOrder?.triggerprice??0.0;
+       }
+       else
+       {
+         var stopLossOrder = orders.firstWhere(
+                 (order)=>order.trade.pair==trade.pair
+                 &&order.trade.openDate==trade.openDate
+                 &&order.above
+             ,orElse: ()=>null);
+
+         trade.stopLoss=stopLossOrder?.triggerprice??0.0;
+
+         var takeProfitOrder = orders.firstWhere(
+                 (order)=>order.trade.pair==trade.pair
+                 &&order.trade.openDate==trade.openDate
+                 &&!order.above
+             ,orElse: ()=>null);
+
+         trade.takeProfit=takeProfitOrder?.triggerprice??0.0;
+       }
+    }
 
     List history = jsonNode["balanceHistory"];
 

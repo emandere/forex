@@ -95,6 +95,8 @@ class ForexTradeControl extends PolymerElement
         ..currentDate=formatter.format(DateTime.parse(currTrade.closeDate))
         ..Id=currTrade.id.toString()
         ..account="primary"
+        ..stopLoss=currTrade.stopLoss.toString()
+        ..takeProfit=currTrade.takeProfit.toString()
         ..PL=currTrade.PL().toStringAsFixed(2);
       ;
 

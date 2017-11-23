@@ -21,7 +21,8 @@ class ForexTradeDetail extends PolymerElement
   String _currentDate;
   String _Id;
   String _account;
-
+  String _stopLoss;
+  String _takeProfit;
 
   @property String get account => _account;
   @reflectable set account(String value)
@@ -82,6 +83,20 @@ class ForexTradeDetail extends PolymerElement
   {
     _currentDate=value;
     set('currentDate', _currentDate);
+  }
+
+  @property String get stopLoss => _stopLoss;
+  @reflectable set stopLoss(String value)
+  {
+    _stopLoss=value;
+    set('stopLoss', _stopLoss);
+  }
+
+  @property String get takeProfit => _takeProfit;
+  @reflectable set takeProfit(String value)
+  {
+    _takeProfit=value;
+    set('takeProfit', _takeProfit);
   }
 
   ForexTradeDetail.created() : super.created();
