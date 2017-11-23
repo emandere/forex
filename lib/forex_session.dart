@@ -151,6 +151,12 @@ class ForexSession extends PolymerElement
     String request = await HttpRequest.getString(url);
     currencyPairs=JSON.decode(request);
     set('currencyPairs',currencyPairs);
+
+
+    List<String> pairs = ["<ALL>"];
+    pairs.addAll(JSON.decode(request));
+    sessionPanel.currencyPairs = pairs;
+
   }
 
   updatePairs(List<Map> prices)
@@ -682,6 +688,7 @@ class ForexSession extends PolymerElement
     if(currentSessionId=="liveSession")
     {
       mainChart.sessionDetail= priceControl.sessionDetail;
+      mainChart.sessionDetail.currencyPairs=sessionPanel.currencyPairs;
       mainChart.hideCharts();
     }
     else
