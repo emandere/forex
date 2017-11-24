@@ -203,7 +203,6 @@ class ForexSession extends PolymerElement
       ForexPriceControl priceControl = $["priceControl"];
       priceControl.prices=currentPrices;
       await UpdateLiveSession();
-      updateTradeMenu();
   }
 
 
@@ -242,6 +241,8 @@ class ForexSession extends PolymerElement
       ..position=session.strategy.position
       ..pct= pct.toStringAsFixed(2)
       ..pctOpen=pctOpen.toStringAsFixed(2);
+
+    updateTradeMenuLive(session);
   }
 
   Future<String> GetIndicator(String ruleName,String pair,String date,String window) async
@@ -703,7 +704,12 @@ class ForexSession extends PolymerElement
 
   void updateTradeMenu()
   {
-    tradeControl.updateTrades( currentSession.openTrades("primary"));
+    updateTradeMenuLive(currentSession);
+  }
+
+  void updateTradeMenuLive(TradingSession session)
+  {
+    tradeControl.updateTrades( session.openTrades("primary"));
   }
 
   @Listen('savesession')
