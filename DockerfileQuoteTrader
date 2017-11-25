@@ -1,11 +1,6 @@
-FROM google/dart
-
+FROM forexappbase
 WORKDIR /forex
-ADD pubspec.* /forex/
 ADD lib /forex/lib
 ADD QuoteTrader.dart /forex/QuoteTrader.dart
-RUN pub get --trace
-ADD . /forex
-RUN pub get --offline
 CMD []
 ENTRYPOINT ["/usr/bin/dart","QuoteTrader.dart","release"]

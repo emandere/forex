@@ -709,7 +709,8 @@ class ForexSession extends PolymerElement
 
   void updateTradeMenuLive(TradingSession session)
   {
-    tradeControl.updateTrades( session.openTrades("primary"));
+    if(currentSession.id==session.id)
+      tradeControl.updateTrades( session.openTrades("primary"));
   }
 
   @Listen('savesession')
