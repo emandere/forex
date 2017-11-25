@@ -106,7 +106,6 @@ class ForexSession extends PolymerElement
      firstLoad=true;
      set('itemIndex',0);
      UpdateRealTimePrices();
-     //loadSessions();
      loadCurrencyPairs();
      getDailyCurrencies();
      loadServerTime();
