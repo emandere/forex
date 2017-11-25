@@ -60,3 +60,6 @@ pub run test UnitTests.dart
 
 //local docker
 docker run -p 27017:27017 -v /mnt/c/datamongodocker:/data/db --restart=always --name mongo -d mongo mongod --dbpath /data/db --smallfiles
+
+
+sudo docker stats $(sudo docker ps --format '{{.Names}}')

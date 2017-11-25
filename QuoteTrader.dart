@@ -14,11 +14,19 @@ main(List<String> arguments) async
   ForexMongo mongoLayer = new ForexMongo(arguments[0]);
   await mongoLayer.db.open();
 
-  var server ="23.22.66.239";
+
+
+
   var ruleName = "RSIOverbought70";
   var window = 14;
   var rsiRule = new IndicatorRule(ruleName, window);
   var sessionId = "liveSession";
+  var server ="23.22.66.239";
+  if(arguments[0]=="debug")
+    server="localhost";
+  else
+    server="23.22.66.239";
+
   var tradingSessionMap = await mongoLayer.readSession(sessionId);
   var tradingSession = new TradingSession();
   var lastQuotes = <String,Price>{};
