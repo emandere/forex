@@ -9,13 +9,16 @@ class TestStrategyClass
 
   testStrategyConstructor()
   {
+    var window=100;
     var testMap ={};
     testMap["ruleName"]="RSIOverbought70";
-    testMap["window"]=100;
+    testMap["window"]=window;
     testMap["stopLoss"]=0.03;
     testMap["takeProfit"]=0.01;
     testMap["units"]=2000;
     testMap["position"]="long";
+
+
 
     Strategy test = new Strategy.fromJsonMap(testMap);
     expect(test.units, 2000);
@@ -26,5 +29,7 @@ class TestStrategyClass
 
     expect(test2.units, 2000);
     expect(test2.position, "long");
+    expect(test2.window, 100);
+    expect(-window, -100);
   }
 }

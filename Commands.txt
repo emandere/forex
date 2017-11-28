@@ -59,7 +59,15 @@ pub run test UnitTests.dart
 
 
 //local docker
-docker run -p 27017:27017 -v /mnt/c/datamongodocker:/data/db --restart=always --name mongo -d mongo mongod --dbpath /data/db --smallfiles
+docker run -p 27017:27017 -v c:\datamongodocker:/data --restart=always --name mongo -d mongo mongod --smallfiles
 
 
 sudo docker stats $(sudo docker ps --format '{{.Names}}')
+
+
+Docker Swarm Commands
+ sudo docker node update --label-add runtype=mongo node-1
+ sudo docker swarm init --listen-addr 172.30.0.130:2377
+ sudo docker swarm join --token
+ sudo docker node update --label-add runtype=mongo 8wovypquy3ai77goovvutnaq1
+ sudo docker service create --name ping00 --constraint 'node.labels.runtype == mongo'  alpine ping 172.30.0.130

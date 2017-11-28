@@ -67,7 +67,7 @@ main(List<String> arguments) async
   Future<bool> checkRule(Price currPrice) async
   {
     var endDate = new DateTime.now();
-    var startDate = endDate.add(new Duration(days:-20));
+    var startDate = endDate.add(new Duration(days:-window));
 
     var dailyValuesMap = await mongoLayer.readPriceRangeAsyncByDate(currPrice.instrument, startDate, endDate).toList();
     if(dailyValuesMap.isNotEmpty)

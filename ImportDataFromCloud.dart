@@ -15,7 +15,7 @@ main() async
   await mongoLayer.db.open();
   var server= "23.22.66.239";
   var startDate="20110101";
-  var endDate="201300101";
+  var endDate="20300101";
   var pairs=await readMongoPairs(server);
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
@@ -24,12 +24,14 @@ main() async
   for(String pair in pairs) 
   {
     var startCandleMap = await mongoLayer.readLatestCandle(pair);
+    var startDatePair=startDate;
     if(startCandleMap!=null)
     {
       var startCandle = new ForexDailyValue.fromJson(startCandleMap);
-      startDate = formatter.format(startCandle.datetime.add(new Duration(days:-1)));
+      startDatePair = formatter.format(startCandle.datetime.add(new Duration(days:-1)));
     }
-    var url = 'http://$server/api/forexclasses/v1/dailypricesrange/$pair/$startDate/$endDate';
+
+    var url = 'http://$server/api/forexclasses/v1/dailypricesrange/$pair/$startDatePair/$endDate';
 
     var  listCandleJson = await http.get(url);
     List<Map> listCandleJSonMap = JSON.decode(listCandleJson.body);
