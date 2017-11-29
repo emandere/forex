@@ -391,7 +391,7 @@ class ForexSession extends PolymerElement
     mainChart.loadBarChartPLByPair(title, BarChartPLByPair());
     mainChart.loadBarChartOpenTradeByPair(title, BarChartOpenTradesByPair());
 
-    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
+    //mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
 
     if(currentSession.sessionUser.AllTradingPairs().length>0)
