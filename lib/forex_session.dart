@@ -404,6 +404,8 @@ class ForexSession extends PolymerElement
       List values = await dailyValues(pair, startdt, enddt);
       mainChart.loadCurrencyChart(pair,values);
     }
+
+    mainChart.sessionDetail.SpinnerOff();
   }
 
   SetUpDashboardPair(String pair,DateTime startFilterDate,DateTime endFilterDate) async
