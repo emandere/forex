@@ -43,6 +43,7 @@ class TradingSession
                   firstWhere((e) => e.toString() == (jsonMap["sessionType"]??"SessionType.test"),
                   orElse: () => SessionType.test);
     startDate=DateTime.parse(jsonMap["startDate"].toString());
+    endDate=DateTime.parse(jsonMap["endDate"]==null?jsonMap["endDate"].toString():"20300101");
     currentTime=DateTime.parse(jsonMap["currentTime"].toString());
     sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
     strategy=jsonMap["strategy"]==null?new Strategy():new Strategy.fromJsonMap(jsonMap["strategy"]);
