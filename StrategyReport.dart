@@ -28,10 +28,6 @@ main() async
   Strategy testStrategies = setStrategy(ruleName, rulePosition, window);
 
 
-
-
-
-
   IndicatorRule tradingRule = new IndicatorRule(ruleName,window);
   List<IndicatorRule> rules = new List<IndicatorRule>();
   rules.add(tradingRule);
