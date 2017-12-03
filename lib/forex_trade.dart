@@ -80,12 +80,11 @@ class ForexTradeControl extends PolymerElement
 
   updateTrades(List<Trade> currentTrades)
   {
-    DivElement menuTrades=$['menuTrades'];
+    PaperMenu menuTrades=$['menuTrades'];
     menuTrades.children.clear();
     DateFormat formatter = new DateFormat('yyyyMMdd');
     for(Trade currTrade in currentTrades)
     {
-      PaperItem item = new PaperItem();
       ForexTradeDetail detail = new ForexTradeDetail()
         ..pair=currTrade.pair
         ..units=currTrade.units.toString()
@@ -99,9 +98,7 @@ class ForexTradeControl extends PolymerElement
         ..takeProfit=currTrade.takeProfit.toStringAsFixed(4)
         ..PL=currTrade.PL().toStringAsFixed(2);
       ;
-
-      item.children.add(detail);
-      menuTrades.children.add(item);
+      menuTrades.children.add(detail);
     }
   }
 
