@@ -88,7 +88,7 @@ class ForexTradeControl extends PolymerElement
       ForexTradeDetail detail = new ForexTradeDetail()
         ..pair=currTrade.pair
         ..units=currTrade.units.toString()
-        ..currentPrice=currTrade.closePrice.toString()
+        ..currentPrice=currTrade.closePrice.toStringAsFixed(4)
         ..tradeValue=currTrade.value().toStringAsFixed(2)
         ..openDate=formatter.format(DateTime.parse(currTrade.openDate))
         ..currentDate=formatter.format(DateTime.parse(currTrade.closeDate))
