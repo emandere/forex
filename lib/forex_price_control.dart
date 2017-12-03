@@ -24,7 +24,9 @@ class ForexPriceControl extends PolymerElement
   @property ForexSessionDetail get sessionDetail => _sessionDetail;
   @reflectable set sessionDetail(ForexSessionDetail value)
   {
+
     _sessionDetail = $['sessionDetail'] as ForexSessionDetail;
+    _sessionDetail.hidden=false;
     _sessionDetail..id = value.id
       ..startDate=value.startDate
       ..currentDate=value.currentDate
@@ -77,7 +79,8 @@ class ForexPriceControl extends PolymerElement
   factory ForexPriceControl() => new Element.tag('forex-price-control') as ForexPriceControl;
   ready()
   {
-
+    ForexSessionDetail _sess = $['sessionDetail'] as ForexSessionDetail;
+    _sess.hidden=true;
   }
 
 }
