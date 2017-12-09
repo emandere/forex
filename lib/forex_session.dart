@@ -171,9 +171,9 @@ class ForexSession extends PolymerElement
 
       for(Map session in sessions)
       {
-          if(session["lastUpdatedTime"]!=null || session["lastUpdatedTime"]!="null"
-              || session["id"]!="liveSession"
-              || session["sessionType"]!="SessionType.live")
+          if(session["lastUpdatedTime"]!=null && session["lastUpdatedTime"]!="null"
+              && session["id"]!="liveSession"
+              && session["sessionType"]!="SessionType.live")
           {
 
             DateFormat formatter = new DateFormat("yyyyMMddTHHmmss");//('yyyyMMddTHHmmssZ');
