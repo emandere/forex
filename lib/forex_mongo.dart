@@ -1,5 +1,6 @@
 library forex_mongo;
 import 'package:mongo_dart/mongo_dart.dart';
+import 'package:intl/intl.dart';
 import 'forex_classes.dart';
 import 'forex_prices.dart';
 import 'candle_stick.dart';
@@ -192,6 +193,7 @@ class ForexMongo
 
    saveSession(TradingSession session) async
    {
+     session.lastUpdatedTime=new DateTime.now();
      return db.collection('session').save(session.toJsonMap());
    }
 
@@ -305,6 +307,8 @@ class ForexMongo
     return mongoAddForexDailyValue().then(mongoResult);
   }
 
+
+
   Future<Map> readLatestCandle(String pair)
   {
     SelectorBuilder condition = where.eq("pair",pair).sortBy("datetime",descending: true).limit(1);
@@ -365,6 +369,35 @@ class ForexMongo
     else
     {
       return null;
+    }
+  }
+
+  Future<Map> getLatestSession(String sessionId,DateTime lastUpdate) async
+  {
+    SelectorBuilder condition = where.eq("id",sessionId);
+    var MapSession = await db.collection("session").findOne(condition);
+    DateFormat formatter = new DateFormat('yyyyMMddTHHmmss');
+    //String test2=formatter.format(DateTime.parse("2017-12-09T03:44:59.267410Z"));
+    //DateTime oldDateTime = DateTime.parse(test2).add(new Duration(hours:-5));
+    if(MapSession==null)
+    {
+      return null;
+    }
+    else
+    {
+       if(MapSession["lastUpdatedTime"]==null || MapSession["lastUpdatedTime"]=="null")
+         return null;
+
+       String formattedMongo = formatter.format(DateTime.parse(MapSession["lastUpdatedTime"]));
+       DateTime latestUpdateMongo = DateTime.parse(formattedMongo).add(new Duration(hours:5));
+       if(lastUpdate.compareTo(latestUpdateMongo)<0)
+       {
+         return MapSession;
+       }
+       else
+       {
+         return null;
+       }
     }
   }
 

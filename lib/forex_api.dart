@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:rpc/rpc.dart';
+import 'package:intl/intl.dart';
 import 'candle_stick.dart';
 import 'forex_prices.dart';
 import 'forex_classes.dart';
@@ -37,6 +38,22 @@ class ForexClasses
       return sessionRead;
     }
     return mongoLayer.readSession(sessionid).then(getSessionString);
+  }
+
+  @ApiMethod(path: 'getlatestsession/{sessionid}/{lastUpdate}')
+  Future<List<TradingSession>> readLatestSession(String sessionid,String lastUpdate) async
+  {
+     Map MapSession = await mongoLayer.getLatestSession(sessionid, DateTime.parse(lastUpdate));
+
+     if(MapSession==null)
+     {
+         return [];
+     }
+     else
+     {
+         return [new TradingSession.fromJSONMap(MapSession)];
+     }
+
   }
 
   @ApiMethod(path: 'deletesession/{sessionid}')
@@ -141,6 +158,17 @@ class ForexClasses
     success.add("pass");
     TradingSession session=new TradingSession.fromJSON(sessionData.data);
     await mongoLayer.saveSession(session);
+    return success;
+  }
+
+
+  @ApiMethod(method: 'POST',path: 'pushtoqueuesessionpost')
+  Future<List<String>> pushtoqueueSessionPost(PostData sessionData) async
+  {
+    List<String> success = new List<String>();
+    success.add("pass");
+    TradingSession session=new TradingSession.fromJSON(sessionData.data);
+    await mongoLayer.pushTradingSession(session);
     return success;
   }
 

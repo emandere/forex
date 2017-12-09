@@ -58,8 +58,10 @@ class ForexSessionPanel extends PolymerElement {
   void sendUserSession(var event) {
     PaperInput sessionId = $['sessionId'];
     PaperInput startDate = $['startDate'];
+    PaperInput endDate = $['endDate'];
     PaperInput primaryAmount = $['primaryAmount'];
     PaperInput secondaryAmount = $['secondaryAmount'];
+    PaperInput position = $['position'];
     PaperInput rule = $['rule'];
     PaperInput window = $['window'];
     PaperInput units = $['units'];
@@ -72,6 +74,7 @@ class ForexSessionPanel extends PolymerElement {
     tradeSession.id = sessionId.value;
     tradeSession.sessionUser.id = "testSessionUser";
     tradeSession.startDate = DateTime.parse(startDate.value);
+    tradeSession.endDate = DateTime.parse(endDate.value);
     tradeSession.currentTime = DateTime.parse(startDate.value);
     tradeSession.sessionType=SessionType.values.firstWhere((x)=>x.toString()=="SessionType.${sessionTypeMenu.value}");
 
@@ -83,6 +86,7 @@ class ForexSessionPanel extends PolymerElement {
     tradeSession.strategy.units=units.value;
     tradeSession.strategy.stopLoss=stopLoss.value;
     tradeSession.strategy.takeProfit=takeProfit.value;
+    tradeSession.strategy.position=position.value;
 
 
     this.fire('savesession', detail: {"session":tradeSession.toJsonMap()});
@@ -137,12 +141,36 @@ class ForexSessionPanel extends PolymerElement {
     DateFormat formatter = new DateFormat('yyyyMMdd');
     PaperMenu menuSession = $['menuSession'];
     ForexSessionDetail sessionCard = menuSession.children.firstWhere((x)=>x.id==session.id);
+
+    var closedTrades = session.sessionUser.closedTrades().length;
+    var pct = closedTrades==0?0:session.sessionUser.closedTrades()
+        .where((x)=>x.PL()>0)
+        .length.toDouble() / closedTrades.toDouble() ;
+    pct = pct * 100;
+
+    var openTrades = session.sessionUser.openTrades().length;
+    var pctOpen = openTrades==0?0:session.sessionUser.openTrades()
+        .where((x)=>x.PL()>0)
+        .length.toDouble() / openTrades.toDouble() ;
+    pctOpen = pctOpen * 100;
+
     sessionCard.id=session.id;
     sessionCard.startDate=formatter.format(session.startDate);
     sessionCard.currentDate=formatter.format(session.currentTime);
     sessionCard.balance=session.balance().toStringAsFixed(2);
     sessionCard.pl=session.PL().toStringAsFixed(2);
+    sessionCard.closedTrades=closedTrades.toString();
+    sessionCard.openTrades=openTrades.toString();
+    sessionCard.pct=pct.toStringAsFixed(2);
+    sessionCard.pctOpen=pctOpen.toStringAsFixed(2);
+
     sessionCard.ruleName=session.strategy.ruleName;
+    sessionCard.window=session.strategy.window.toString();
+    sessionCard.stopLoss=session.strategy.stopLoss.toString();
+    sessionCard.takeProfit=session.strategy.takeProfit.toString();
+    sessionCard.units=session.strategy.units.toString();
+    sessionCard.position=session.strategy.position;
+
   }
 
   ForexSessionDetail GetSession(String id)

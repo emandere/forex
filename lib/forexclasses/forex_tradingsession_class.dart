@@ -10,6 +10,7 @@ class TradingSession
   DateTime startDate;
   DateTime endDate;
   DateTime currentTime;
+  DateTime lastUpdatedTime;
   SessionType sessionType;
   Strategy  strategy;
   String id;
@@ -43,7 +44,8 @@ class TradingSession
                   firstWhere((e) => e.toString() == (jsonMap["sessionType"]??"SessionType.test"),
                   orElse: () => SessionType.test);
     startDate=DateTime.parse(jsonMap["startDate"].toString());
-    endDate=DateTime.parse(jsonMap["endDate"]==null?jsonMap["endDate"].toString():"20300101");
+    endDate=DateTime.parse(jsonMap.containsKey("endDate") && jsonMap["endDate"].toString() !="null"?jsonMap["endDate"].toString():"20300101");
+    lastUpdatedTime=DateTime.parse(jsonMap.containsKey("lastUpdatedTime") && jsonMap["lastUpdatedTime"].toString()!="null"?jsonMap["lastUpdatedTime"].toString():"20010101");
     currentTime=DateTime.parse(jsonMap["currentTime"].toString());
     sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
     strategy=jsonMap["strategy"]==null?new Strategy():new Strategy.fromJsonMap(jsonMap["strategy"]);
@@ -62,6 +64,7 @@ class TradingSession
       "sessionType":sessionType.toString(),
       "startDate":startDate.toString(),
       "endDate":endDate.toString(),
+      "lastUpdatedTime":lastUpdatedTime.toString(),
       "currentTime":currentTime.toString(),
       "strategy":strategy.toJsonMap(),
       "sessionUser":sessionUser.toJsonMap()

@@ -50,5 +50,6 @@ ProcessTradingSession(ForexMongo mongoLayer) async
       }
 
       tradingSession.printacc();
+      await mongoLayer.saveSession(tradingSession);
     }
 }

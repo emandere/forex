@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:intl/intl.dart';
 import '../forex_classes.dart';
 import '../forex_prices.dart';
 class TestTradingSessionClass
@@ -17,6 +18,15 @@ class TestTradingSessionClass
     expect(testUser.id, "testUser");
 
     var testUser2 = new User.fromJsonMap(testUser.toJsonMap());
+
+    DateFormat formatter = new DateFormat('yyyyMMddTHHmmss');
+    String test=formatter.format(DateTime.parse("2017-12-08 22:44:59.267410"));
+    DateTime newDateTime = DateTime.parse(test);
+
+    String test2=formatter.format(DateTime.parse("2017-12-09T03:44:59.267410Z"));
+    DateTime oldDateTime = DateTime.parse(test2).add(new Duration(hours:-5));
+
+    int x = oldDateTime.compareTo(newDateTime);
 
     expect(testUser2.id, "testUser");
     expect(testUser2.status, "live");

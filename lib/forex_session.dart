@@ -78,7 +78,7 @@ class ForexSession extends PolymerElement
      PaperMenu menuPage=$['menuPage'];
      //PaperFab playpauseBtn =$['playpauseBtn'];
 
-
+     sessions=<Map>[];
      sessionPanel=$['sessionPanel'];
 
 
@@ -112,7 +112,7 @@ class ForexSession extends PolymerElement
 
      const period = const Duration(seconds:10);
      new Timer.periodic(period, (Timer t) async => await UpdateRealTimePrices());
-
+     new Timer.periodic(period, (Timer t) async => await UpdateSessions());
   }
 
   menuPageSwitcher(var event)
@@ -164,6 +164,34 @@ class ForexSession extends PolymerElement
     pairTable.currencyPairs=currencyPairs;
     pairTable.prices=prices;
     tradeControl.prices=prices;
+  }
+
+  UpdateSessions() async
+  {
+
+      for(Map session in sessions)
+      {
+          if(session["lastUpdatedTime"]!=null || session["lastUpdatedTime"]!="null")
+          {
+
+            DateFormat formatter = new DateFormat("yyyyMMddTHHmmss");//('yyyyMMddTHHmmssZ');
+            String timestamp = formatter.format(DateTime.parse(session["lastUpdatedTime"]));
+            //print(session["id"]+" Updated "+session["lastUpdatedTime"].toString());
+            List<Map> ListMapSession = await loadLatestSession(
+                session["id"], timestamp);
+            if(ListMapSession.length>0)
+            {
+                session["lastUpdatedTime"]=ListMapSession[0]["lastUpdatedTime"];
+                print(session["id"]+" Updated "+session["lastUpdatedTime"].toString());
+                sessionPanel.updateSession(new TradingSession.fromJSONMap(ListMapSession[0]));
+                PaperToast toastSession=$['toastSession'];
+                toastSession.text="${session["id"]} updated";
+                toastSession.duration=3000;
+                toastSession.open();
+            }
+          }
+      }
+
   }
 
   UpdateCurrentSession(Event e) async
@@ -259,6 +287,14 @@ class ForexSession extends PolymerElement
 
   }
 
+  Future<List<Map>> loadLatestSession(String id,String timestamp) async
+  {
+    var url = "/api/forexclasses/v1/getlatestsession/$id/$timestamp";
+    String request = await HttpRequest.getString(url);
+    return JSON.decode(request);
+
+  }
+
   deleteSession(String id) async
   {
     var url = "/api/forexclasses/v1/deletesession/$id";
@@ -297,13 +333,18 @@ class ForexSession extends PolymerElement
 
   SaveSession()
   {
-    var url = "/api/forexclasses/v1/addsessionpost";//"/api/forexclasses/v1/addsessionpost";
+    var urlSave = "/api/forexclasses/v1/addsessionpost";//"/api/forexclasses/v1/addsessionpost";
+    var urlQueue = "/api/forexclasses/v1/pushtoqueuesessionpost";
     PostData myData = new PostData();
 
 
     myData.data=tradeSession.toJson();
 
-    HttpRequest.request(url, method:'POST',
+    HttpRequest.request(urlSave, method:'POST',
+        requestHeaders: {"content-type": "application/json"},
+        sendData:myData.toJson());
+
+    HttpRequest.request(urlQueue, method:'POST',
         requestHeaders: {"content-type": "application/json"},
         sendData:myData.toJson());
 
