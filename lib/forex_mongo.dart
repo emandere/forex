@@ -193,7 +193,8 @@ class ForexMongo
 
    saveSession(TradingSession session) async
    {
-     session.lastUpdatedTime=new DateTime.now();
+     DateFormat formatter = new DateFormat('yyyyMMddTHHmmss');
+     session.lastUpdatedTime=formatter.format(new DateTime.now());
      return db.collection('session').save(session.toJsonMap());
    }
 
@@ -376,9 +377,6 @@ class ForexMongo
   {
     SelectorBuilder condition = where.eq("id",sessionId);
     var MapSession = await db.collection("session").findOne(condition);
-    DateFormat formatter = new DateFormat('yyyyMMddTHHmmss');
-    //String test2=formatter.format(DateTime.parse("2017-12-09T03:44:59.267410Z"));
-    //DateTime oldDateTime = DateTime.parse(test2).add(new Duration(hours:-5));
     if(MapSession==null)
     {
       return null;
@@ -387,9 +385,8 @@ class ForexMongo
     {
        if(MapSession["lastUpdatedTime"]==null || MapSession["lastUpdatedTime"]=="null")
          return null;
-
-       String formattedMongo = formatter.format(DateTime.parse(MapSession["lastUpdatedTime"]));
-       DateTime latestUpdateMongo = DateTime.parse(formattedMongo).add(new Duration(hours:5));
+       String formattedMongo = MapSession["lastUpdatedTime"];
+       DateTime latestUpdateMongo = DateTime.parse(formattedMongo);//.add(new Duration(hours:5));
        if(lastUpdate.compareTo(latestUpdateMongo)<0)
        {
          return MapSession;

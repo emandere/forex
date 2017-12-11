@@ -176,8 +176,8 @@ class ForexSession extends PolymerElement
               && session["sessionType"]!="SessionType.live")
           {
 
-            DateFormat formatter = new DateFormat("yyyyMMddTHHmmss");//('yyyyMMddTHHmmssZ');
-            String timestamp = formatter.format(DateTime.parse(session["lastUpdatedTime"]));
+            //DateFormat formatter = new DateFormat("yyyyMMddTHHmmss");//('yyyyMMddTHHmmssZ');
+            String timestamp = session["lastUpdatedTime"];
             //print(session["id"]+" Updated "+session["lastUpdatedTime"].toString());
             List<Map> ListMapSession = await loadLatestSession(
                 session["id"], timestamp);
@@ -426,15 +426,16 @@ class ForexSession extends PolymerElement
   SetUpDashboard() async
   {
 
+
     mainChart.showCharts();
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
     mainChart.loadTradesHistogram(currentSessionId,TradingHistogram());
     mainChart.loadTradesTimeHistogram(currentSessionId,TradingTimeHistogram());
-    mainChart.loadBarChartTradeByPair(title, BarChartTradeByPair());
-    mainChart.loadBarChartPLByPair(title, BarChartPLByPair());
-    mainChart.loadBarChartOpenTradeByPair(title, BarChartOpenTradesByPair());
+    mainChart.loadBarChartTradeByPair(currentSessionId, BarChartTradeByPair());
+    mainChart.loadBarChartPLByPair(currentSessionId, BarChartPLByPair());
+    mainChart.loadBarChartOpenTradeByPair(currentSessionId, BarChartOpenTradesByPair());
 
-    //mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
+    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
 
     if(currentSession.sessionUser.AllTradingPairs().length>0)
@@ -525,6 +526,7 @@ class ForexSession extends PolymerElement
 
   List balanceHistPair(String pair,DateTime startFilterDate,DateTime endFilterDate)
   {
+     DateFormat formatter = new DateFormat('yyyyMMdd');
      List pairBalanceHistory = [];
      findClosedTrades(DateTime date)
      {
@@ -532,7 +534,7 @@ class ForexSession extends PolymerElement
                .sessionUser
                .closedTrades()
                .where((trade)=>trade.pair==pair)
-               .where((trade)=>DateTime.parse(trade.closeDate)==date);
+               .where((trade)=>formatter.format(DateTime.parse(trade.closeDate))==formatter.format(date));
      }
 
      var sessionDates = currentSession
@@ -773,7 +775,6 @@ class ForexSession extends PolymerElement
   @Listen('selectfiltersession')
   OnSelectFilterSession(event, detail) async
   {
-
       if(detail["pair"]=="<ALL>") {
         await SetUpDashboard();
       }

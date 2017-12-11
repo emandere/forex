@@ -28,7 +28,7 @@ ProcessTradingSession(ForexMongo mongoLayer) async
   tradingSession1.strategy=strategy1;
   tradingSession1.startDate=DateTime.parse("20170101");
   tradingSession1.endDate=DateTime.parse("20171201");
-  tradingSession1.lastUpdatedTime=new DateTime.now();
+  //tradingSession1.lastUpdatedTime=new DateTime.now();
   tradingSession1.fundAccount("primary", 2000.0);
 
   await mongoLayer.pushTradingSession(tradingSession1);

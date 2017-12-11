@@ -361,4 +361,51 @@ class ForexClasses
     return [tradingRule.indicator(dailyRange).toStringAsFixed(0)];
   }
 
+  @ApiMethod(path:'balancehistorypair/{sessionid}/{pair}/{strstartfilterdate}/{strendfilterdate}')
+  Future<List<double>> balanceHistPair(String sessionid,String pair,String strstartfilterdate,String strendfilterdate) async
+  {
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+
+    Map currentSessionMap = await mongoLayer.readSession(sessionid);
+    TradingSession currentSession = new TradingSession.fromJSONMap(currentSessionMap);
+    DateTime startFilterDate = DateTime.parse(strstartfilterdate);
+    DateTime endFilterDate = DateTime.parse(strendfilterdate);
+    List pairBalanceHistory = <double>[];
+    findClosedTrades(DateTime date)
+    {
+      return currentSession
+          .sessionUser
+          .closedTrades()
+          .where((trade)=>trade.pair==pair)
+          .where((trade)=>formatter.format(DateTime.parse(trade.closeDate))==formatter.format(date));
+    }
+
+    var sessionDates = currentSession
+        .sessionUser
+        .primaryAccount
+        .balanceHistory
+        .map((dailyVal)=>(DateTime.parse(dailyVal["date"])))
+        .where((dailyVal)=>dailyVal.isAfter(startFilterDate))
+        .where((dailyVal)=>dailyVal.isBefore(endFilterDate));
+
+    double amount = currentSession
+        .sessionUser
+        .primaryAccount
+        .balanceHistory[0]["amount"];
+
+    for(DateTime sessionDate in sessionDates)
+    {
+      pairBalanceHistory.add(amount);
+      if(findClosedTrades(sessionDate).isNotEmpty)
+      {
+        amount += findClosedTrades(sessionDate)
+            .map((trade) => trade.PL())
+            .reduce((t, e) => t + e);
+      }
+    }
+
+    return pairBalanceHistory;
+  }
+
+
 }

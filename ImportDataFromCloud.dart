@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'lib/forex_mongo.dart';
 import 'lib/forex_prices.dart';
 import 'lib/candle_stick.dart';
+import 'lib/forex_classes.dart';
 
 main() async
 {
@@ -20,8 +21,20 @@ main() async
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
 
+  print("Loading Sessions");
+  var urlSessions = 'http://$server/api/forexclasses/v1/sessions';
+  var  listSessionJson = await http.get(urlSessions);
+  List<Map> listSessionJsonMap = JSON.decode(listSessionJson.body);
+  for(Map sessionJSON in listSessionJsonMap)
+  {
+    TradingSession session = new TradingSession.fromJSONMap(sessionJSON);
+    await mongoLayer.saveSession(session);
+    print("  Session ${session.id} saved");
+  }
+  print("Loading Sessions Complete");
+
   
-  for(String pair in pairs) 
+ for(String pair in pairs)
   {
     var startCandleMap = await mongoLayer.readLatestCandle(pair);
     var startDatePair=startDate;
@@ -54,6 +67,7 @@ main() async
     }
 
   }
+
 
   exit(1);
 }
