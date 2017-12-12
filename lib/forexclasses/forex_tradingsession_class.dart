@@ -182,7 +182,12 @@ class TradingSession
 
   executeTradePrice(String acc,Price currPrice, int units,String position,double stopLoss,double takeProfit)
   {
-    if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (currPrice.bid  * units.toDouble()))
+    double adj(Price cP)
+    {
+      double adj= (cP.instrument =="USDJPY") ? 0.01 : 1.0;
+      return adj;
+    }
+    if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (currPrice.bid * adj(currPrice)  * units.toDouble()))
     {
       sessionUser.executeTrade(acc, currPrice.instrument, units,position, currPrice.time.toIso8601String(), stopLoss, takeProfit);
       setStopLossAndTakeProfit(acc, currPrice.time.toIso8601String(), position, stopLoss, takeProfit);
