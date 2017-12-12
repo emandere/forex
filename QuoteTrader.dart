@@ -72,6 +72,7 @@ main(List<String> arguments) async
     var dailyValuesMap = await mongoLayer.readPriceRangeAsyncByDate(currPrice.instrument, startDate, endDate).toList();
     if(dailyValuesMap.isNotEmpty)
     {
+      print (currPrice.instrument +" "+rsiRule.indicator(dailyValuesMap).toStringAsFixed(0));
       if (rsiRule.IsMet(dailyValuesMap, currPrice.toJson()))
       {
         print('Sell! ${currPrice.instrument} ${currPrice.time.toIso8601String()}');
@@ -132,7 +133,7 @@ main(List<String> arguments) async
               takeProfit * currPrice.bid);
           availableTrades[currPrice.instrument] = false;
         }
-        tradingSession.printacc();
+        //tradingSession.printacc();
         tradingSession.updateSessionPrice(currPrice);
       }
 
@@ -141,8 +142,8 @@ main(List<String> arguments) async
 
       var url = 'http://$server/api/forexclasses/v1/addsessionpost';
       var response = await http.post(url, body: myData.toJsonMap());
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
+      //print("Response status: ${response.statusCode}");
+      //print("Response body: ${response.body}");
 
     }
   }
