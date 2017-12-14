@@ -426,6 +426,7 @@ class ForexSession extends PolymerElement
   SetUpDashboard() async
   {
 
+    ForexPriceControl priceControl = $["priceControl"];
 
     mainChart.showCharts();
     mainChart.loadBalanceChart(currentSessionId,balanceHist());
@@ -435,7 +436,10 @@ class ForexSession extends PolymerElement
     mainChart.loadBarChartPLByPair(currentSessionId, BarChartPLByPair());
     mainChart.loadBarChartOpenTradeByPair(currentSessionId, BarChartOpenTradesByPair());
 
-    mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
+    if(firstLoad && currentSessionId=="liveSession")
+      mainChart.sessionDetail=priceControl.sessionDetail;
+    else
+      mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
 
 
     if(currentSession.sessionUser.AllTradingPairs().length>0)
@@ -782,7 +786,7 @@ class ForexSession extends PolymerElement
       {
         await SetUpDashboardPair(
             detail["pair"], DateTime.parse(detail["startFilterDate"]),
-            DateTime.parse(detail["endFilterDate"]));
+            DateTime.parse(detail["endFilterDate"]).add(new Duration(days:1)));
       }
   }
 

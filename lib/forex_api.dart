@@ -369,7 +369,7 @@ class ForexClasses
     Map currentSessionMap = await mongoLayer.readSession(sessionid);
     TradingSession currentSession = new TradingSession.fromJSONMap(currentSessionMap);
     DateTime startFilterDate = DateTime.parse(strstartfilterdate);
-    DateTime endFilterDate = DateTime.parse(strendfilterdate);
+    DateTime endFilterDate = DateTime.parse(strendfilterdate).add(new Duration(days:1));
     List pairBalanceHistory = <double>[];
     findClosedTrades(DateTime date)
     {
