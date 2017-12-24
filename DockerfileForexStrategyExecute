@@ -1,0 +1,6 @@
+FROM forexappbase
+WORKDIR /forex
+ADD lib /forex/lib
+ADD StrategyExecute.dart /forex/StrategyExecute.dart
+CMD []
+ENTRYPOINT ["/usr/bin/dart","StrategyExecute.dart","release"]

@@ -18,8 +18,7 @@ main(List<String> arguments) async
 ProcessTradingSession(ForexMongo mongoLayer) async
 {
     var tradingSessionMap = await mongoLayer.popTradingSession();
-    var server = "23.22.66.239";
-    if(tradingSessionMap!=null)
+        if(tradingSessionMap!=null)
     {
       TradingSession tradingSession = new TradingSession.fromJSONMap(tradingSessionMap);
       print(tradingSession.strategy.ruleName);
@@ -33,7 +32,7 @@ ProcessTradingSession(ForexMongo mongoLayer) async
       ForexCache cache = new ForexCache(
           formatter.format(tradingSession.startDate),
           formatter.format(tradingSession.endDate),rules);
-      await cache.buildCache(server);
+      await cache.buildCacheMongo(mongoLayer);
       print("cache built!");
 
       for(var dailyPairValues in cache.DailyValues())

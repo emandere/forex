@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../forex_indicator_rules.dart';
 import "package:collection/collection.dart";
+import '../forex_indicator_rules.dart';
+import '../forex_mongo.dart';
 class ForexCache
 {
   Map cache;
@@ -29,6 +30,20 @@ class ForexCache
     return JSON.decode(pairsListStr.body);
   }
 
+  Future <List<Map>> dailyValuesRange(ForexMongo mongoLayer,String pair,String startDate,String endDate) async
+  {
+    List<Map> dailyvals=new List<Map>();
+    await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsync(pair,DateTime.parse(startDate),DateTime.parse(endDate)))
+    {
+      dailyvals.add(dailyvalueMap);
+    }
+    await for(Map dailyvalueMap in mongoLayer.readDailyValuesRangeAsyncLatest(pair,DateTime.parse(startDate),DateTime.parse(endDate)))
+    {
+      dailyvals.add(dailyvalueMap);
+    }
+    return dailyvals;
+  }
+
 
 
   buildCache(String server) async
@@ -37,6 +52,18 @@ class ForexCache
     {
       cache[pair] = <Map>[];
       for(Map dailyvalueMap in await readDailyValuesRangeAsync(server,pair,startDate,endDate))
+      {
+        cache[pair].add(dailyvalueMap);
+      }
+    }
+  }
+
+  buildCacheMongo(ForexMongo mongoLayer) async
+  {
+    for(String pair in await mongoLayer.readMongoPairs())
+    {
+      cache[pair] = <Map>[];
+      for(Map dailyvalueMap in await dailyValuesRange(mongoLayer,pair, startDate,endDate))//readDailyValuesRangeAsync(server,pair,startDate,endDate))
       {
         cache[pair].add(dailyvalueMap);
       }
