@@ -137,11 +137,13 @@ main(List<String> arguments) async
         tradingSession.updateSessionPrice(currPrice);
       }
 
-      PostData myData = new PostData();
-      myData.data = tradingSession.toJson();
+      await mongoLayer.saveSession(tradingSession);
 
-      var url = 'http://$server/api/forexclasses/v1/addsessionpost';
-      var response = await http.post(url, body: myData.toJsonMap());
+      //PostData myData = new PostData();
+      //myData.data = tradingSession.toJson();
+
+      //var url = 'http://$server/api/forexclasses/v1/addsessionpost';
+      //var response = await http.post(url, body: myData.toJsonMap());
       //print("Response status: ${response.statusCode}");
       //print("Response body: ${response.body}");
 
