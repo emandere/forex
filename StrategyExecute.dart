@@ -18,7 +18,7 @@ main(List<String> arguments) async
 ProcessTradingSession(ForexMongo mongoLayer) async
 {
     var tradingSessionMap = await mongoLayer.popTradingSession();
-        if(tradingSessionMap!=null)
+    if(tradingSessionMap!=null)
     {
       TradingSession tradingSession = new TradingSession.fromJSONMap(tradingSessionMap);
       print(tradingSession.strategy.ruleName);
@@ -44,8 +44,17 @@ ProcessTradingSession(ForexMongo mongoLayer) async
             tradingSession.executeTradeStrategyPrice("primary",
                 tradingSession.strategy, new Price.fromJsonDailyValue(dailyPairValue));
           }
+          print("${dailyPairValue['pair']} ${dailyPairValue['date']}");
+          await for(Map priceMap in mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'],DateTime.parse(dailyPairValue['date'])))
+          {
+             tradingSession.updateSessionPriceNoHist(new Price.fromJsonMap(priceMap));
+            //tradingSession.updateSession(dailyPairValues);
+          }
+          tradingSession.updateSession(dailyPairValues);
+
         }
-        tradingSession.updateSession(dailyPairValues);
+
+
       }
 
       tradingSession.printacc();

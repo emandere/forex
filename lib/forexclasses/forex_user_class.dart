@@ -203,7 +203,7 @@ class User
      executeTrade(acc, price.instrument,
          currStrategy.units,
          currStrategy.position,
-         price.time.toIso8601String(),
+         price.time.toIso8601String()+"Z",
          currStrategy.stopLoss * price.bid,
          currStrategy.takeProfit*price.bid);
   }

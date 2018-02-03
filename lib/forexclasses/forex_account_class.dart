@@ -422,7 +422,7 @@ class Account
     List<Trade> selectedTrades = Trades.where((trade)=>trade.pair==currPrice.instrument).toList();
     for(Trade currTrade in selectedTrades)
     {
-      currTrade.updateTrade(currPrice.time.toIso8601String(), currPrice.bid);
+      currTrade.updateTrade(currPrice.time.toIso8601String()+"Z", currPrice.bid);
     }
   }
 

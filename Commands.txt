@@ -9,6 +9,8 @@ docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
 //Query mongo database
 docker exec -it mongo bash
 
+db.rawprices.createIndex({"instrument":1,"time":1})
+
 sudo /etc/init.d/jenkins restart
 
 # Delete every Docker containers

@@ -93,7 +93,7 @@ class TradingSession
 
   updateSession(List<Map> pairs)
   {
-    String currTime = pairs.first['date'];
+    String currTime = pairs.first['datetime'].toIso8601String()+"Z";
     currentTime = DateTime.parse(currTime);
     for(String pair in sessionUser.TradingPairs())
     {
@@ -112,6 +112,16 @@ class TradingSession
     sessionUser.processOrdersNew(currPrice.instrument,currPrice.bid);
     updateHistory();
   }
+
+  updateSessionPriceNoHist(Price currPrice)
+  {
+    currentTime =currPrice.time;
+    sessionUser.updateTradesPrice(currPrice);
+    sessionUser.processOrdersNew(currPrice.instrument,currPrice.bid);
+    //updateHistory();
+  }
+
+
 
   Future <List<ForexDailyValue>> dailyValuesRange(String pair,String startDate,Function dailyValuesCall,Function dailyValuesCallMissing) async
   {

@@ -39,7 +39,7 @@ class Price
       instrument=dailyPairValue["pair"];
       bid=dailyPairValue["close"];
       ask=dailyPairValue["close"];
-      time=DateTime.parse(dailyPairValue["date"]);
+      time=dailyPairValue["datetime"];
   }
 
   setPrice(Map jsonNode)

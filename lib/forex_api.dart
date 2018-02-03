@@ -407,5 +407,31 @@ class ForexClasses
     return pairBalanceHistory;
   }
 
+  @ApiMethod(path:'tradingtimehist/{sessionid}')
+  Future<List<double>> TradingTimeHistogram(String sessionid) async
+  {
+    Map currentSessionMap = await mongoLayer.readSession(sessionid);
+    TradingSession currentSession = new TradingSession.fromJSONMap(currentSessionMap);
+    int DateDiff(Trade trade)
+    {
+      DateTime openDate = DateTime.parse(trade.openDate);
+      DateTime closeDate = DateTime.parse(trade.closeDate);
+      return closeDate.difference(openDate).inDays+1;
+    }
+    var a = currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
+        .toList();
+    a.toList();
+    return currentSession
+        .sessionUser
+        .primaryAccount
+        .closedTrades
+        .map((trade)=>[trade.pair+trade.openDate,DateDiff(trade)])
+        .toList();
+  }
+
 
 }

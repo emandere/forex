@@ -642,7 +642,7 @@ class ForexSession extends PolymerElement
     {
       DateTime openDate = DateTime.parse(trade.openDate);
       DateTime closeDate = DateTime.parse(trade.closeDate);
-      return closeDate.difference(openDate).inDays;
+      return closeDate.difference(openDate).inDays+1;
     }
     return currentSession
         .sessionUser

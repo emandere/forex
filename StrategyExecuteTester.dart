@@ -24,10 +24,10 @@ ProcessTradingSession(ForexMongo mongoLayer) async
 
 
   TradingSession tradingSession1 = new TradingSession();
-  tradingSession1.id="DeleteMe22";
+  tradingSession1.id="DeleteMe25";
   tradingSession1.strategy=strategy1;
-  tradingSession1.startDate=DateTime.parse("20170101");
-  tradingSession1.endDate=DateTime.parse("20171201");
+  tradingSession1.startDate=DateTime.parse("20170601");
+  tradingSession1.endDate=DateTime.parse("20171101");
   //tradingSession1.lastUpdatedTime=new DateTime.now();
   tradingSession1.fundAccount("primary", 2000.0);
 
