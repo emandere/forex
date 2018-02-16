@@ -78,5 +78,6 @@ Docker Swarm Commands
  sudo docker node update --label-add runtype=mongo 8wovypquy3ai77goovvutnaq1
  sudo docker service create --name ping00 --constraint 'node.labels.runtype == mongo'  alpine ping 172.30.0.130
 
+docker volume create mongodata
 
 docker run -p 27017:27017 -v mongodata:/data/db --restart=always --name mongo -d mongo mongod --smallfiles
