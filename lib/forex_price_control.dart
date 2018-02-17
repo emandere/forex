@@ -68,7 +68,8 @@ class ForexPriceControl extends PolymerElement
       {
         divcurrprices.children.add(new ForexPrice()
           ..pair=priceVal.instrument
-          ..price=padzeros(priceVal.ask.toString())
+          ..bid=padzeros(priceVal.bid.toString())
+          ..ask=padzeros(priceVal.ask.toString())
           ..date=formatter.format(priceVal.time)
           ..indicator=priceVal.indicator
         );

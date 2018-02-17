@@ -14,7 +14,8 @@ import 'package:polymer_elements/paper_icon_button.dart';
 class ForexPrice extends PolymerElement
 {
   String _pair;
-  String _price;
+  String _bid;
+  String _ask;
   String _date;
   String _indicator;
 
@@ -24,11 +25,17 @@ class ForexPrice extends PolymerElement
     _pair=value;
     set('pair', _pair);
   }
-  @property String get price => _price;
-  @reflectable set price(String value)
+  @property String get bid => _bid;
+  @reflectable set bid(String value)
   {
-    _price=value;
-    set('price', _price);
+    _bid=value;
+    set('bid', _bid);
+  }
+  @property String get ask => _ask;
+  @reflectable set ask(String value)
+  {
+    _ask=value;
+    set('ask', _ask);
   }
   @property String get date => _date;
   @reflectable set date(String value)
