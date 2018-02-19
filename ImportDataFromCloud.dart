@@ -36,6 +36,11 @@ main() async
   
  for(String pair in pairs)
   {
+    var urlLatest = 'http://$server/api/forexclasses/v1/latestprices/$pair';
+    var priceJSON = await http.get(urlLatest);
+    Price currPrice = new Price.fromJson(priceJSON.body);
+    await mongoLayer.AddCurrentPrice(currPrice);
+
     var startCandleMap = await mongoLayer.readLatestCandle(pair);
     var startDatePair=startDate;
     if(startCandleMap!=null)
@@ -65,6 +70,8 @@ main() async
       }
       print(" $day");
     }
+    
+
 
   }
 
