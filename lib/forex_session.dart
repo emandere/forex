@@ -92,12 +92,9 @@ class ForexSession extends PolymerElement
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
 
-     //btnCreateTrade.on['tap'].listen(CreateTrade);
-
-     //menuPage.on['tap'].listen((event)=>panel.togglePanel());
+     
      menuPage.on['tap'].listen(menuPageSwitcher);
-     //menuPage.on['tap'].listen(redrawCharts);
-     //playpauseBtn.on['tap'].listen((event)=>playpause());
+
 
 
 
