@@ -11,7 +11,10 @@ import 'lib/forex_indicator_rules.dart';
 import 'lib/trade/forex_trade_api.dart';
 main(List<String> arguments) async
 {
-  ForexMongo mongoLayer = new ForexMongo(arguments[0]);
+  var arg = "debug";
+  if(arguments.length>0)
+     arg = arguments[0];
+  ForexMongo mongoLayer = new ForexMongo(arg);
   await mongoLayer.db.open();
 
 
@@ -22,7 +25,7 @@ main(List<String> arguments) async
   var rsiRule = new IndicatorRule(ruleName, window);
   var sessionId = "liveSession";
   var server ="23.22.66.239";
-  if(arguments[0]=="debug")
+  if(arg=="debug")
     server="localhost";
   else
     server="23.22.66.239";
@@ -138,7 +141,8 @@ main(List<String> arguments) async
       }
 
       await mongoLayer.saveSession(tradingSession);
-
+      tradingSessionMap = await mongoLayer.readSession(sessionId);
+      tradingSession = new TradingSession.fromJSONMap(tradingSessionMap);
       //PostData myData = new PostData();
       //myData.data = tradingSession.toJson();
 

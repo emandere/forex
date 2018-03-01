@@ -92,7 +92,7 @@ class ForexSession extends PolymerElement
      navIconMenuBack.on['tap'].listen((event)=>panel.togglePanel());
 
 
-     
+
      menuPage.on['tap'].listen(menuPageSwitcher);
 
 
