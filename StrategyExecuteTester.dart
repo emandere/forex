@@ -4,7 +4,10 @@ import 'lib/forex_mongo.dart';
 import 'lib/forex_classes.dart';
 main(List<String> arguments) async
 {
-  ForexMongo mongoLayer = new ForexMongo(arguments[0]);
+  var arg = "debug";
+  if(arguments.length>0)
+    arg = arguments[0];
+  ForexMongo mongoLayer = new ForexMongo(arg);
   await mongoLayer.db.open();
 
 
