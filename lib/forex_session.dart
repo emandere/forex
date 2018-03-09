@@ -57,6 +57,7 @@ class ForexSession extends PolymerElement
   String currentSessionId;
   int countdownAmt;
   bool firstLoad;
+  bool sessionSelected;
   Timer countdownSesssions;
   DateTime startDate;
   DateTime endDate;
@@ -66,7 +67,7 @@ class ForexSession extends PolymerElement
   ForexSession.created() : super.created();
   ready()
   {
-
+     sessionSelected=false;
      PaperIconButton navIconMenu = $['navIconMenu'];
      PaperIconButton navIconMenuBack = $['navIconMenuBack'];
      PaperDrawerPanel panel = $['drawerPanel'];
@@ -119,8 +120,16 @@ class ForexSession extends PolymerElement
       loadSessions();
       firstLoad=false;
     }
+    //window.alert(get('itemIndex').toString());
+    if(get('itemIndex')==1 && !sessionSelected)
+    {
+      set('itemIndex',0);
+    }
+
+
     PaperDrawerPanel panel = $['drawerPanel'];
     panel.togglePanel();
+
   }
 
   loadServerTime() async
@@ -744,7 +753,7 @@ class ForexSession extends PolymerElement
       mainChart.sessionDetail = sessionPanel.GetSession(currentSessionId);
       mainChart.hideCharts();
     }
-
+    sessionSelected=true;
     //SetUpDashboard();
 
   }
