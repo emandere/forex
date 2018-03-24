@@ -18,6 +18,12 @@ main(List<String> arguments) async
 
 }
 
+PercentageComplete(DateTime currentDay,DateTime endDay)
+{
+   Duration remainingTime = endDay.difference(currentDay);
+   return remainingTime.inDays;
+}
+
 ProcessTradingSession(ForexMongo mongoLayer) async
 {
     var tradingSessionMap = await mongoLayer.popTradingSession();
@@ -47,7 +53,7 @@ ProcessTradingSession(ForexMongo mongoLayer) async
             tradingSession.executeTradeStrategyPrice("primary",
                 tradingSession.strategy, new Price.fromJsonDailyValue(dailyPairValue));
           }
-          print("${dailyPairValue['pair']} ${dailyPairValue['date']}");
+          print("${dailyPairValue['pair']} ${dailyPairValue['date']} ${PercentageComplete(DateTime.parse(dailyPairValue['date']), tradingSession.endDate)}");
           await for(Map priceMap in mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'],DateTime.parse(dailyPairValue['date'])))
           {
              tradingSession.updateSessionPriceNoHist(new Price.fromJsonMap(priceMap));
