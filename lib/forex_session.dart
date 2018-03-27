@@ -538,13 +538,14 @@ class ForexSession extends PolymerElement
   {
      DateFormat formatter = new DateFormat('yyyyMMdd');
      List pairBalanceHistory = [];
-     findClosedTrades(DateTime date)
+     findClosedTrades(String date)
      {
-        return currentSession
-               .sessionUser
-               .closedTrades()
-               .where((trade)=>trade.pair==pair)
-               .where((trade)=>formatter.format(DateTime.parse(trade.closeDate))==formatter.format(date));
+       return currentSession
+           .sessionUser
+           .primaryAccount
+           .closedTrades
+           .where((trade)=>trade.pair==pair)
+           .where((trade)=>formatter.format(DateTime.parse(trade.closeDate))==date);
      }
 
      var sessionDates = currentSession
@@ -560,15 +561,30 @@ class ForexSession extends PolymerElement
                             .primaryAccount
                             .balanceHistory[0]["amount"];
 
-     for(DateTime sessionDate in sessionDates)
+     var getCloseDates = new Set.from(currentSession
+         .sessionUser
+         .primaryAccount
+         .closedTrades
+         .where((trade)=>trade.pair==pair)
+         .map((trade)=>formatter.format(DateTime.parse(trade.closeDate)))
+         .toList()..sort());
+
+
+     var setSessionDates = new Set.from(
+         sessionDates.map((date)=>formatter.format(date))
+                     .toList()..sort()
+     );
+
+     for(String sessionDate in setSessionDates)
      {
-        pairBalanceHistory.add([sessionDate,amount]);
-        if(findClosedTrades(sessionDate).isNotEmpty)
-        {
-          amount += findClosedTrades(sessionDate)
-                    .map((trade) => trade.PL())
-                    .reduce((t, e) => t + e);
-        }
+       //String sessionDate = formatter.format(sessionDateDt);
+       if (getCloseDates.contains(sessionDate))
+       {
+         amount += findClosedTrades(sessionDate)
+             .map((trade) => trade.PL())
+             .reduce((t, e) => t + e);
+       }
+       pairBalanceHistory.add([DateTime.parse(sessionDate),amount]);
      }
 
      return pairBalanceHistory;
