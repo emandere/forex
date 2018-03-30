@@ -14,6 +14,7 @@ class TradingSession
   SessionType sessionType;
   Strategy  strategy;
   String id;
+  double percentComplete;
 
   TradingSession()
   {
@@ -22,6 +23,7 @@ class TradingSession
     startDate = DateTime.parse("2007-01-01T05:00Z");
     sessionType=SessionType.test;
     strategy=new Strategy();
+    percentComplete=0.0;
   }
 
   TradingSession.fromJSON(String json)
@@ -50,6 +52,7 @@ class TradingSession
     currentTime=DateTime.parse(jsonMap["currentTime"].toString());
     sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
     strategy=jsonMap["strategy"]==null?new Strategy():new Strategy.fromJsonMap(jsonMap["strategy"]);
+    percentComplete=jsonMap["percentComplete"]==null || jsonMap["percentComplete"]=="null"?0.0:double.parse(jsonMap["percentComplete"].toString());
   }
 
 
@@ -68,7 +71,8 @@ class TradingSession
       "lastUpdatedTime":lastUpdatedTime,
       "currentTime":currentTime.toString(),
       "strategy":strategy.toJsonMap(),
-      "sessionUser":sessionUser.toJsonMap()
+      "sessionUser":sessionUser.toJsonMap(),
+      "percentComplete":percentComplete.toString()
     };
   }
 

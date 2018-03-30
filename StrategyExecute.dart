@@ -18,10 +18,10 @@ main(List<String> arguments) async
 
 }
 
-PercentageComplete(DateTime currentDay,DateTime endDay)
+PercentageComplete(DateTime currentDay,DateTime endDate,int sessionDuration)
 {
-   Duration remainingTime = endDay.difference(currentDay);
-   return remainingTime.inDays;
+   Duration remainingTime = endDate.difference(currentDay);
+   return ((sessionDuration-remainingTime.inDays)/sessionDuration)*100.0;
 }
 
 ProcessTradingSession(ForexMongo mongoLayer) async
@@ -37,7 +37,7 @@ ProcessTradingSession(ForexMongo mongoLayer) async
       rules.add(tradingRule);
 
       DateFormat formatter = new DateFormat('yyyyMMdd');
-
+      int  sessionRange = tradingSession.endDate.difference(tradingSession.startDate).inDays;
       ForexCache cache = new ForexCache(
           formatter.format(tradingSession.startDate),
           formatter.format(tradingSession.endDate),rules);
@@ -53,19 +53,22 @@ ProcessTradingSession(ForexMongo mongoLayer) async
             tradingSession.executeTradeStrategyPrice("primary",
                 tradingSession.strategy, new Price.fromJsonDailyValue(dailyPairValue));
           }
-          print("${dailyPairValue['pair']} ${dailyPairValue['date']} ${PercentageComplete(DateTime.parse(dailyPairValue['date']), tradingSession.endDate)}");
+          tradingSession.percentComplete=PercentageComplete(DateTime.parse(dailyPairValue['date']), tradingSession.endDate,sessionRange);
+          print("${dailyPairValue['pair']} ${dailyPairValue['date']} ${tradingSession.percentComplete}");
           await for(Map priceMap in mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'],DateTime.parse(dailyPairValue['date'])))
           {
              tradingSession.updateSessionPriceNoHist(new Price.fromJsonMap(priceMap));
             //tradingSession.updateSession(dailyPairValues);
           }
           tradingSession.updateSession(dailyPairValues);
+          await mongoLayer.saveSession(tradingSession);
 
         }
 
 
       }
 
+      tradingSession.percentComplete=100.0;
       tradingSession.printacc();
       await mongoLayer.saveSession(tradingSession);
     }
