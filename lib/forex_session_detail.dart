@@ -13,6 +13,7 @@ import 'package:polymer_elements/paper_button.dart';
 import 'package:polymer_elements/paper_spinner.dart';
 import 'package:polymer_elements/paper_input.dart';
 import 'package:polymer_elements/paper_card.dart';
+import 'package:polymer_elements/paper_progress.dart';
 
 @PolymerRegister('forex-session-detail')
 class ForexSessionDetail extends PolymerElement
@@ -32,6 +33,7 @@ class ForexSessionDetail extends PolymerElement
   String _takeProfit;
   String _units;
   String _position;
+  String _sessionProgress;
   bool _selectSession = true;
   List<String> _currencyPairs =[];
 
@@ -155,6 +157,26 @@ class ForexSessionDetail extends PolymerElement
   {
     _units=value;
     set('units', _units);
+  }
+
+  @property String get sessionProgress => _sessionProgress;
+  @reflectable set sessionProgress(String value)
+  {
+
+    _sessionProgress=value;
+    PaperProgress sessionProgressBar=$['sessionProgressBar'];
+    sessionProgressBar.value=value;
+    double valueDouble = double.parse(value);
+    if(valueDouble>0.0 && valueDouble<100.0)
+    {
+        sessionProgressBar.hidden=false;
+    }
+    else
+    {
+        sessionProgressBar.hidden=true;
+    }
+
+
   }
   ForexSessionDetail.created() : super.created();
   factory ForexSessionDetail() => new Element.tag('forex-session-detail') as ForexSessionDetail;

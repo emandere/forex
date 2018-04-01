@@ -116,6 +116,7 @@ class ForexSessionPanel extends PolymerElement {
       
       menuSession.children.add(new ForexSessionDetail()
         ..id = session.id
+        ..sessionProgress=session.percentComplete.toString()
         ..startDate=formatter.format(session.startDate)
         ..currentDate=formatter.format(session.currentTime)
         ..balance = session.balance().toStringAsFixed(2)
@@ -155,6 +156,7 @@ class ForexSessionPanel extends PolymerElement {
     pctOpen = pctOpen * 100;
 
     sessionCard.id=session.id;
+    sessionCard.sessionProgress=session.percentComplete.toString();
     sessionCard.startDate=formatter.format(session.startDate);
     sessionCard.currentDate=formatter.format(session.currentTime);
     sessionCard.balance=session.balance().toStringAsFixed(2);
@@ -163,6 +165,7 @@ class ForexSessionPanel extends PolymerElement {
     sessionCard.openTrades=openTrades.toString();
     sessionCard.pct=pct.toStringAsFixed(2);
     sessionCard.pctOpen=pctOpen.toStringAsFixed(2);
+
 
     sessionCard.ruleName=session.strategy.ruleName;
     sessionCard.window=session.strategy.window.toString();

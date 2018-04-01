@@ -192,10 +192,10 @@ class ForexSession extends PolymerElement
                 session["lastUpdatedTime"]=ListMapSession[0]["lastUpdatedTime"];
                 print(session["id"]+" Updated "+session["lastUpdatedTime"].toString());
                 sessionPanel.updateSession(new TradingSession.fromJSONMap(ListMapSession[0]));
-                PaperToast toastSession=$['toastSession'];
-                toastSession.text="${session["id"]} updated";
-                toastSession.duration=3000;
-                toastSession.open();
+                //PaperToast toastSession=$['toastSession'];
+                //toastSession.text="${session["id"]} updated";
+                //toastSession.duration=3000;
+                //toastSession.open();
             }
           }
       }

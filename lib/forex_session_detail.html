@@ -73,7 +73,7 @@
                     {{id}}
                 </div>
 
-                <table  style="width:280px">
+                <table  style="width:280px;margin-left:50px">
                     <tr>
                         <td><div class ="sessioninfo">Start Date</div></td>
                         <td></td>
@@ -115,6 +115,14 @@
                         <td>{{pctOpen}}</td>
                     </tr>
                 </table>
+                <table>
+                    <tr>
+                        <td>
+                           <paper-progress value="0" hidden="true" id="sessionProgressBar" ></paper-progress>
+                        </td>
+                    </tr>
+                </table>
+
                 <br>
             </paper-card>
             <br>
@@ -156,6 +164,7 @@
                     </tr>
                 </table>
                 <br>
+
             </paper-card>
         </div>
         <paper-dialog id="dialogFilter">
