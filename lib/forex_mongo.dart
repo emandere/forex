@@ -358,7 +358,7 @@ class ForexMongo
 
   Future<Map> popTradingSession() async
   {
-    SelectorBuilder condition = where.eq("read",false).sortBy("datetime",descending: true).limit(1);
+    SelectorBuilder condition = where.eq("read",false).sortBy("datetime",descending: false).limit(1);
     var mapStrategy = await db.collection('tradingsessionqueue').findOne(condition);
     if(mapStrategy!=null)
     {
