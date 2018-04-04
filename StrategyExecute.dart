@@ -42,7 +42,7 @@ main(List<String> arguments) async
 
       DateFormat formatter = new DateFormat('yyyyMMdd');
       int sessionRange = tradingSession.endDate
-          .difference(tradingSession.currentTime)
+          .difference(tradingSession.startDate)
           .inDays;
       ForexCache cache = new ForexCache(
           formatter.format(tradingSession.currentTime),
@@ -67,10 +67,11 @@ main(List<String> arguments) async
           }
 
           tradingSession.updateSession(dailyPairValues);
-          await mongoLayer.saveSession(tradingSession);
-          tradingSession.percentComplete = PercentageComplete(tradingSession.currentTime, tradingSession.endDate, sessionRange);
-          print("${dailyPairValue['pair']} ${dailyPairValue['date']} ${tradingSession.percentComplete}");
+
         }
+        await mongoLayer.saveSession(tradingSession);
+        tradingSession.percentComplete = PercentageComplete(tradingSession.currentTime, tradingSession.endDate, sessionRange);
+        print("${dailyPairValues[0]['date']} ${tradingSession.percentComplete}");
       }
 
       tradingSession.percentComplete = 100.0;

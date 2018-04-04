@@ -108,6 +108,7 @@ class ForexSession extends PolymerElement
      getDailyCurrencies();
      loadServerTime();
 
+
      const period = const Duration(seconds:10);
      new Timer.periodic(period, (Timer t) async => await UpdateRealTimePrices());
      new Timer.periodic(period, (Timer t) async => await UpdateSessions());
@@ -117,6 +118,7 @@ class ForexSession extends PolymerElement
   {
     if(get('itemIndex')==4 && firstLoad)
     {
+      loadCurrencyPair();
       loadSessions();
       firstLoad=false;
     }
@@ -174,6 +176,8 @@ class ForexSession extends PolymerElement
 
   UpdateSessions() async
   {
+      if(sessions.length!=await countSessions())
+        loadSessions();
 
       for(Map session in sessions)
       {
@@ -314,20 +318,32 @@ class ForexSession extends PolymerElement
     toastSession.open();
   }
 
-  loadSessions() async
+  loadCurrencyPair() async
   {
     var pairUrl = "/api/forexclasses/v1/pairs";
     String pairRequest = await HttpRequest.getString(pairUrl);
     List<String> pairs = ["<ALL>"];
     pairs.addAll(JSON.decode(pairRequest));
     sessionPanel.currencyPairs = pairs;
+  }
 
+  loadSessions() async
+  {
     var url = "/api/forexclasses/v1/sessions";
     String request = await HttpRequest.getString(url);
     sessions=JSON.decode(request);
     set('sessions',sessions );
     sessionPanel.sessions=sessions;
 
+  }
+
+  countSessions() async
+  {
+    var url = "/api/forexclasses/v1/countsessions";
+    String request = await HttpRequest.getString(url);
+    //window.alert(JSON.decode(request)[0]);
+    String len=JSON.decode(request)[0].toString();
+    return int.parse(len);
   }
 
 

@@ -213,6 +213,11 @@ class ForexMongo
       return db.collection('user').findOne({"_id":id});
   }
 
+  Future<int> countSessions()
+  {
+      return db.collection('session').count();
+  }
+
   Future<List<String>> deleteUser(User user)
   {
     mongoDeleteUser()

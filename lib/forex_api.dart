@@ -91,6 +91,12 @@ class ForexClasses
     return sessions;
   }
 
+  @ApiMethod(path: 'countsessions')
+  Future<List<int>> getCountSessions() async
+  {
+      return [await mongoLayer.countSessions()];
+  }
+
 
 
   @ApiMethod(path: 'usernames')
