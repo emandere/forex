@@ -361,21 +361,27 @@ class ForexMongo
     yield* db.collection('forexdailyprices').find(condition);
   }
 
+
+
   Future<Map> popTradingSession() async
   {
     SelectorBuilder condition = where.eq("read",false).sortBy("datetime",descending: false).limit(1);
     var mapStrategy = await db.collection('tradingsessionqueue').findOne(condition);
     if(mapStrategy!=null)
     {
-      mapStrategy["read"] = true;
-
-      await db.collection('tradingsessionqueue').save(mapStrategy);
-      return mapStrategy["tradingsession"];
+      //mapStrategy["read"] = true;
+      //await db.collection('tradingsessionqueue').save(mapStrategy);
+      return mapStrategy;
     }
     else
     {
       return null;
     }
+  }
+
+  saveSessionQueue(Map session) async
+  {
+      return await db.collection('tradingsessionqueue').save(session);
   }
 
   Future<Map> getLatestSession(String sessionId,DateTime lastUpdate) async
