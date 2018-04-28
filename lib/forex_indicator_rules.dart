@@ -17,6 +17,21 @@ IterableZip datafromZipWindow(Iterable<Map> window)
   var close = window.map((t)=>t["close"]);
   return new IterableZip([open,close]);
 }
+
+List<String> rules()
+{
+return
+  ["AboveBollingerBandHigher",
+  "RandomRule",
+  "BelowBollingerBandLowerWithSlope",
+  "BelowBollingerBandLower",
+  "PositiveSlopeAndGreaterThanAverage",
+  "RSIOverbought70",
+  "RSIOversold30",
+  "RSIOversold30AvoidVolatility"
+  ];
+}
+
 abstract class IndicatorRule
 {
   factory IndicatorRule(String ruleName,int dataPoints)

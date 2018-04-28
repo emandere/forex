@@ -107,7 +107,7 @@ class ForexSession extends PolymerElement
      loadCurrencyPairs();
      getDailyCurrencies();
      loadServerTime();
-
+     loadRules();
 
      const period = const Duration(seconds:10);
      new Timer.periodic(period, (Timer t) async => await UpdateRealTimePrices());
@@ -119,6 +119,7 @@ class ForexSession extends PolymerElement
     if(get('itemIndex')==4 && firstLoad)
     {
       loadCurrencyPair();
+      loadRules();
       loadSessions();
       firstLoad=false;
     }
@@ -325,6 +326,15 @@ class ForexSession extends PolymerElement
     List<String> pairs = ["<ALL>"];
     pairs.addAll(JSON.decode(pairRequest));
     sessionPanel.currencyPairs = pairs;
+  }
+
+  loadRules() async
+  {
+    var rulesUrl = "/api/forexclasses/v1/rules";
+    String rulesRequest = await HttpRequest.getString(rulesUrl);
+    List<String> rules = [];
+    rules.addAll(JSON.decode(rulesRequest));
+    sessionPanel.rules = rules;
   }
 
   loadSessions() async

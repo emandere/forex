@@ -35,7 +35,14 @@
             <h2>New Session</h2>
             <div align="left">
 
-                <paper-input id="rule" label="Trading Rule" floatingLabel></paper-input>
+                <!--<paper-input id="rule" label="Trading Rule" floatingLabel></paper-input>-->
+                <paper-dropdown-menu id="rule" label="Trading Rule" noink no-animations>
+                    <paper-listbox class="dropdown-content">
+                        <template is="dom-repeat" items="{{rules}}">
+                            <paper-item>{{item}}</paper-item>
+                        </template>
+                    </paper-listbox>
+                </paper-dropdown-menu>
                 <paper-input id="position" label="Position" floatingLabel></paper-input>
                 <paper-input id="window" label="Data Window" floatingLabel></paper-input>
                 <paper-input id="units" label="Units" floatingLabel></paper-input>

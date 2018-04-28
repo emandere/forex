@@ -70,6 +70,12 @@ class ForexClasses
     return mongoLayer.readMongoPairs();
   }
 
+  @ApiMethod(path: 'rules')
+  Future<List<String>> readRules() async
+  {
+    return rules();
+  }
+
   @ApiMethod(path: 'starttime')
   Future<Map<String,DateTime>> getStartTime() async
   {

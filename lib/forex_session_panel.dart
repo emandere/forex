@@ -18,10 +18,18 @@ import 'package:polymer_elements/paper_dropdown_menu.dart';
 class ForexSessionPanel extends PolymerElement {
   List<Map> _sessions;
   List<String> _currencyPairs=[];
+  List<String> _rules = [];
   @property List<String> get currencyPairs => _currencyPairs;
   @reflectable set currencyPairs(List<String> value)
   {
     _currencyPairs=value;
+  }
+
+  @property List<String> get rules => _rules;
+  @reflectable set rules(List<String> value)
+  {
+    _rules=value;
+    set('rules',_rules);
   }
 
   @property List<Map> get sessions => _sessions;
@@ -62,7 +70,7 @@ class ForexSessionPanel extends PolymerElement {
     PaperInput primaryAmount = $['primaryAmount'];
     PaperInput secondaryAmount = $['secondaryAmount'];
     PaperInput position = $['position'];
-    PaperInput rule = $['rule'];
+    PaperDropdownMenu rule = $['rule'];
     PaperInput window = $['window'];
     PaperInput units = $['units'];
     PaperInput stopLoss = $['stopLoss'];

@@ -9,6 +9,8 @@ class Strategy
   double stopLoss;
   double takeProfit;
 
+
+
   String toJson()
   {
      return JSON.encode(toJsonMap());
