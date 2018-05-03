@@ -80,4 +80,4 @@ Docker Swarm Commands
 
 docker volume create mongodata
 
-docker run -p 27017:27017 -v mongodata:/data/db --restart=always --name mongo -d mongo mongod --smallfiles
+docker run  -p 27017:27017 -v mongodata:/data/db --restart=always --name mongo -d mongo mongod --smallfiles

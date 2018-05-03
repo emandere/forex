@@ -169,7 +169,8 @@ class ForexClasses
     List<String> success = new List<String>();
     success.add("pass");
     TradingSession session=new TradingSession.fromJSON(sessionData.data);
-    await mongoLayer.saveSession(session);
+    //await mongoLayer.saveSession(session);
+    await mongoLayer.pushTradingSession(session);
     return success;
   }
 
