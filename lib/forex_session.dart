@@ -368,7 +368,7 @@ class ForexSession extends PolymerElement
   SaveSession()
   {
     var urlSave = "/api/forexclasses/v1/addsessionpost";//"/api/forexclasses/v1/addsessionpost";
-    var urlQueue = "/api/forexclasses/v1/pushtoqueuesessionpost";
+
     PostData myData = new PostData();
 
 
@@ -378,9 +378,6 @@ class ForexSession extends PolymerElement
         requestHeaders: {"content-type": "application/json"},
         sendData:myData.toJson());
 
-    HttpRequest.request(urlQueue, method:'POST',
-        requestHeaders: {"content-type": "application/json"},
-        sendData:myData.toJson());
 
 
     PaperToast toastSession=$['toastSession'];
