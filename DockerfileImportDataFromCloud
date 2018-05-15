@@ -1,0 +1,6 @@
+FROM forexappbase
+WORKDIR /forex
+ADD lib /forex/lib
+ADD ImportDataFromCloud.dart /forex/ImportDataFromCloud.dart
+CMD []
+ENTRYPOINT ["/usr/bin/dart","ImportDataFromCloud.dart","release"]

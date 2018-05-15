@@ -10,7 +10,17 @@ import 'lib/forex_prices.dart';
 import 'lib/candle_stick.dart';
 import 'lib/forex_classes.dart';
 
+
 main() async
+{
+  print("Starting Import Server");
+  const period = const Duration(minutes: 30);
+  new Timer.periodic(period, (Timer t) async => await syncMongo());
+
+}
+
+
+syncMongo() async
 {
   ForexMongo mongoLayer = new ForexMongo("debug");
   await mongoLayer.db.open();
@@ -18,6 +28,22 @@ main() async
   var startDate="20110101";
   var endDate="20300101";
   var pairs=await readMongoPairs(server);
+  bool shouldUpdate = false;
+  for(String pair in pairs)
+  {
+    var urlLatest = 'http://$server/api/forexclasses/v1/latestprices/$pair';
+    var priceJSON = await http.get(urlLatest);
+    Price currPrice = new Price.fromJson(priceJSON.body);
+    var localCurrPriceMap = await mongoLayer.readLatestPrice(pair);
+    Price localPrice = new Price.fromJsonMap(localCurrPriceMap);
+    if(currPrice.time.isAfter(localPrice.time))
+    {
+      shouldUpdate = true;
+      break;
+    }
+  }
+
+  if(!shouldUpdate) return;
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
 
