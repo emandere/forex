@@ -11,18 +11,24 @@ import 'lib/candle_stick.dart';
 import 'lib/forex_classes.dart';
 
 
-main() async
+main(List<String> arguments) async
 {
+  var arg = "debug";
+  var isProcessing = false;
+  if (arguments.length > 0)
+    arg = arguments[0];
+
+  ForexMongo mongoLayer = new ForexMongo(arg);
   print("Starting Import Server");
   const period = const Duration(minutes: 30);
-  new Timer.periodic(period, (Timer t) async => await syncMongo());
+  new Timer.periodic(period, (Timer t) async => await syncMongo(mongoLayer));
 
 }
 
 
-syncMongo() async
+syncMongo(ForexMongo mongoLayer) async
 {
-  ForexMongo mongoLayer = new ForexMongo("debug");
+  //ForexMongo mongoLayer = new ForexMongo("debug");
   await mongoLayer.db.open();
   var server= "23.22.66.239";
   var startDate="20110101";

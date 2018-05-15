@@ -35,16 +35,21 @@ sudo docker build -t strategyapp -f DockerfileForexStrategyExecute github.com/em
 
 sudo docker build -t candleapp -f DockerfileQuoteCandles github.com/emandere/forex
 
+sudo docker build -t importdatafromcloudapp -f DockerfileImportDataFromCloud github.com/emandere/forex
+
 //Run forex docker container
 sudo docker run -p 80:80 --link mongo:mongo forexapp -t
 
 sudo docker run -p 80:80 --link mongo:mongo quoteapp -t
+
 
 sudo docker run -v /home/ubuntu/tradedata/keys:/forex/keys --link mongo:mongo -t quoteapp
 
 sudo docker run -d -t -i --name candleapp --restart=always --link mongo:mongo candleapp
 
 sudo docker run -d -t -i --name strategyapp --restart=always --link mongo:mongo strategyapp
+
+sudo docker run -d -t -i --name importdatafromcloudapp --restart=always --link mongo:mongo importdatafromcloudapp
 
 //Start EC2 Instance
 
@@ -81,3 +86,11 @@ Docker Swarm Commands
 docker volume create mongodata
 
 docker run  -p 27017:27017 -v mongodata:/data/db --restart=always --name mongo -d mongo mongod --smallfiles
+
+
+declare -r rmicountcleanup=$(docker.exe images -q --filter "dangling=true" | wc -l)
+if [ $rmicountcleanup -gt 0 ]
+then
+ docker.exe rmi -f $(docker.exe images -q --filter "dangling=true")
+fi
+exit
