@@ -10,25 +10,27 @@ import 'lib/forex_prices.dart';
 import 'lib/candle_stick.dart';
 import 'lib/forex_classes.dart';
 
-
 main(List<String> arguments) async
 {
   var arg = "debug";
-  var isProcessing = false;
+
   if (arguments.length > 0)
     arg = arguments[0];
 
   ForexMongo mongoLayer = new ForexMongo(arg);
   print("Starting Import Server");
-  const period = const Duration(minutes: 30);
-  new Timer.periodic(period, (Timer t) async => await syncMongo(mongoLayer));
+  while(true)
+  {
+    await syncMongo(mongoLayer);
+    await new Future.delayed(const Duration(minutes: 30));
+  }
 
 }
 
 
 syncMongo(ForexMongo mongoLayer) async
 {
-  //ForexMongo mongoLayer = new ForexMongo("debug");
+
   await mongoLayer.db.open();
   var server= "23.22.66.239";
   var startDate="20110101";
@@ -102,13 +104,9 @@ syncMongo(ForexMongo mongoLayer) async
       }
       print(" $day");
     }
-    
-
 
   }
 
-
-  exit(1);
 }
 
 readMongoPairs(String server) async
