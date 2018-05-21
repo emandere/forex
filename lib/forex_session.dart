@@ -780,6 +780,7 @@ class ForexSession extends PolymerElement
     updateSessionCards();
     updateTradeMenu();
     UpdatePrices();
+    sessionPanel.UpdateDialogSession(currentSession);
 
     if(currentSessionId=="liveSession")
     {

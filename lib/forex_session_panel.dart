@@ -1,6 +1,7 @@
 @HtmlImport('forex_session_panel.html')
 library forex.lib.forex_session_panel;
 
+import 'dart:html';
 import 'forex_classes.dart';
 import 'forex_session_detail.dart';
 import 'package:polymer/polymer.dart';
@@ -71,7 +72,7 @@ class ForexSessionPanel extends PolymerElement {
     PaperInput secondaryAmount = $['secondaryAmount'];
     PaperInput position = $['position'];
     PaperDropdownMenu rule = $['rule'];
-    PaperInput window = $['window'];
+    PaperInput pwindow = $['window'];
     PaperInput units = $['units'];
     PaperInput stopLoss = $['stopLoss'];
     PaperInput takeProfit = $['takeProfit'];
@@ -84,13 +85,22 @@ class ForexSessionPanel extends PolymerElement {
     tradeSession.startDate = DateTime.parse(startDate.value);
     tradeSession.endDate = DateTime.parse(endDate.value);
     tradeSession.currentTime = DateTime.parse(startDate.value);
-    tradeSession.sessionType=SessionType.values.firstWhere((x)=>x.toString()=="SessionType.${sessionTypeMenu.value}");
+
+    String sessionTypeValue=sessionTypeMenu.value;
+    if(sessionTypeMenu.value==null)
+      sessionTypeValue=sessionTypeMenu.placeholder;
+
+    String ruleTypeValue=rule.value;
+    if(rule.value==null)
+      ruleTypeValue=rule.placeholder;
+
+    tradeSession.sessionType=SessionType.values.firstWhere((x)=>x.toString()=="SessionType.${sessionTypeValue}");
 
     tradeSession.fundAccount("primary", double.parse(primaryAmount.value));
     tradeSession.fundAccount("secondary", double.parse(secondaryAmount.value));
 
-    tradeSession.strategy.ruleName=rule.value;
-    tradeSession.strategy.window=window.value;
+    tradeSession.strategy.ruleName=ruleTypeValue;
+    tradeSession.strategy.window=pwindow.value;
     tradeSession.strategy.units=units.value;
     tradeSession.strategy.stopLoss=stopLoss.value;
     tradeSession.strategy.takeProfit=takeProfit.value;
@@ -182,6 +192,40 @@ class ForexSessionPanel extends PolymerElement {
     sessionCard.units=session.strategy.units.toString();
     sessionCard.position=session.strategy.position;
 
+  }
+
+  UpdateDialogSession(TradingSession session)
+  {
+
+    PaperInput startDate = $['startDate'];
+    PaperInput endDate = $['endDate'];
+    PaperInput primaryAmount = $['primaryAmount'];
+    PaperInput secondaryAmount = $['secondaryAmount'];
+    PaperInput position = $['position'];
+    PaperDropdownMenu rule = $['rule'];
+    PaperInput window = $['window'];
+    PaperInput units = $['units'];
+    PaperInput stopLoss = $['stopLoss'];
+    PaperInput takeProfit = $['takeProfit'];
+    PaperDropdownMenu sessionTypeMenu = $['sessionTypeMenu'];
+
+    DateFormat formatter = new DateFormat('yyyyMMdd');
+
+    startDate.value=formatter.format(session.startDate);
+    endDate.value=formatter.format(session.endDate);
+    rule.placeholder=session.strategy.ruleName;
+    rule.selectedItem=session.strategy.ruleName;
+    sessionTypeMenu.placeholder="test";
+    sessionTypeMenu.selectedItem="test";
+    primaryAmount.value=session.sessionUser.secondaryAccount.cash.toString();
+    secondaryAmount.value=session.sessionUser.secondaryAccount.cash.toString();
+    
+    position.value=session.strategy.position;
+    window.value=session.strategy.window.toString();
+    units.value=session.strategy.units.toString();
+    stopLoss.value=session.strategy.stopLoss.toStringAsFixed(3);
+    takeProfit.value=session.strategy.takeProfit.toStringAsFixed(3);
+    
   }
 
   ForexSessionDetail GetSession(String id)
