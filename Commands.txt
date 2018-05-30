@@ -75,6 +75,7 @@ docker run -p 27017:27017 -v c:\datamongodocker:/data --restart=always --name mo
 
 sudo docker stats $(sudo docker ps --format '{{.Names}}')
 
+docker stats $(docker ps --format '{{.Names}}')
 
 Docker Swarm Commands
  sudo docker node update --label-add runtype=mongo node-1

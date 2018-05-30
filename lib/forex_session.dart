@@ -487,7 +487,7 @@ class ForexSession extends PolymerElement
 
   SetUpDashboardPair(String pair,DateTime startFilterDate,DateTime endFilterDate) async
   {
-
+    ForexPriceControl priceControl = $["priceControl"];
     DateFormat formatter = new DateFormat('yyyyMMdd');
     String startdt=formatter.format(currentSession.startDate);
     String enddt=formatter.format(currentSession.currentTime);
@@ -501,8 +501,6 @@ class ForexSession extends PolymerElement
     mainChart.loadBalanceChart( title,balanceHistPairList);
     mainChart.loadTradesHistogram(title ,TradingHistogramPair(pair,startFilterDate,endFilterDate));
     mainChart.loadTradesTimeHistogram(title ,TradingTimeHistogramPair(pair,startFilterDate,endFilterDate));
-
-
 
     var closedTrades = currentSession.sessionUser.closedTrades()
         .where((t)=>t.pair==pair)
@@ -541,6 +539,10 @@ class ForexSession extends PolymerElement
       ..pct= pct.toStringAsFixed(2)
       ..pctOpen=pctOpen.toStringAsFixed(2)
       ..ruleName=currentSession.strategy.ruleName
+      ..stopLoss=currentSession.strategy.stopLoss.toStringAsFixed(3)
+      ..takeProfit=currentSession.strategy.takeProfit.toStringAsFixed(3)
+      ..units=currentSession.strategy.units.toString()
+      ..position=currentSession.strategy.position
       ..window=currentSession.strategy.window.toString()
     ;
 
