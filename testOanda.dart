@@ -20,6 +20,8 @@ main() async
   bodyMap["units"]="2";
   bodyMap["side"]="sell";
   bodyMap["type"]="market";
+  bodyMap["stopLoss"]="1.17";
+  bodyMap["takeProfit"]="1.14";
   var response = await http.post(url,body:bodyMap,headers:authorization);
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");
