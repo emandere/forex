@@ -58,6 +58,7 @@ class ForexSession extends PolymerElement
   int countdownAmt;
   bool firstLoad;
   bool sessionSelected;
+  final String liveSession ="liveSessionRSI";
   Timer countdownSesssions;
   DateTime startDate;
   DateTime endDate;
@@ -183,7 +184,7 @@ class ForexSession extends PolymerElement
       for(Map session in sessions)
       {
           if(session["lastUpdatedTime"]!=null && session["lastUpdatedTime"]!="null"
-              && session["id"]!="liveSession"
+              && session["id"]!=liveSession
               && session["sessionType"]!="SessionType.live")
           {
 
@@ -250,7 +251,7 @@ class ForexSession extends PolymerElement
   {
     ForexPriceControl priceControl = $["priceControl"];
     DateFormat formatter = new DateFormat('yyyyMMdd');
-    TradingSession session = await loadSession("liveSession");
+    TradingSession session = await loadSession(liveSession);
     var closedTrades = session.sessionUser.closedTrades().length;
     var pct = closedTrades==0?0:session.sessionUser.closedTrades()
         .where((x)=>x.PL()>0)
@@ -465,7 +466,7 @@ class ForexSession extends PolymerElement
     mainChart.loadBarChartPLByPair(currentSessionId, BarChartPLByPair());
     mainChart.loadBarChartOpenTradeByPair(currentSessionId, BarChartOpenTradesByPair());
 
-    if(firstLoad && currentSessionId=="liveSession")
+    if(firstLoad && currentSessionId==liveSession)
       mainChart.sessionDetail=priceControl.sessionDetail;
     else
       mainChart.sessionDetail=sessionPanel.GetSession(currentSessionId);
@@ -784,7 +785,7 @@ class ForexSession extends PolymerElement
     UpdatePrices();
     sessionPanel.UpdateDialogSession(currentSession);
 
-    if(currentSessionId=="liveSession")
+    if(currentSessionId==liveSession)
     {
       mainChart.sessionDetail= priceControl.sessionDetail;
       mainChart.sessionDetail.currencyPairs=sessionPanel.currencyPairs;
