@@ -46,8 +46,12 @@ main(List<String> arguments) async
   var stopLossPct = 0.007;
   var tradePosition = "short";
   var account = "primary";
-  var units=2000;
+  var units=200;
 
+  for(String pair in pairs)
+  {
+      availableTrades[pair]=false;
+  }
 
   if(tradePosition=="long")
   {
@@ -131,6 +135,8 @@ main(List<String> arguments) async
       {
         availableTrades[currPrice.instrument]=true;
       }
+
+
 
       if(availableTrades[currPrice.instrument])
       {

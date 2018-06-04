@@ -16,12 +16,12 @@ main() async
   var url =  "https://api-fxtrade.oanda.com/v1/accounts/$accountId/orders";
   var bodyMap = {};
 
-  bodyMap["instrument"]="EUR_USD";
+  bodyMap["instrument"]="AUD_USD";
   bodyMap["units"]="2";
   bodyMap["side"]="sell";
   bodyMap["type"]="market";
-  bodyMap["stopLoss"]="1.17";
-  bodyMap["takeProfit"]="1.14";
+  bodyMap["stopLoss"]="0.768";
+  bodyMap["takeProfit"]="0.761";
   var response = await http.post(url,body:bodyMap,headers:authorization);
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");
