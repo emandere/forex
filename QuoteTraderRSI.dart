@@ -188,6 +188,7 @@ executeRealTrades (String url,
   bodyMap["stopLoss"]=stopLoss;
   bodyMap["takeProfit"]=takeProfit;
   var response = await http.post(url,body:bodyMap,headers:authorization);
+  print("url: ${url}");
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");
 
