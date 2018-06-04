@@ -72,9 +72,9 @@ main(List<String> arguments) async
   {
      tradingSession.id=sessionId;
      tradingSession.startDate = new DateTime.now();
-     tradingSession.fundAccount("primary",191.69);
+     tradingSession.fundAccount("primary",189.91);
      tradingSession.strategy.position=tradePosition;
-     tradingSession.strategy.units = 2000;
+     tradingSession.strategy.units = units;
      tradingSession.strategy.stopLoss=stopLoss;
      tradingSession.strategy.takeProfit =takeProfit;
      tradingSession.strategy.window=window;
