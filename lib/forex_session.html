@@ -99,6 +99,10 @@
                         <iron-icon icon="donut-large" item-icon></iron-icon>
                         Sessions
                     </paper-icon-item>
+                    <paper-icon-item id="closedtradeItem">
+                        <iron-icon icon="timeline" item-icon></iron-icon>
+                        Closed Trades
+                    </paper-icon-item>
                     <!--<paper-item id="tradeItem">Trade</paper-item>-->
                 </paper-menu>
             </paper-header-panel>
@@ -125,6 +129,9 @@
                         </div>
                         <div>
                             <forex-session-panel id="sessionPanel"></forex-session-panel>
+                        </div>
+                        <div>
+                            <forex-trade-control id="tradeControlClosed"></forex-trade-control>
                         </div>
                     </iron-pages>
                   <div fit>

@@ -117,7 +117,8 @@ main(List<String> arguments) async
   bool pairTraded(Price price)
   {
     DateFormat formatter = new DateFormat('yyyyMMdd');
-    return tradingSession.openTrades("primary")
+
+    return tradingSession.allTrades("primary")
         .where((trade)=>trade.pair==price.instrument)
         .map((trade)=>formatter.format(DateTime.parse(trade.openDate)))
         .contains(formatter.format(price.time));
@@ -150,11 +151,11 @@ main(List<String> arguments) async
               stopLoss * currPrice.bid,
               takeProfit * currPrice.bid);
 
-          await executeRealTrades(url,authorization,
+          /*await executeRealTrades(url,authorization,
               findPair(pairs,currPrice.instrument),
               (stopLoss * currPrice.bid).toStringAsFixed(3),
               (takeProfit * currPrice.bid).toStringAsFixed(3),
-              tradingSession.strategy);
+              tradingSession.strategy);*/
 
           availableTrades[currPrice.instrument] = false;
         }

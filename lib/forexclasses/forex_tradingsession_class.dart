@@ -203,7 +203,7 @@ class TradingSession
     }
     if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (currPrice.bid * adj(currPrice)  * units.toDouble()))
     {
-      sessionUser.executeTrade(acc, currPrice.instrument, units,position, currPrice.time.toIso8601String(), stopLoss, takeProfit);
+      sessionUser.executeTrade(acc, currPrice.instrument, units,position, currPrice.time.toIso8601String()+"Z", stopLoss, takeProfit);
       setStopLossAndTakeProfit(acc, currPrice.time.toIso8601String(), position, stopLoss, takeProfit);
     }
   }
@@ -262,6 +262,22 @@ class TradingSession
       return sessionUser.primaryAccount.Trades;
     else
       return sessionUser.secondaryAccount.Trades;
+  }
+
+  List<Trade> closedTrades(String account)
+  {
+    if(account=="primary")
+      return sessionUser.primaryAccount.closedTrades;
+    else
+      return sessionUser.secondaryAccount.closedTrades;
+  }
+
+  List<Trade> allTrades(String account)
+  {
+    if(account=="primary")
+      return sessionUser.primaryAccount.closedTrades..addAll(sessionUser.primaryAccount.Trades);
+    else
+      return sessionUser.secondaryAccount.closedTrades..addAll(sessionUser.secondaryAccount.Trades);
   }
 
   double balance()

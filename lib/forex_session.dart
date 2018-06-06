@@ -44,6 +44,7 @@ class ForexSession extends PolymerElement
   TradingSession tradeSession;
   ForexMainChart mainChart;
   ForexTradeControl tradeControl;
+
   ForexSessionPanel sessionPanel;
   @property
   String avicon;
@@ -809,7 +810,11 @@ class ForexSession extends PolymerElement
   void updateTradeMenuLive(TradingSession session)
   {
     if(currentSession.id==session.id)
-      tradeControl.updateTrades( session.openTrades("primary"));
+    {
+      tradeControl.updateTrades(session.openTrades("primary"));
+      ForexTradeControl tradeControlClosed =$['tradeControlClosed'];
+      tradeControlClosed.updateTrades(session.closedTrades("primary"));
+    }
   }
 
   @Listen('savesession')
