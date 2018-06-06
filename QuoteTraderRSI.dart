@@ -50,7 +50,7 @@ main(List<String> arguments) async
 
   for(String pair in pairs)
   {
-      availableTrades[pair]=false;
+      availableTrades[pair.replaceAll(new RegExp("_"),"")]=false;
   }
 
   if(tradePosition=="long")

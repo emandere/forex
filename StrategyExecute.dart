@@ -58,9 +58,10 @@ main(List<String> arguments) async
 				{
 					if (dailyPairValue[tradingSession.strategy.ruleName])
 					{
+						Map initPrice = await mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'], DateTime.parse(dailyPairValue['date'])).first;
 						tradingSession.executeTradeStrategyPrice("primary",
 								tradingSession.strategy,
-								new Price.fromJsonDailyValue(dailyPairValue));
+								new Price.fromJsonMap(initPrice));
 					}
 
 					await for (Map priceMap in mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'], DateTime.parse(dailyPairValue['date'])))
@@ -68,7 +69,8 @@ main(List<String> arguments) async
 						tradingSession.updateSessionPriceNoHist(new Price.fromJsonMap(priceMap));
 					}
 
-					tradingSession.updateSession(dailyPairValues);
+					Map lastPrice = await mongoLayer.readPricesAsyncByDate(dailyPairValue['pair'], DateTime.parse(dailyPairValue['date'])).last;
+					tradingSession.updateSessionPrice(new Price.fromJsonMap(lastPrice));
 
 				}
 				await mongoLayer.saveSession(tradingSession);
