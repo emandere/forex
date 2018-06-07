@@ -275,9 +275,9 @@ class TradingSession
   List<Trade> allTrades(String account)
   {
     if(account=="primary")
-      return sessionUser.primaryAccount.closedTrades..addAll(sessionUser.primaryAccount.Trades);
+      return  new List<Trade>.from(sessionUser.primaryAccount.Trades)..addAll(sessionUser.primaryAccount.closedTrades);
     else
-      return sessionUser.secondaryAccount.closedTrades..addAll(sessionUser.secondaryAccount.Trades);
+      return  new List<Trade>.from(sessionUser.secondaryAccount.Trades)..addAll(sessionUser.secondaryAccount.closedTrades);
   }
 
   double balance()
