@@ -204,7 +204,7 @@ class TradingSession
     if(sessionUser.Accounts[acc].MarginAvailable() * 50 > (currPrice.bid * adj(currPrice)  * units.toDouble()))
     {
       sessionUser.executeTrade(acc, currPrice.instrument, units,position, currPrice.time.toIso8601String()+"Z", stopLoss, takeProfit);
-      setStopLossAndTakeProfit(acc, currPrice.time.toIso8601String(), position, stopLoss, takeProfit);
+      setStopLossAndTakeProfit(acc, currPrice.time.toIso8601String()+"Z", position, stopLoss, takeProfit);
     }
   }
 
