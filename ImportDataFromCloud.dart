@@ -39,6 +39,7 @@ syncMongo(ForexMongo mongoLayer) async
   bool shouldUpdate = false;
   for(String pair in pairs)
   {
+    print(pair);
     var urlLatest = 'http://$server/api/forexclasses/v1/latestprices/$pair';
     var priceJSON = await http.get(urlLatest);
     Price currPrice = new Price.fromJson(priceJSON.body);
