@@ -87,7 +87,7 @@ main(List<String> arguments) async
   _apiServer.addApi(new ForexData());
   _apiServer.addApi(new ForexClasses(mongoLayer));
   _apiServer.enableDiscoveryApi();
-  HttpServer server = await HttpServer.bind(InternetAddress.ANY_IP_V4,80);
+  HttpServer server = await HttpServer.bind(InternetAddress.ANY_IP_V6,80);
 
   server.listen(requestHandler);
 }
