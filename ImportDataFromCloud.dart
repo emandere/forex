@@ -39,11 +39,14 @@ syncMongo(ForexMongo mongoLayer) async
   bool shouldUpdate = false;
   for(String pair in pairs)
   {
-    print(pair);
+    var localCurrPriceMap = await mongoLayer.readLatestPrice(pair);
+    if(localCurrPriceMap==null)
+      break;
+    
     var urlLatest = 'http://$server/api/forexclasses/v1/latestprices/$pair';
     var priceJSON = await http.get(urlLatest);
     Price currPrice = new Price.fromJson(priceJSON.body);
-    var localCurrPriceMap = await mongoLayer.readLatestPrice(pair);
+    
     Price localPrice = new Price.fromJsonMap(localCurrPriceMap);
     if(currPrice.time.isAfter(localPrice.time))
     {
