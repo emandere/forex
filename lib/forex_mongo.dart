@@ -369,8 +369,8 @@ class ForexMongo
     var mapStrategy = await db.collection('tradingsessionqueue').findOne(condition);
     if(mapStrategy!=null)
     {
-      //mapStrategy["read"] = true;
-      //await db.collection('tradingsessionqueue').save(mapStrategy);
+      mapStrategy["read"] = true;
+      await db.collection('tradingsessionqueue').save(mapStrategy);
       return mapStrategy;
     }
     else

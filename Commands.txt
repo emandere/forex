@@ -38,6 +38,9 @@ sudo docker build -t candleapp -f DockerfileQuoteCandles github.com/emandere/for
 sudo docker build -t importdatafromcloudapp -f DockerfileImportDataFromCloud github.com/emandere/forex
 
 //Run forex docker container
+
+sudo docker run -v /home/ubuntu/data:/data/db --restart=always --name mongo -d mongo mongod --smallfiles --wiredTigerCacheSizeGB 0.25
+
 sudo docker run -p 80:80 --link mongo:mongo forexapp -t
 
 sudo docker run -p 80:80 --link mongo:mongo quoteapp -t
@@ -95,3 +98,8 @@ then
  docker.exe rmi -f $(docker.exe images -q --filter "dangling=true")
 fi
 exit
+
+Kubernetes Commands
+
+sudo kubectl run hello-node --image=hello-node:v1 --port=8080 --image-pull-policy=Never
+sudo kubectl run strategyapp --image=strategyapp:latest --image-pull-policy=Never
