@@ -16,6 +16,7 @@ part 'forexclasses/forex_order_class.dart';
 part 'forexclasses/forex_account_class.dart';
 part 'forexclasses/forex_user_class.dart';
 part 'forexclasses/forex_tradingsession_class.dart';
+part 'forexclasses/forex_experiment.dart';
 
 class PostData
 {
