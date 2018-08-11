@@ -1,5 +1,12 @@
 part of forex_classes;
-class Variable<T>
+class IVariable
+{
+  List<Strategy> CartesianProduct(List<Strategy> currentProduct)
+  {
+
+  }
+}
+class Variable<T> implements IVariable
 {
   final String name;
   final T start;
@@ -49,8 +56,9 @@ class Variable<T>
    {
      Strategy newStrategy = new Strategy();
 
-     newStrategy.stopLoss = oldStrategy.stopLoss;
      newStrategy.window=oldStrategy.window;
+     newStrategy.stopLoss = oldStrategy.stopLoss;
+     newStrategy.takeProfit = oldStrategy.takeProfit;
 
      switch(name)
      {
@@ -59,6 +67,9 @@ class Variable<T>
          break;
        case "stopLoss":
          newStrategy.stopLoss=currentValue as double;
+         break;
+       case "takeProfit" :
+         newStrategy.takeProfit=currentValue as double;
          break;
      }
      return newStrategy;
@@ -70,5 +81,28 @@ class Variable<T>
 
 class Experiment
 {
+   List<IVariable> variables;
+   List<Strategy> GetStrategiesFromVariables()
+   {
+        return GetStrategiesFromVariablesHelper(variables);
+   }
+   Experiment()
+   {
+     variables =<IVariable>[];
+   }
+
+   List<Strategy> GetStrategiesFromVariablesHelper(List<IVariable> localVariables)
+   {
+      if(localVariables.length==1)
+      {
+         return localVariables[0].CartesianProduct(<Strategy>[]);
+      }
+      else
+      {
+         return localVariables
+                .first
+                .CartesianProduct(GetStrategiesFromVariablesHelper(localVariables.sublist(1)));
+      }
+   }
 
 }
