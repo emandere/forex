@@ -39,6 +39,14 @@ class TestExperimentClass
     expect(twoproduct.length, 25);
     expect(twoproduct[24].window, 4);
     expect(twoproduct[24].stopLoss, 4.0);
+
+
+    Variable<int> test = new Variable(name:"window", staticOptions:[1]);
+    Variable<double> test2 = new Variable(name:"stopLoss", staticOptions:[2.0]);
+    List<Strategy> tp = test.CartesianProduct(test2.CartesianProduct(<Strategy>[]));
+    expect(tp.length,1);
+    expect(tp[0].window,1);
+    expect(tp[0].stopLoss,2.0);
   }
   testExperiment()
   {
