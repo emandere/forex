@@ -81,28 +81,42 @@ class Variable<T> implements IVariable
 
 class Experiment
 {
-   List<IVariable> variables;
-   List<Strategy> GetStrategiesFromVariables()
-   {
-        return GetStrategiesFromVariablesHelper(variables);
-   }
-   Experiment()
-   {
-     variables =<IVariable>[];
-   }
+  TradingSession experimentSession;
+  List<IVariable> variables;
+  List<Strategy> GetStrategiesFromVariables()
+  {
+      return GetStrategiesFromVariablesHelper(variables);
+  }
+  Experiment()
+  {
+   variables =<IVariable>[];
+  }
 
-   List<Strategy> GetStrategiesFromVariablesHelper(List<IVariable> localVariables)
-   {
-      if(localVariables.length==1)
+  List<Strategy> GetStrategiesFromVariablesHelper(List<IVariable> localVariables)
+  {
+    if(localVariables.length==1)
+    {
+       return localVariables[0].CartesianProduct(<Strategy>[]);
+    }
+    else
+    {
+       return localVariables
+              .first
+              .CartesianProduct(GetStrategiesFromVariablesHelper(localVariables.sublist(1)));
+    }
+  }
+
+  List<TradingSession> GetExperimentSessions()
+  {
+      var sessions = <TradingSession>[];
+      var expSessionMap = experimentSession.toJsonMap();
+      for(Strategy strategy in GetStrategiesFromVariables())
       {
-         return localVariables[0].CartesianProduct(<Strategy>[]);
+          TradingSession sess = new TradingSession.fromJSONMap(expSessionMap);
+          sess.strategy = strategy;
+          sessions.add(sess);
       }
-      else
-      {
-         return localVariables
-                .first
-                .CartesianProduct(GetStrategiesFromVariablesHelper(localVariables.sublist(1)));
-      }
-   }
+      return sessions;
+  }
 
 }
