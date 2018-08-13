@@ -81,6 +81,7 @@ class Variable<T> implements IVariable
 
 class Experiment
 {
+  String id;
   TradingSession experimentSession;
   List<IVariable> variables;
   List<Strategy> GetStrategiesFromVariables()
@@ -110,11 +111,14 @@ class Experiment
   {
       var sessions = <TradingSession>[];
       var expSessionMap = experimentSession.toJsonMap();
+      int i=0;
       for(Strategy strategy in GetStrategiesFromVariables())
       {
           TradingSession sess = new TradingSession.fromJSONMap(expSessionMap);
           sess.strategy = strategy;
+          sess.id = "${id}-${i.toString()}";
           sessions.add(sess);
+          i++;
       }
       return sessions;
   }

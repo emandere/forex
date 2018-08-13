@@ -67,6 +67,7 @@ class TestExperimentClass
     Variable<double> xTakeProfit = new Variable(name:"takeProfit",start:0.0,stop:5.0,increment:1.0);
 
     Experiment exp = new Experiment();
+    exp.id = "firstTest";
     exp.experimentSession = tradingSession1;
     exp.variables.add(xWindow);
     exp.variables.add(xStopLoss);
@@ -84,7 +85,7 @@ class TestExperimentClass
     expect(sessions[124].strategy.window, 4);
     expect(sessions[124].strategy.stopLoss, 4.0);
     expect(sessions[124].strategy.takeProfit, 4.0);
-
+    expect(sessions[124].id,"firstTest-124");
 
   }
 }
