@@ -59,6 +59,9 @@ class Variable<T> implements IVariable
      newStrategy.window=oldStrategy.window;
      newStrategy.stopLoss = oldStrategy.stopLoss;
      newStrategy.takeProfit = oldStrategy.takeProfit;
+     newStrategy.position =oldStrategy.position;
+     newStrategy.ruleName =oldStrategy.ruleName;
+     newStrategy.units = oldStrategy.units;
 
      switch(name)
      {
@@ -70,6 +73,15 @@ class Variable<T> implements IVariable
          break;
        case "takeProfit" :
          newStrategy.takeProfit=currentValue as double;
+         break;
+       case "units":
+         newStrategy.units=currentValue as int;
+         break;
+       case "ruleName":
+         newStrategy.ruleName = currentValue as String;
+         break;
+       case "Position":
+         newStrategy.position = currentValue as String;
          break;
      }
      return newStrategy;

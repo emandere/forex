@@ -63,8 +63,11 @@ class TestExperimentClass
 
 
     Variable<int> xWindow = new Variable(name:"window", start:0,stop:5,increment:1);
+    Variable<int> xUnits = new Variable(name:"units", staticOptions: [2002]);
     Variable<double> xStopLoss = new Variable(name:"stopLoss",start:0.0,stop:5.0,increment:1.0);
     Variable<double> xTakeProfit = new Variable(name:"takeProfit",start:0.0,stop:5.0,increment:1.0);
+    Variable<String> xPosition = new Variable(name:"Position",staticOptions: ["long"]);
+    Variable<String> xRuleName = new Variable(name:"ruleName",staticOptions: ["RSIOverbought70"]);
 
     Experiment exp = new Experiment();
     exp.id = "firstTest";
@@ -72,6 +75,9 @@ class TestExperimentClass
     exp.variables.add(xWindow);
     exp.variables.add(xStopLoss);
     exp.variables.add(xTakeProfit);
+    exp.variables.add(xPosition);
+    exp.variables.add(xRuleName);
+    exp.variables.add(xUnits);
     List<Strategy> expProduct = exp.GetStrategiesFromVariables();
     expect(expProduct.length,125);
 
@@ -85,6 +91,9 @@ class TestExperimentClass
     expect(sessions[124].strategy.window, 4);
     expect(sessions[124].strategy.stopLoss, 4.0);
     expect(sessions[124].strategy.takeProfit, 4.0);
+    expect(sessions[124].strategy.position, "long");
+    expect(sessions[124].strategy.ruleName, "RSIOverbought70");
+    expect(sessions[124].strategy.units, 2002);
     expect(sessions[124].id,"firstTest-124");
 
   }
