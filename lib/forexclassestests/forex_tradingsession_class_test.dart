@@ -16,6 +16,11 @@ class TestTradingSessionClass
     var testUser = testTradingSession.sessionUser;
 
     expect(testUser.id, "testUser");
+    expect(testTradingSession.experimentId,"cmon");
+
+    var MapTest = testTradingSession.toJsonMap();
+
+    expect(MapTest["experimentId"], "cmon");
 
     var testUser2 = new User.fromJsonMap(testUser.toJsonMap());
 
@@ -160,6 +165,7 @@ class TestTradingSessionClass
      testTradingSession["startDate"]="20110101";
      testTradingSession["currentTime"]="20170101";
      testTradingSession["sessionUser"]=getTestMapUser();
+     testTradingSession["experimentId"]="cmon";
      //testTradingSession["strategy"]=getTestStrategy();
      return testTradingSession;
   }

@@ -129,6 +129,7 @@ class Experiment
           TradingSession sess = new TradingSession.fromJSONMap(expSessionMap);
           sess.strategy = strategy;
           sess.id = "${id}-${i.toString()}";
+          sess.experimentId =id;
           sessions.add(sess);
           i++;
       }

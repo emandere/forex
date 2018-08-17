@@ -95,6 +95,7 @@ class TestExperimentClass
     expect(sessions[124].strategy.ruleName, "RSIOverbought70");
     expect(sessions[124].strategy.units, 2002);
     expect(sessions[124].id,"firstTest-124");
+    expect(sessions[124].experimentId,"firstTest");
 
   }
 }

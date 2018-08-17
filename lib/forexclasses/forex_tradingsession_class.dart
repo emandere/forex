@@ -14,6 +14,7 @@ class TradingSession
   SessionType sessionType;
   Strategy  strategy;
   String id;
+  String experimentId;
   double percentComplete;
 
   TradingSession()
@@ -24,6 +25,7 @@ class TradingSession
     sessionType=SessionType.test;
     strategy=new Strategy();
     percentComplete=0.0;
+    experimentId ="";
   }
 
   TradingSession.fromJSON(String json)
@@ -53,6 +55,8 @@ class TradingSession
     sessionUser = new User.fromJsonMap(jsonMap["sessionUser"]);
     strategy=jsonMap["strategy"]==null?new Strategy():new Strategy.fromJsonMap(jsonMap["strategy"]);
     percentComplete=jsonMap["percentComplete"]==null || jsonMap["percentComplete"]=="null"?0.0:double.parse(jsonMap["percentComplete"].toString());
+    experimentId=jsonMap["experimentId"]==null || jsonMap["experimentId"]=="null"?"":jsonMap["experimentId"].toString();
+
   }
 
 
@@ -66,6 +70,7 @@ class TradingSession
       "_id":id,
       "id":id,
       "sessionType":sessionType.toString(),
+      "experimentId":experimentId.toString(),
       "startDate":startDate.toString(),
       "endDate":endDate.toString(),
       "lastUpdatedTime":lastUpdatedTime,
