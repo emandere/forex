@@ -25,12 +25,13 @@ main(List<String> arguments) async
    Variable<int> xWindow = new Variable(name:"window", staticOptions: [15]);
    Variable<int> xUnits = new Variable(name:"units", staticOptions: [2000]);
    Variable<double> xStopLoss = new Variable(name:"stopLoss",start:1.001,stop:1.01,increment:0.001);
-   Variable<double> xTakeProfit = new Variable(name:"takeProfit",start:0.991,stop:0.998,increment:0.001);//new Variable(name:"takeProfit",staticOptions: [0.997]);
+   Variable<double> xTakeProfit = new Variable(name:"takeProfit",staticOptions: [0.999]);
    Variable<String> xPosition = new Variable(name:"Position",staticOptions: ["short"]);
-   Variable<String> xRuleName = new Variable(name:"ruleName",staticOptions: ["RSIOverbought70"]);
+   Variable<String> xRuleName = new Variable(name:"ruleName",staticOptions: ["AboveBollingerBandHigher"]);
+   //Variable<String> xRuleName = new Variable(name:"ruleName",staticOptions: ["RSIOverbought70"]);
 
    Experiment exp = new Experiment();
-   exp.id = "firstTest2";
+   exp.id = "firstTest6";
    exp.experimentSession = tradingSession1;
    exp.variables.add(xWindow);
    exp.variables.add(xStopLoss);
