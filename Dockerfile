@@ -5,7 +5,8 @@ ADD web /forex/web
 ADD services.dart /forex/services.dart
 RUN pub build
 
-RUN adduser --disabled-password appuser --group root
+RUN addgroup --S appuser
+RUN adduser -S -G  appuser appuser
 USER appuser
 CMD []
 ENTRYPOINT ["su","-","appuser","/usr/bin/dart","services.dart","release"]
