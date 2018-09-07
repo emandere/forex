@@ -7,6 +7,7 @@ RUN pub build
 
 RUN groupadd -g 999 appuser && \
     useradd -r -u 999 -g appuser appuser
+RUN su - user -c "touch mine"
 USER appuser
 CMD []
-ENTRYPOINT ["/usr/bin/dart","services.dart","release"]
+ENTRYPOINT ["su","-","appuser","/usr/bin/dart","services.dart","release"]
