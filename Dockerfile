@@ -5,8 +5,10 @@ ADD web /forex/web
 ADD services.dart /forex/services.dart
 RUN pub build
 
-RUN addgroup --system appusergroup
-RUN adduser --system appuser --ingroup  appusergroup
-USER appuser
+RUN adduser --disabled-password --gecos '' docker
+RUN adduser docker sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER docker
 CMD []
-ENTRYPOINT ["su","-","appuser","/usr/bin/dart","services.dart","release"]
+ENTRYPOINT ["sudo","/usr/bin/dart","services.dart","release"]
