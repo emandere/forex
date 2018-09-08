@@ -10,5 +10,6 @@ RUN adduser docker sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER docker
+RUN sudo apt-get
 CMD []
-ENTRYPOINT ["sudo","/usr/bin/dart","services.dart","release"]
+ENTRYPOINT ["su","-","docker","/usr/bin/dart","services.dart","release"]
