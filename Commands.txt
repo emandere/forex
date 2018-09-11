@@ -27,6 +27,9 @@ sudo docker ps
 sudo docker stop [id]
 
 //Build forex docker container
+
+docker build -t emandere/forexappbase -f DockerfileBaseForex .
+
 sudo docker build -t forexapp github.com/emandere/forex
 
 sudo docker build -t quoteapp -f DockerfileQuoteLogger github.com/emandere/forex

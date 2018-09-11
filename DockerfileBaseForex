@@ -1,6 +1,6 @@
-FROM google/dart
+FROM google/dart:1.24.3
 WORKDIR /forex
 ADD pubspec.* /forex/
-RUN pub get --trace
+RUN cd /forex &&  pub get --trace
 ADD . /forex
-RUN pub get --offline
+RUN cd /forex && pub get --offline
