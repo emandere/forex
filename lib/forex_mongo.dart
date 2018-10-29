@@ -418,4 +418,13 @@ class ForexMongo
     await db.collection('tradingsessionqueue').save(tradingSessionNode);
   }
 
+  pushTradingStrategySession(TradingSession tradingSession) async
+  {
+    var tradingSessionNode = {};
+    tradingSessionNode["read"]=false;
+    tradingSessionNode["tradingsession"]=tradingSession.toJsonMap();
+    tradingSessionNode["datetime"]=new DateTime.now();
+    await db.collection('tradingsessionqueue').save(tradingSessionNode);
+  }
+
 }
