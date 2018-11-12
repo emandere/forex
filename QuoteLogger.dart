@@ -33,7 +33,7 @@ main(List<String> arguments) async
 
 
           var jsonPrice = JSON.decode(text);
-          var price = new Price.fromJsonMap(jsonPrice);
+          var price = new Price.fromJsonMapV2(jsonPrice);
 
           yield price;
         }
