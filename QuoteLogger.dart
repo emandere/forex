@@ -23,11 +23,18 @@ main(List<String> arguments) async
       for(String pair in pairs)
       {
         try {
-          var text = await http.read(
+          /*var text = await http.read(
               "https://api-fxtrade.oanda.com/v1/prices?instruments=$pair",
+              headers: authorization);*/
+
+          var text = await http.read(
+              "https://api-fxtrade.oanda.com/v3/instruments/$pair/candles?count=6&price=BA&granularity=S5",
               headers: authorization);
+
+
           var jsonPrice = JSON.decode(text);
-          var price = new Price.fromJsonMap(jsonPrice["prices"][0]);
+          var price = new Price.fromJsonMap(jsonPrice);
+
           yield price;
         }
         catch(exception,stackTrace)
