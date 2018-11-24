@@ -23,11 +23,28 @@ main(List<String> arguments) async
 		return ((sessionDuration - remainingTime.inDays) / sessionDuration) * 100.0;
 	}
 
+	DeleteHangingSessions() async
+	{
+		await for(Map sessionMap in mongoLayer.getSessions())
+		{
+			TradingSession session = new TradingSession.fromJSONMap(sessionMap);
+			if(await mongoLayer.isHanging(session))
+			{
+				mongoLayer.deleteSession(session.id);
+				print(session.id + " deleted");
+			}
+		}
+	}
+
 	ProcessTradingSession(ForexMongo mongoLayer) async
 	{
 		if(isProcessing)
 		{
 			return;
+		}
+		else
+		{
+			await DeleteHangingSessions();
 		}
 
 		isProcessing=true;
@@ -99,6 +116,8 @@ main(List<String> arguments) async
 		isProcessing=false;
 
 	}
+
+
 
 
 	const period = const Duration(seconds: 3);

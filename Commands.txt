@@ -92,6 +92,8 @@ Docker Swarm Commands
 
 docker volume create mongodata
 
+docker volume create kafkadata
+
 docker run  -p 27017:27017 -v mongodata:/data/db --restart=always --name mongo -d mongo mongod --smallfiles
 
 

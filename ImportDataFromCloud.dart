@@ -19,6 +19,8 @@ main(List<String> arguments) async
 
   ForexMongo mongoLayer = new ForexMongo(arg);
   print("Starting Import Server");
+  await syncMongo(mongoLayer);
+  print("Done with initial sync");
   while(true)
   {
     await syncMongo(mongoLayer);
@@ -57,7 +59,7 @@ syncMongo(ForexMongo mongoLayer) async
     }
   }
 
-  if(!shouldUpdate) return;
+  //if(!shouldUpdate) return;
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
 
@@ -68,6 +70,8 @@ syncMongo(ForexMongo mongoLayer) async
   for(Map sessionJSON in listSessionJsonMap)
   {
     TradingSession session = new TradingSession.fromJSONMap(sessionJSON);
+    if(session.id=="liveSessionRSI")
+      session.sessionType = SessionType.live;
     await mongoLayer.saveSession(session);
     print("  Session ${session.id} saved");
   }

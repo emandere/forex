@@ -427,4 +427,25 @@ class ForexMongo
     await db.collection('tradingsessionqueue').save(tradingSessionNode);
   }
 
+  isHanging(TradingSession session) async
+  {
+     if(session.sessionType ==SessionType.live)
+     {
+       return false;
+     }
+     else
+     {
+       SelectorBuilder condition = where.eq("name",session.experimentId);
+       int experimentCount = await db.collection('experiments').count(condition);
+       if(experimentCount==0)
+       {
+          return true;
+       }
+       else
+       {
+          return false;
+       }
+     }
+  }
+
 }
