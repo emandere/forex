@@ -61,7 +61,7 @@ main(List<String> arguments) async
 			tradingSession.endDate=DateTime.parse(tradingSessionMap["enddate"]);
 			tradingSession.strategy = new Strategy.fromJsonMap(tradingSessionMap["strategy"]);
 			tradingSession.fundAccount("primary", tradingSessionMap["startamount"]);//
-
+			tradingSession.experimentId=tradingSessionMap["experimentId"];
 
 			print(tradingSession.strategy.ruleName);
 

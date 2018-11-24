@@ -59,7 +59,7 @@ syncMongo(ForexMongo mongoLayer) async
     }
   }
 
-  //if(!shouldUpdate) return;
+  if(!shouldUpdate) return;
 
   DateFormat formatter = new DateFormat('yyyyMMdd');
 
