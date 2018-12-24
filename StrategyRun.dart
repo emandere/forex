@@ -27,11 +27,11 @@ main(List<String> arguments) async
 	{
 		await for(Map sessionMap in mongoLayer.getSessions())
 		{
-			TradingSession session = new TradingSession.fromJSONMap(sessionMap);
-			if(await mongoLayer.isHanging(session))
+			//TradingSession session = new TradingSession.fromJSONMap(sessionMap);
+			if(await mongoLayer.isHanging(sessionMap["experimentId"],sessionMap["sessionType"]))
 			{
-				mongoLayer.deleteSession(session.id);
-				print(session.id + " deleted");
+				//mongoLayer.deleteSession(session.id);
+				print(sessionMap["id"] + " deleted");
 			}
 		}
 	}
