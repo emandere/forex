@@ -10,7 +10,7 @@ part 'indicators/BelowBollingerBandLowerWithSlope.dart';
 part 'indicators/RSIOverbought70.dart';
 part 'indicators/RSIOversold30.dart';
 part 'indicators/RSIOversold30AvoidVolatility.dart';
-List<double> dataFromWindow(Iterable<Map> window)=>window.map((day)=>day["close"]).toList();
+List<double> dataFromWindow(Iterable<Map> window)=>window.map((day)=>double.parse(day["close"].toString())).toList();
 IterableZip datafromZipWindow(Iterable<Map> window)
 {
   var open = window.map((t)=>t["open"]);
