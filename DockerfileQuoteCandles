@@ -1,4 +1,4 @@
-FROM forexappbase
+FROM emandere/forexappbase
 WORKDIR /forex
 ADD lib /forex/lib
 ADD QuoteCandles.dart /forex/QuoteCandles.dart
