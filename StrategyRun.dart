@@ -52,7 +52,8 @@ main(List<String> arguments) async
 		if (tradingSessionMap != null) {
 			//TradingSession tradingSession = new TradingSession.fromJSONMap(
 			//		tradingSessionMap["tradingsession"]);
-
+			Stopwatch watch = new Stopwatch();
+			watch.start();
 			TradingSession tradingSession = new TradingSession();
 			tradingSession.id=tradingSessionMap["name"];
 			//tradingSession1.strategy=strategy1;
@@ -109,8 +110,13 @@ main(List<String> arguments) async
 
 			tradingSession.percentComplete = 100.0;
 			tradingSession.printacc();
+			watch.stop();
+			print(watch.elapsed.inSeconds.toString());
+			tradingSession.elapsedTime = watch.elapsed.inSeconds.toString();
+			tradingSession.endSessionTime = new DateTime.now().toIso8601String();
 			await mongoLayer.saveSession(tradingSession);
       tradingSessionMap["read"] = true;
+
       await mongoLayer.saveSessionQueue(tradingSessionMap);
 		}
 		isProcessing=false;
