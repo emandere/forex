@@ -54,7 +54,9 @@ main(List<String> arguments) async
 			//		tradingSessionMap["tradingsession"]);
 			Stopwatch watch = new Stopwatch();
 			watch.start();
+
 			TradingSession tradingSession = new TradingSession();
+			tradingSession.beginSessionTime = new DateTime.now().toIso8601String();
 			tradingSession.id=tradingSessionMap["name"];
 			//tradingSession1.strategy=strategy1;
 			tradingSession.startDate=DateTime.parse(tradingSessionMap["startdate"]);
