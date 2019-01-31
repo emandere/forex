@@ -42,10 +42,10 @@ main(List<String> arguments) async
 		{
 			return;
 		}
-		else
-		{
-			await DeleteHangingSessions();
-		}
+		//else
+		//{
+			//await DeleteHangingSessions();
+		//}
 
 		isProcessing=true;
 		var tradingSessionMap = await mongoLayer.popTradingSession();
