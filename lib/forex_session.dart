@@ -59,7 +59,7 @@ class ForexSession extends PolymerElement
   int countdownAmt;
   bool firstLoad;
   bool sessionSelected;
-  final String liveSession ="liveSessionRSI";
+  final String liveSession ="liveSessionRSIReal";
   Timer countdownSesssions;
   DateTime startDate;
   DateTime endDate;

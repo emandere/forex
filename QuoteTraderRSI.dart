@@ -28,7 +28,7 @@ main(List<String> arguments) async
   var ruleName = "RSIOverbought70";
   var window = 14;
   var rsiRule = new IndicatorRule(ruleName, window);
-  var sessionId = "liveSessionRSI";
+  var sessionId = "liveSessionRSIReal";
   var server ="23.22.66.239";
   if(arg=="debug")
     server="localhost";
