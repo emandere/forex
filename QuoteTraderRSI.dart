@@ -15,7 +15,14 @@ main(List<String> arguments) async
   var authorization = {"Authorization": await file.readAsString()};
   var fileAccount = new File("account");
   var accountId = await fileAccount.readAsString();
-  var url =  "https://api-fxtrade.oanda.com/v1/accounts/$accountId/orders";
+
+  var combinedheaders =
+  {
+    "Authorization": await file.readAsString(),
+    'Content-type' : 'application/json'
+  };
+
+  var url =  "https://api-fxtrade.oanda.com/v3/accounts/$accountId/orders";
   var arg = "debug";
   if(arguments.length>0)
      arg = arguments[0];
@@ -142,7 +149,7 @@ main(List<String> arguments) async
 
       if(availableTrades[currPrice.instrument])
       {
-        if (await checkRule(currPrice))
+        if(await checkRule(currPrice))
         {
           tradingSession.executeTradePrice(
               account,
@@ -152,11 +159,11 @@ main(List<String> arguments) async
               stopLoss * currPrice.bid,
               takeProfit * currPrice.bid);
 
-          /*await executeRealTrades(url,authorization,
+          await executeRealTrades(url,combinedheaders,
               findPair(pairs,currPrice.instrument),
               (stopLoss * currPrice.bid).toStringAsFixed(3),
               (takeProfit * currPrice.bid).toStringAsFixed(3),
-              tradingSession.strategy);*/
+              tradingSession.strategy);
 
           availableTrades[currPrice.instrument] = false;
         }
@@ -174,22 +181,34 @@ main(List<String> arguments) async
 
 
 executeRealTrades (String url,
-    Map authorization,
+    Map combinedheaders,
     String instrument,
     String stopLoss,
     String takeProfit,
     Strategy strategy) async
 {
-
-  var bodyMap = {};
-
-  bodyMap["instrument"]=instrument;
-  bodyMap["units"]=strategy.units.toString();
-  bodyMap["side"]=strategy.position=="short"?"sell":"buy";
-  bodyMap["type"]="market";
-  bodyMap["stopLoss"]=stopLoss;
-  bodyMap["takeProfit"]=takeProfit;
-  var response = await http.post(url,body:bodyMap,headers:authorization);
+  int side = strategy.position=="short"?-1:1;
+  int units = side * strategy.units;
+  var order =
+  {
+    "order":
+    {
+      "units":units.toString(),
+      "instrument": instrument,
+      "timeInForce": "FOK",
+      "type": "MARKET",
+      "positionFill": "DEFAULT",
+      "stopLossOnFill":
+      {
+        "price": stopLoss
+      },
+      "takeProfitOnFill":
+      {
+        "price": takeProfit
+      }
+    }
+  };
+  var response = await http.post(url,body:JSON.encode(order),headers:combinedheaders);
   print("url: ${url}");
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");

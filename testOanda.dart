@@ -2,10 +2,11 @@
 
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'dart:convert';
 main() async
 {
 
-
+ newcall();
 
 }
 
@@ -39,6 +40,13 @@ newcall() async
 {
   var file = new File("keys");
   var authorization = {"Authorization": await file.readAsString()};
+  var content = {'Content-type' : 'application/json'};
+
+  var combinedheaders =
+  {
+    "Authorization": await file.readAsString(),
+    'Content-type' : 'application/json'
+  };
   //var text = await http.read("https://api-fxtrade.oanda.com/labs/v1/historical_position_ratios?instrument=EUR_USD&period=86400",
   //    headers:authorization);
   //print(text);
@@ -63,11 +71,15 @@ newcall() async
                     },
                     "takeProfitOnFill":
                     {
-                      "price": "1.14530"
+                      "price": "1.11530"
                     }
                 }
             };
-  var response = await http.post(url,body:order,headers:authorization);
+  //var order = {};
+  //order["units"]="-2";
+  //order["instruments"]="EUR_USD";
+  print(url);
+  var response = await http.post(url,body:JSON.encode(order),headers:combinedheaders);
   print("Response status: ${response.statusCode}");
   print("Response body: ${response.body}");
 

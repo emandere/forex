@@ -108,3 +108,5 @@ Kubernetes Commands
 
 sudo kubectl run hello-node --image=hello-node:v1 --port=8080 --image-pull-policy=Never
 sudo kubectl run strategyapp --image=strategyapp:latest --image-pull-policy=Never
+
+truncate -s -1 keys
