@@ -1,0 +1,6 @@
+FROM emandere/forexappbase
+WORKDIR /forex
+ADD lib /forex/lib
+ADD QuoteTraderBoll.dart /forex/QuoteTraderBoll.dart
+CMD []
+ENTRYPOINT ["/usr/bin/dart","QuoteTraderBoll.dart","release"]
