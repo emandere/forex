@@ -48,7 +48,7 @@ main(List<String> arguments) async
   var pairs = ["AUD_USD","EUR_USD","GBP_USD","NZD_USD","USD_CAD","USD_CHF","USD_JPY"];
   var takeProfit = 1.0;
   var stopLoss = 1.0;
-  var takeProfitPct = 0.002;
+  var takeProfitPct = 0.008;
   var stopLossPct = 0.007;
   var tradePosition = "short";
   var account = "primary";
