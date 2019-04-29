@@ -94,7 +94,8 @@ main(List<String> arguments) async
     var endDate = new DateTime.now();
     var startDate = endDate.add(new Duration(days:-window));
 
-    var dailyValuesMap = await mongoLayer.readPriceRangeAsyncByDate(currPrice.instrument, startDate, endDate).toList();
+    //var dailyValuesMap = await mongoLayer.readPriceRangeAsyncByDate(currPrice.instrument, startDate, endDate).toList();
+    var dailyValuesMap = await mongoLayer.readDailyAsyncByDate(currPrice.instrument, endDate);
     if(dailyValuesMap.isNotEmpty)
     {
       print (currPrice.instrument +" "+rsiRule.indicator(dailyValuesMap).toStringAsFixed(0));
