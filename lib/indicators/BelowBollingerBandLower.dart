@@ -11,7 +11,7 @@ class BelowBollingerBandLower implements IndicatorRule
   bool IsMet(Iterable<Map> window,Map currentValue)
   {
     List<double> data = dataFromWindow(window);
-    if(BollingerLower(data) > currentValue["open"])
+    if(BollingerLower(data) > currentValue["close"])
       return true;
     else
       return false;
