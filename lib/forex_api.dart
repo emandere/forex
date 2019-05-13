@@ -370,8 +370,10 @@ class ForexClasses
     var dailyRange = await mongoLayer
                             .readPriceRangeAsyncByDate(pair,DateTime.parse(currentDate).add(new Duration(days:-window))
                                                            ,DateTime.parse(currentDate)).toList();
-
-    return [tradingRule.indicator(dailyRange).toStringAsFixed(0)];
+    if(ruleName=="BelowBollingerBandLower")
+      return [tradingRule.indicator(dailyRange).toStringAsFixed(5)];
+    else
+      return [tradingRule.indicator(dailyRange).toStringAsFixed(0)];
   }
 
   @ApiMethod(path:'balancehistorypair/{sessionid}/{pair}/{strstartfilterdate}/{strendfilterdate}')
