@@ -159,11 +159,11 @@ main(List<String> arguments) async
               stopLoss * currPrice.bid,
               takeProfit * currPrice.bid);
 
-          await executeRealTrades(url,combinedheaders,
+          /*await executeRealTrades(url,combinedheaders,
               findPair(pairs,currPrice.instrument),
               (stopLoss * currPrice.bid).toStringAsFixed(3),
               (takeProfit * currPrice.bid).toStringAsFixed(3),
-              tradingSession.strategy);
+              tradingSession.strategy);*/
 
           availableTrades[currPrice.instrument] = false;
         }
