@@ -375,7 +375,7 @@ class ForexClasses
     else
       return [tradingRule.indicator(dailyRange).toStringAsFixed(0)];
   }
-
+  //TESTING Only
   @ApiMethod(path:'balancehistorypair/{sessionid}/{pair}/{strstartfilterdate}/{strendfilterdate}')
   Future<List<double>> balanceHistPair(String sessionid,String pair,String strstartfilterdate,String strendfilterdate) async
   {

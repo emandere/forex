@@ -25,6 +25,8 @@ services:
     depends_on:
       - mongo
   strategyapp:
+    deploy:
+          replicas: 2
     image: 127.0.0.1:5000/strategyapp
     build:
       context: .
