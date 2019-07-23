@@ -23,11 +23,19 @@ trades() async
 
   var fileAccount = new File("account");
   var accountId = await fileAccount.readAsString();
-   var url = "https://api-fxtrade.oanda.com/v3/accounts/$accountId/openTrades";
-   var response = await http.get(url,headers: combinedheaders);
-   //print(response.body);
-  var jsonMap = JSON.decode(response.body);
-  print(jsonMap["trades"][0]["initialUnits"]);
+  var url = "https://api-fxtrade.oanda.com/v3/accounts/$accountId/openTrades";
+
+  var FIFOunits = await getFIFOUnits(200, "EUR_USD",combinedheaders,url);
+  print(FIFOunits);
+}
+
+getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
+{
+    var response = await http.get(url,headers: combinedheaders);
+  //print(response.body);
+    var jsonMap = JSON.decode(response.body);
+    var trades = jsonMap["trades"];
+    return units + trades.where((x) => x["instrument"]==pair).length;
 }
 
 old() async

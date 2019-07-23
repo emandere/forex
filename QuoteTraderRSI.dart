@@ -23,6 +23,7 @@ main(List<String> arguments) async
   };
 
   var url =  "https://api-fxtrade.oanda.com/v3/accounts/$accountId/orders";
+  var urlOpenTrades = "https://api-fxtrade.oanda.com/v3/accounts/$accountId/openTrades";
   var arg = "debug";
   if(arguments.length>0)
      arg = arguments[0];
@@ -132,6 +133,15 @@ main(List<String> arguments) async
         .contains(formatter.format(price.time));
   }
 
+  getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
+  {
+    var response = await http.get(url,headers: combinedheaders);
+    //print(response.body);
+    var jsonMap = JSON.decode(response.body);
+    var trades = jsonMap["trades"];
+    return units + trades.where((x) => x["instrument"]==pair).length;
+  }
+
 
 
   await for(Price currPrice in getquotes(pairs,mongoLayer))
@@ -151,10 +161,11 @@ main(List<String> arguments) async
       {
         if(await checkRule(currPrice))
         {
+          var FIFOunits = await getFIFOUnits(tradingSession.strategy.units, currPrice.instrument, combinedheaders, urlOpenTrades);
           tradingSession.executeTradePrice(
               account,
               currPrice,
-              units,
+              FIFOunits,
               tradePosition,
               stopLoss * currPrice.bid,
               takeProfit * currPrice.bid);
@@ -163,6 +174,7 @@ main(List<String> arguments) async
               findPair(pairs,currPrice.instrument),
               (stopLoss * currPrice.bid).toStringAsFixed(3),
               (takeProfit * currPrice.bid).toStringAsFixed(3),
+              FIFOunits,
               tradingSession.strategy);
 
           availableTrades[currPrice.instrument] = false;
@@ -185,10 +197,11 @@ executeRealTrades (String url,
     String instrument,
     String stopLoss,
     String takeProfit,
+    int FIFOunits,
     Strategy strategy) async
 {
   int side = strategy.position=="short"?-1:1;
-  int units = side * strategy.units;
+  int units = side * FIFOunits;
   var order =
   {
     "order":
