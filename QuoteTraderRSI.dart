@@ -161,7 +161,7 @@ main(List<String> arguments) async
       {
         if(await checkRule(currPrice))
         {
-          var FIFOunits = await getFIFOUnits(tradingSession.strategy.units, currPrice.instrument, combinedheaders, urlOpenTrades);
+          var FIFOunits = await getFIFOUnits(tradingSession.strategy.units, findPair(pairs,currPrice.instrument), combinedheaders, urlOpenTrades);
           tradingSession.executeTradePrice(
               account,
               currPrice,
