@@ -136,10 +136,12 @@ main(List<String> arguments) async
   getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
   {
     var response = await http.get(url,headers: combinedheaders);
-    //print(response.body);
     var jsonMap = JSON.decode(response.body);
-    var trades = jsonMap["trades"];
-    return units + trades.where((x) => x["instrument"]==pair).length;
+    var trades = jsonMap["trades"].where((x) => x["instrument"]==pair);
+    if(trades.length > 0)
+      return trades.map((x) => int.parse(x["currentUnits"])).reduce(max) - 1;
+    else
+      return units;
   }
 
 

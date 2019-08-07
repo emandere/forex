@@ -3,6 +3,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
+import 'dart:math';
 main() async
 {
 
@@ -25,8 +26,10 @@ trades() async
   var accountId = await fileAccount.readAsString();
   var url = "https://api-fxtrade.oanda.com/v3/accounts/$accountId/openTrades";
 
-  var FIFOunits = await getFIFOUnits(200, "EUR_USD",combinedheaders,url);
+  var FIFOunits = await getFIFOUnits(200, "USD_CAD",combinedheaders,url);
+  var FIFOunits2 = await getFIFOUnits(200, "EUR_USD",combinedheaders,url);
   print(FIFOunits);
+  print(FIFOunits2);
 }
 
 getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
@@ -34,8 +37,11 @@ getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
     var response = await http.get(url,headers: combinedheaders);
   //print(response.body);
     var jsonMap = JSON.decode(response.body);
-    var trades = jsonMap["trades"];
-    return units + trades.where((x) => x["instrument"]==pair).length;
+    var trades = jsonMap["trades"].where((x) => x["instrument"]==pair);
+    if(trades.length > 0)
+      return trades.map((x) => int.parse(x["currentUnits"])).reduce(max) - 1;
+    else
+      return units;
 }
 
 old() async
