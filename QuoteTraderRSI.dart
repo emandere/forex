@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'lib/forex_prices.dart';
