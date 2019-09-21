@@ -50,10 +50,10 @@ class TradingSession
   setSession(Map jsonMap)
   {
     id=jsonMap["id"];
-    //sessionType=SessionType.values.
-    //              firstWhere((e) => e.toString() == (jsonMap["sessionType"]??"SessionType.test"),
-    //              orElse: () => SessionType.test);
-    sessionType = SessionType.values[jsonMap["sessionType"]["index"]??1];
+    sessionType=SessionType.values.
+                  firstWhere((e) => e.toString() == (jsonMap["sessionType"]??"SessionType.test"),
+                  orElse: () => SessionType.test);
+    //sessionType = SessionType.values[jsonMap["sessionType"]["index"]??1];
     startDate=DateTime.parse(jsonMap["startDate"].toString());
     endDate=DateTime.parse(jsonMap.containsKey("endDate") && jsonMap["endDate"].toString() !="null"?jsonMap["endDate"].toString():"20300101");
     lastUpdatedTime=jsonMap.containsKey("lastUpdatedTime") && jsonMap["lastUpdatedTime"].toString()!="null"?jsonMap["lastUpdatedTime"].toString():"20010101";
