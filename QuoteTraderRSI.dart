@@ -140,7 +140,7 @@ main(List<String> arguments) async
     var jsonMap = JSON.decode(response.body);
     var trades = jsonMap["trades"].where((x) => x["instrument"]==pair);
     if(trades.length > 0)
-      return trades.map((x) => int.parse(x["currentUnits"])).reduce(max) - 1;
+      return (trades.map((x) => int.parse(x["currentUnits"])).reduce(min) - 1).abs();
     else
       return units;
   }

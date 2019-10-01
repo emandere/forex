@@ -26,7 +26,7 @@ trades() async
   var accountId = await fileAccount.readAsString();
   var url = "https://api-fxtrade.oanda.com/v3/accounts/$accountId/openTrades";
 
-  var FIFOunits = await getFIFOUnits(200, "USD_CAD",combinedheaders,url);
+  var FIFOunits = await getFIFOUnits(200, "USD_CHF",combinedheaders,url);
   var FIFOunits2 = await getFIFOUnits(200, "EUR_USD",combinedheaders,url);
   print(FIFOunits);
   print(FIFOunits2);
@@ -39,7 +39,7 @@ getFIFOUnits(int units,String pair, Map combinedheaders,String url) async
     var jsonMap = JSON.decode(response.body);
     var trades = jsonMap["trades"].where((x) => x["instrument"]==pair);
     if(trades.length > 0)
-      return trades.map((x) => int.parse(x["currentUnits"])).reduce(max) - 1;
+      return (trades.map((x) => int.parse(x["currentUnits"])).reduce(min) - 1).abs();
     else
       return units;
 }
