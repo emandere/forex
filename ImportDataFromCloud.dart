@@ -70,7 +70,7 @@ syncMongo(ForexMongo mongoLayer) async
   for(Map sessionJSON in listSessionJsonMap)
   {
     TradingSession session = new TradingSession.fromJSONMap(sessionJSON);
-    if(session.id=="liveSessionRSI")
+    if(session.id=="liveSessionRSI" || session.id=="liveSessionRSIReal")
       session.sessionType = SessionType.live;
     await mongoLayer.saveSession(session);
     print("  Session ${session.id} saved");
